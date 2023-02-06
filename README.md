@@ -4,20 +4,6 @@
 
 This system is a boilerplate system that you can use as a starting point for building your own custom systems. It's similar to Simple World-building, but has examples of creating attributes in code rather than dynamically through the UI.
 
-## Usage
-
-Before installing this system, you should rename any files that have `boilerplate` in their filename to use whatever machine-safe name your system needs, such as `adnd2e` if you were building a system for 2nd edition Advanced Dungeons & Dragons. In addition, you should search through the files for `boilerplate` and `Boilerplate` and do the same for those, replacing them with appropriate names for your system.
-
-### System Generator
-
-This project is also available as generator that can be run with npm: https://www.npmjs.com/package/generator-foundry
-
-### Vue 3 Boilerplate
-
-Alternatively, there's another build of this system that supports using Vue 3 components (ES module build target) for character sheet templates.
-
-Head over to the [Vue3Boilerplate System](https://gitlab.com/asacolips-projects/foundry-mods/vue3boilerplate) repo if you're interested in using Vue!
-
 ### Tutorial
 
 For much more information on how to use this system as a starting point for making your own, see the [full tutorial on the Foundry Wiki](https://foundryvtt.wiki/en/development/guides/SD-tutorial)!
