@@ -1,8 +1,8 @@
 {
-  "id": "boilerplate",
-  "title": "Boilerplate",
-  "description": "The Boilerplate system for FoundryVTT!",
-  "version": "1.2.0",
+  "id": "paranoia",
+  "title": "Paranoia Perfect Edition",
+  "description": "Paranoia Perfect Edition - DING! Attention citizen. Welcome to the first of your six lives here in Alpha Complex. I am your best friend, The Computer. Do not worry. I am here to protect you, educate you and help you stay loyal. This will make you happy and productive, as cases of severe anxiety and PTSD have dropped considerably. You have been decanted from your clone tank and are ready to serve. How may I help you be successful?",
+  "version": "0.0.1",
   "compatibility": {
     "minimum": 10,
     "verified": "10.287",
@@ -11,8 +11,8 @@
   "authors": [{
     "name": "Asacolips"
   }],
-  "esmodules": ["module/boilerplate.mjs"],
-  "styles": ["css/boilerplate.css"],
+  "esmodules": ["module/paranoia.mjs"],
+  "styles": ["css/paranoia.css"],
   "scripts": [],
   "packs": [],
   "languages": [

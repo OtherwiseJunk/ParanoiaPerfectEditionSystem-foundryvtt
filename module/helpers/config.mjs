@@ -1,23 +1,23 @@
-export const BOILERPLATE = {};
+export const PARANOIA = {};
 
 /**
  * The set of Ability Scores used within the sytem.
  * @type {Object}
  */
- BOILERPLATE.abilities = {
-  "str": "BOILERPLATE.AbilityStr",
-  "dex": "BOILERPLATE.AbilityDex",
-  "con": "BOILERPLATE.AbilityCon",
-  "int": "BOILERPLATE.AbilityInt",
-  "wis": "BOILERPLATE.AbilityWis",
-  "cha": "BOILERPLATE.AbilityCha"
+ PARANOIA.abilities = {
+  "str": "PARANOIA.AbilityStr",
+  "dex": "PARANOIA.AbilityDex",
+  "con": "PARANOIA.AbilityCon",
+  "int": "PARANOIA.AbilityInt",
+  "wis": "PARANOIA.AbilityWis",
+  "cha": "PARANOIA.AbilityCha"
 };
 
-BOILERPLATE.abilityAbbreviations = {
-  "str": "BOILERPLATE.AbilityStrAbbr",
-  "dex": "BOILERPLATE.AbilityDexAbbr",
-  "con": "BOILERPLATE.AbilityConAbbr",
-  "int": "BOILERPLATE.AbilityIntAbbr",
-  "wis": "BOILERPLATE.AbilityWisAbbr",
-  "cha": "BOILERPLATE.AbilityChaAbbr"
+PARANOIA.abilityAbbreviations = {
+  "str": "PARANOIA.AbilityStrAbbr",
+  "dex": "PARANOIA.AbilityDexAbbr",
+  "con": "PARANOIA.AbilityConAbbr",
+  "int": "PARANOIA.AbilityIntAbbr",
+  "wis": "PARANOIA.AbilityWisAbbr",
+  "cha": "PARANOIA.AbilityChaAbbr"
 };

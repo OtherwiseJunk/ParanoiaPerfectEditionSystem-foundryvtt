@@ -1,4 +1,4 @@
-# Boilerplate System
+# Paranoia System
 
 ![Foundry v10](https://img.shields.io/badge/foundry-v10-green)
 

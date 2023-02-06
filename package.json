@@ -1,7 +1,7 @@
 {
-  "name": "boilerplate",
-  "version": "1.0.0",
-  "description": "CSS compiler for the Boilerplate system",
+  "name": "foundryvtt-paranoia",
+  "version": "0.0.1",
+  "description": "FoundryVTT Paranoia Perfect Edition System",
   "scripts": {
     "build": "gulp build",
     "compile": "gulp css",

@@ -1,22 +1,22 @@
 {
-  "BOILERPLATE.AbilityStr": "Strength",
-  "BOILERPLATE.AbilityCon": "Constitution",
-  "BOILERPLATE.AbilityDex": "Dexterity",
-  "BOILERPLATE.AbilityInt": "Intelligence",
-  "BOILERPLATE.AbilityWis": "Wisdom",
-  "BOILERPLATE.AbilityCha": "Charisma",
+  "PARANOIA.AbilityStr": "Strength",
+  "PARANOIA.AbilityCon": "Constitution",
+  "PARANOIA.AbilityDex": "Dexterity",
+  "PARANOIA.AbilityInt": "Intelligence",
+  "PARANOIA.AbilityWis": "Wisdom",
+  "PARANOIA.AbilityCha": "Charisma",
 
-  "BOILERPLATE.AbilityStrAbbr": "str",
-  "BOILERPLATE.AbilityConAbbr": "con",
-  "BOILERPLATE.AbilityDexAbbr": "dex",
-  "BOILERPLATE.AbilityIntAbbr": "int",
-  "BOILERPLATE.AbilityWisAbbr": "wis",
-  "BOILERPLATE.AbilityChaAbbr": "cha",
+  "PARANOIA.AbilityStrAbbr": "str",
+  "PARANOIA.AbilityConAbbr": "con",
+  "PARANOIA.AbilityDexAbbr": "dex",
+  "PARANOIA.AbilityIntAbbr": "int",
+  "PARANOIA.AbilityWisAbbr": "wis",
+  "PARANOIA.AbilityChaAbbr": "cha",
 
-  "BOILERPLATE.EffectCreate": "Create Effect",
-  "BOILERPLATE.EffectToggle": "Toggle Effect",
-  "BOILERPLATE.EffectEdit": "Edit Effect",
-  "BOILERPLATE.EffectDelete": "Delete Effect",
+  "PARANOIA.EffectCreate": "Create Effect",
+  "PARANOIA.EffectToggle": "Toggle Effect",
+  "PARANOIA.EffectEdit": "Edit Effect",
+  "PARANOIA.EffectDelete": "Delete Effect",
 
-  "BOILERPLATE.Add": "Add"
+  "PARANOIA.Add": "Add"
 }
