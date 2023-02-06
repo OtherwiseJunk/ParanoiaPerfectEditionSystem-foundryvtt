@@ -4,43 +4,51 @@
     "templates": {
       "base": {
         "health": {
-          "value": 10,
+          "value": 4,
           "min": 0,
-          "max": 10
+          "max": 4
         },
-        "power": {
+        "moxie": {
           "value": 5,
           "min": 0,
           "max": 5
         },
-        "biography": ""
+        "abilities": {
+          "brains": {
+            "value": 0
+          },
+          "chutzpah": {
+            "value": 0
+          },
+          "mechanics": {
+            "value": 0
+          },
+          "violence": {
+            "value": 0
+          }
+        }
       }
     },
     "character": {
       "templates": ["base"],
       "attributes": {
-        "level": {
-          "value": 1
-        }
-      },
-      "abilities": {
-        "str": {
-          "value": 10
+        "name": {
+          "value": ""
         },
-        "dex": {
-          "value": 10
+        "team": {
+          "value": ""
         },
-        "con": {
-          "value": 10
+        "mbd": {
+          "value": ""
         },
-        "int": {
-          "value": 10
+        "serviceGroup": {
+          "value": ""
         },
-        "wis": {
-          "value": 10
+        "treasonButton": {
+          "value": ""
         },
-        "cha": {
-          "value": 10
+        "violenceButton": {
+          "value": ""
         }
       }
     },
