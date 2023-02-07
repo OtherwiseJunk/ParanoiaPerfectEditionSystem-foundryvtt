@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": [ "character","npc"],
+    "types": [ "troubleshooter","npc"],
     "templates": {
       "base": {
         "health": {
@@ -12,100 +12,10 @@
           "value": 5,
           "min": 0,
           "max": 5
-        },
-        "abilities": {
-          "brains": {
-            "label": "Brains",
-            "value": 0,
-            "skills": {
-              "alphaComplex": {
-                "label": "Alpha Complex",
-                "value": 0
-              },
-              "bureaucracy": {
-                "label": "Bureaucracy",
-                "value": 0
-              },
-              "psychology": {
-                "label": "Psychology",
-                "value": 0
-              },
-              "science": {
-                "label": "Science",
-                "value": 0
-              }
-            }
-          },
-          "chutzpah": {
-            "label": "Chutzpah",
-            "value": 0,
-            "skills": {
-              "bluff": {
-                "label": "Bluff",
-                "value": 0
-              },
-              "charm": {
-                "label": "Charm",
-                "value": 0
-              },
-              "intimidate": {
-                "label": "Intimidate",
-                "value": 0
-              },
-              "stealth": {
-                "label": "Stealth",
-                "value": 0
-              }
-            }
-          },
-          "mechanics": {
-            "label": "Mechanics",
-            "value": 0,
-            "skills": {
-              "demolitions": {
-                "label": "Demolitions",
-                "value": 0
-              },
-              "engineer": {
-                "label": "Engineer",
-                "value": 0
-              },
-              "operate": {
-                "label": "Operate",
-                "value": 0
-              },
-              "program": {
-                "label": "Program",
-                "value": 0
-              }
-            }
-          },
-          "violence": {
-            "label": "Violence",
-            "value": 0,
-            "skills": {
-              "athletics": {
-                "label": "Athletics",
-                "value": 0
-              },
-              "guns": {
-                "label": "Guns",
-                "value": 2
-              },
-              "melee": {
-                "label": "Melee",
-                "value": 0
-              },
-              "throw": {
-                "label": "Throw",
-                "value": 0
-              }
-            }
-          }
-        }
+        }        
       }
     },
-    "character": {
+    "troubleshooter": {
       "templates": [
         "base"
       ],
@@ -128,6 +38,100 @@
         "violenceButton": {
           "value": ""
         }
+      },
+      "abilities": {
+        "brains": {
+          "label": "Brains",
+          "value": 0,
+          "skills": {
+            "alphaComplex": {
+              "label": "Alpha Complex",
+              "value": 0
+            },
+            "bureaucracy": {
+              "label": "Bureaucracy",
+              "value": 0
+            },
+            "psychology": {
+              "label": "Psychology",
+              "value": 0
+            },
+            "science": {
+              "label": "Science",
+              "value": 0
+            }
+          }
+        },
+        "chutzpah": {
+          "label": "Chutzpah",
+          "value": 0,
+          "skills": {
+            "bluff": {
+              "label": "Bluff",
+              "value": 0
+            },
+            "charm": {
+              "label": "Charm",
+              "value": 0
+            },
+            "intimidate": {
+              "label": "Intimidate",
+              "value": 0
+            },
+            "stealth": {
+              "label": "Stealth",
+              "value": 0
+            }
+          }
+        },
+        "mechanics": {
+          "label": "Mechanics",
+          "value": 0,
+          "skills": {
+            "demolitions": {
+              "label": "Demolitions",
+              "value": 0
+            },
+            "engineer": {
+              "label": "Engineer",
+              "value": 0
+            },
+            "operate": {
+              "label": "Operate",
+              "value": 0
+            },
+            "program": {
+              "label": "Program",
+              "value": 0
+            }
+          }
+        },
+        "violence": {
+          "label": "Violence",
+          "value": 0,
+          "skills": {
+            "athletics": {
+              "label": "Athletics",
+              "value": 0
+            },
+            "guns": {
+              "label": "Guns",
+              "value": 2
+            },
+            "melee": {
+              "label": "Melee",
+              "value": 0
+            },
+            "throw": {
+              "label": "Throw",
+              "value": 0
+            }
+          }
+        }
+      },
+      "selectedRoll":{
+        "selectedStatValue": 0,
+        "selectedSkillValue": 0
       }
     },
     "npc": {
