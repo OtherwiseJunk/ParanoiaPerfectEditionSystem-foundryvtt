@@ -201,29 +201,28 @@ export class ParanoiaActorSheet extends ActorSheet {
    */
   _onRoll(event) {
     event.preventDefault();
-    const element = event.currentTarget;
-    const dataset = element.dataset;
+    const rollData = this.actor.getRollData().selectedRoll;
 
-    // Handle item rolls.
-    if (dataset.rollType) {
-      if (dataset.rollType == 'item') {
-        const itemId = element.closest('.item').dataset.itemId;
-        const item = this.actor.items.get(itemId);
-        if (item) return item.roll();
-      }
-    }
+    let roll = new Roll(`${rollData.selectedStatValue + rollData.selectedSkillValue}d6`)
+    roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      rollMode: game.settings.get('core', 'rollMode'),
+    });
+    this.rollComputerDice();
+  }
 
-    // Handle rolls that supply the formula directly.
-    if (dataset.roll) {
-      let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
-      roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label,
-        rollMode: game.settings.get('core', 'rollMode'),
-      });
-      return roll;
+  async rollComputerDice(){
+    let roll = await new Roll('1d6').roll();
+    let flavor = 'You manage to avoid The Computer\'s notice. This time.';
+
+    if(roll._total == 6){
+      flavor = 'The Computer turns its eye on your troubleshooter...'
     }
+    roll.toMessage({
+      speaker: {alias: 'The Computer'},
+      flavor: flavor,
+      rollMode: game.settings.get('core', 'rollMode'),
+    });
   }
 
 }

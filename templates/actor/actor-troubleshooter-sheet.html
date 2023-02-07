@@ -79,19 +79,61 @@
     <div class="tab features" data-group="primary" data-tab="productivityProfile">
       <section class="grid grid-4col">
         {{#each system.abilities as |ability key|}}
+        {{#if ability.label}}
         <div class="ability flexcol flex-group-center paranoia-ability-container">
-          <div class="stat-header">
+          <div class="paranoia-stat-header">
             <label for="system.abilities.{{key}}.value" class="resource-label flexlarge align-left"
               data-label="{{ability.label}}">{{ability.label}}</label>
           </div>
           <input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number" />
           {{#each ability.skills as |skill skey|}}
-          <label for="system.abilities.skills.{{skey}}.value" class="flexlarge align-left"
+          <label for="system.abilities.skills.{{skey}}.value" class="paranoia-skill-label flexlarge align-left"
           data-label="{{skill.label}}">{{skill.label}}</label>
         <input type="text" name="system.abilities.skills.{{skey}}.value" value="{{skill.value}}" data-dtype="Number" />
           {{/each}}
         </div>
+        {{/if}}
         {{/each}}
+      </section>
+      <section>
+        <div class="ability flexcol flex-group-center paranoia-rolling-container">
+          <span>Roll Some Dice</span>
+          <div>
+            <select name="system.selectedRoll.selectedStatValue" data-dtype="Number">              
+              <option value="{{system.abilities.brains.value}}">Brains</option>
+              <option value="{{system.abilities.chutzpah.value}}">Chutzpah</option>
+              <option value="{{system.abilities.mechanics.value}}">Mechanics</option>
+              <option value="{{system.abilities.violence.value}}">Violence</option>
+            </select>
+            <select name="system.selectedRoll.selectedSkillValue" data-dtype="Number">              
+              {{#with system.abilities.brains.skills}}
+              <option value="{{alphaComplex.value}}">Alpha Complex</option>
+              <option value="{{bureaucracy.value}}">Bureaucracy</option>
+              <option value="{{psychology.value}}">Psychology</option>
+              <option value="{{science.value}}">Science</option>
+              {{/with}}
+              {{#with system.abilities.chutzpah.skills}}
+              <option value="{{bluff.value}}">Bluff</option>
+              <option value="{{charm.value}}">Charm</option>
+              <option value="{{intimidate.value}}">Intimidate</option>
+              <option value="{{stealth.value}}">Stealth</option>
+              {{/with}}
+              {{#with system.abilities.mechanics.skills}}
+              <option value="{{demolitions.value}}">Demolitions</option>
+              <option value="{{engineer.value}}">Engineer</option>
+              <option value="{{operate.value}}">Operate</option>
+              <option value="{{program.value}}">Program</option>
+              {{/with}}
+              {{#with system.abilities.violence.skills}}
+              <option value="{{athletics.value}}">Athletics</option>
+              <option value="{{guns.value}}">Guns</option>
+              <option value="{{melee.value}}">Melee</option>
+              <option value="{{throw.value}}">Throw</option>
+              {{/with}}
+            </select>
+          </div>                    
+          <button class="rollable">Roll some dice!</button>
+        </div>
       </section>
     </div>
 

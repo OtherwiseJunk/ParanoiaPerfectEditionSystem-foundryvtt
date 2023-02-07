@@ -54,13 +54,24 @@
   }
 }
 
-.stat-header {
+.paranoia-stat-header {
   background-color: darkred;
   width: 100%;
   color: white;
 }
 
+.paranoia-skill-label {
+  margin: 3px;
+}
+
 .paranoia-ability-container {
-  outline: 1px;
+  outline: 2px;
   outline-style: groove;
+}
+
+.paranoia-rolling-container {
+  outline: 2px;
+  outline-style: groove;
+  margin: 10px;
+  padding-top: 5px;
 }
