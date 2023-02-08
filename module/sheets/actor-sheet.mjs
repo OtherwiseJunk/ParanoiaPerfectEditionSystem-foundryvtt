@@ -201,14 +201,62 @@ export class ParanoiaActorSheet extends ActorSheet {
    */
   _onRoll(event) {
     event.preventDefault();
-    const rollData = this.actor.getRollData().selectedRoll;
+    const triggeringElement = event.currentTarget;
+    const rollData = this.actor.getRollData();
+    console.log(rollData);
+    console.log(event);
 
-    let roll = new Roll(`${rollData.selectedStatValue + rollData.selectedSkillValue}d6`)
+
+    switch(triggeringElement.id){
+      case 'paranoia-character-roller':
+        let NODE = this.getNODEFromCharacterSheet(triggeringElement, rollData);
+        if(NODE > 0){
+          this.rollNode(NODE);
+        }
+        else if(NODE != 0){
+          this.rollNode(NODE, true);
+        }        
+        else{
+          ChatMessage.create({
+            flavor: `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.`
+          })
+        }
+        this.rollComputerDice();
+        break;
+    }
+    
+  }
+
+  rollNode(NODE, negativeNODE=false){
+    let roll;
+    roll = new Roll(`${NODE}d6`)
+    let flavor = null;
+    if(negativeNODE){
+      roll = new Roll(`${NODE * -1}d6`);
+      flavor = 'Rolling with negative node. Good luck, citizen.';
+    }
+    
     roll.toMessage({
       speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: flavor,
       rollMode: game.settings.get('core', 'rollMode'),
     });
-    this.rollComputerDice();
+  }
+
+  getNODEFromCharacterSheet(htmlElement, rollData){
+    let stat = htmlElement.form[26].value.toLowerCase()
+    let skill = htmlElement.form[27].value
+    let statNODE = parseInt(rollData.abilities[stat].value);
+    let skillNODE;
+
+    Object.values(rollData.abilities).forEach(ability => {
+      
+      if(ability.hasOwnProperty('skills') && ability.skills.hasOwnProperty(skill)){
+        skillNODE = parseInt(ability.skills[skill].value);
+      }
+    });
+
+    return statNODE + skillNODE;
   }
 
   async rollComputerDice(){

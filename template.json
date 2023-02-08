@@ -128,10 +128,6 @@
             }
           }
         }
-      },
-      "selectedRoll":{
-        "selectedStatValue": 0,
-        "selectedSkillValue": 0
       }
     },
     "npc": {

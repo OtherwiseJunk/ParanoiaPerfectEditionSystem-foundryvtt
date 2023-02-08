@@ -6,7 +6,10 @@
       {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
       use both the "grid" and "grid-Ncol" class where "N" can be any number
       from 1 to 12 and will create that number of columns. --}}
-      <div class="resources grid grid-2col">
+      <div class="paranoia-pii-header">
+        <h1>Part 1: Personally Identifiable Information (PII)</h1>
+      </div>
+      <div class="resources grid grid-2col paranoia-PII-container">
 
         {{!-- "flex-group-center" is also defined in the _grid.scss file
         and it will add a small amount of padding, a border, and will
@@ -67,9 +70,9 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     {{!-- Default tab is specified in actor-sheet.mjs --}}
-    <a class="item" data-tab="productivityProfile">Productivity Profile</a>
-    <a class="item" data-tab="wellness">Wellness</a>
-    <a class="item" data-tab="role">Role in Society</a>
+    <a class="item" data-tab="productivityProfile">Part Too: Productivity Profile</a>
+    <a class="item" data-tab="wellness">Third Part: Wellness</a>
+    <a class="item" data-tab="role">Part the Fourth: Role in Society</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -78,61 +81,58 @@
     {{!-- Owned Features Tab --}}
     <div class="tab features" data-group="primary" data-tab="productivityProfile">
       <section class="grid grid-4col">
-        {{#each system.abilities as |ability key|}}
+        {{#each system.abilities as |ability akey|}}
         {{#if ability.label}}
-        <div class="ability flexcol flex-group-center paranoia-ability-container">
-          <div class="paranoia-stat-header">
-            <label for="system.abilities.{{key}}.value" class="resource-label flexlarge align-left"
-              data-label="{{ability.label}}">{{ability.label}}</label>
+          <div class="ability flexcol flex-group-center paranoia-ability-container">
+            <div class="paranoia-stat-header">
+              
+              <label for="system.abilities.{{akey}}.value" class="resource-label flexlarge align-left"
+                data-label="{{ability.label}}">{{ability.label}}</label>
+
+            </div>
+            
+            <input type="text" name="system.abilities.{{akey}}.value" value="{{ability.value}}" data-dtype="Number" />
+            
+            {{#each ability.skills as |skill skey|}}
+          
+              <label for="system.abilities.skills.{{skey}}.value" class="paranoia-skill-label flexlarge align-left"
+                data-label="{{skill.label}}">{{skill.label}}</label>
+
+              <input type="text" name="system.abilities.{{akey}}.skills.{{skey}}.value" value="{{skill.value}}" data-dtype="Number" />
+
+            {{/each}}
           </div>
-          <input type="text" name="system.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number" />
-          {{#each ability.skills as |skill skey|}}
-          <label for="system.abilities.skills.{{skey}}.value" class="paranoia-skill-label flexlarge align-left"
-          data-label="{{skill.label}}">{{skill.label}}</label>
-        <input type="text" name="system.abilities.skills.{{skey}}.value" value="{{skill.value}}" data-dtype="Number" />
-          {{/each}}
-        </div>
         {{/if}}
         {{/each}}
       </section>
+
       <section>
         <div class="ability flexcol flex-group-center paranoia-rolling-container">
-          <span>Roll Some Dice</span>
+
+          <span>Infrared Clearance Dice Roller</span>
+
           <div>
-            <select name="system.selectedRoll.selectedStatValue" data-dtype="Number">              
-              <option value="{{system.abilities.brains.value}}">Brains</option>
-              <option value="{{system.abilities.chutzpah.value}}">Chutzpah</option>
-              <option value="{{system.abilities.mechanics.value}}">Mechanics</option>
-              <option value="{{system.abilities.violence.value}}">Violence</option>
+
+            <select id="paranoia-roll-stat" data-dtype="String">              
+              {{#each system.abilities as |ability akey|}}
+                {{#if ability.label}}
+                  <option vale="{{akey}}">{{ability.label}}</option>
+                {{/if}}
+              {{/each}}
             </select>
-            <select name="system.selectedRoll.selectedSkillValue" data-dtype="Number">              
-              {{#with system.abilities.brains.skills}}
-              <option value="{{alphaComplex.value}}">Alpha Complex</option>
-              <option value="{{bureaucracy.value}}">Bureaucracy</option>
-              <option value="{{psychology.value}}">Psychology</option>
-              <option value="{{science.value}}">Science</option>
-              {{/with}}
-              {{#with system.abilities.chutzpah.skills}}
-              <option value="{{bluff.value}}">Bluff</option>
-              <option value="{{charm.value}}">Charm</option>
-              <option value="{{intimidate.value}}">Intimidate</option>
-              <option value="{{stealth.value}}">Stealth</option>
-              {{/with}}
-              {{#with system.abilities.mechanics.skills}}
-              <option value="{{demolitions.value}}">Demolitions</option>
-              <option value="{{engineer.value}}">Engineer</option>
-              <option value="{{operate.value}}">Operate</option>
-              <option value="{{program.value}}">Program</option>
-              {{/with}}
-              {{#with system.abilities.violence.skills}}
-              <option value="{{athletics.value}}">Athletics</option>
-              <option value="{{guns.value}}">Guns</option>
-              <option value="{{melee.value}}">Melee</option>
-              <option value="{{throw.value}}">Throw</option>
-              {{/with}}
+
+            <select id="paranoia-roll-skill" data-dtype="String">              
+              {{#each system.abilities as |ability|}}
+                {{#each ability.skills as |skill skey|}}
+                  <option value="{{skey}}">{{skill.label}}</option>
+                {{/each}}
+              {{/each}}
             </select>
-          </div>                    
-          <button class="rollable">Roll some dice!</button>
+
+          </div> 
+
+          <button id="paranoia-character-roller" class="rollable">Roll some dice!</button>
+
         </div>
       </section>
     </div>

@@ -72,6 +72,22 @@
 .paranoia-rolling-container {
   outline: 2px;
   outline-style: groove;
-  margin: 10px;
+  margin: 4px;
   padding-top: 5px;
+}
+
+.troubleshooter{
+  background-color: rgb(199, 199, 199);
+}
+
+.paranoia-pii-header{
+  text-align: center;
+  font-style: bold;
+}
+
+.paranoia-PII-container{
+  outline: 2px;
+  outline-style: groove;
+  margin: 1px;
+  padding: 5px;
 }
