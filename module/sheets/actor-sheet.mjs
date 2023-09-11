@@ -11,8 +11,8 @@ export class ParanoiaActorSheet extends ActorSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["paranoia", "sheet", "actor"],
       template: "systems/paranoia/templates/actor/actor-sheet.html",
-      width: 700,
-      height: 685,
+      width: 900,
+      height: 675,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
     });
   }
