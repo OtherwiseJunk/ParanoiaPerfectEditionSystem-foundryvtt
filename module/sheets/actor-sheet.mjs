@@ -11,8 +11,8 @@ export class ParanoiaActorSheet extends ActorSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["paranoia", "sheet", "actor"],
       template: "systems/paranoia/templates/actor/actor-sheet.html",
-      width: 600,
-      height: 600,
+      width: 900,
+      height: 675,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
     });
   }
@@ -31,6 +31,10 @@ export class ParanoiaActorSheet extends ActorSheet {
     // sheets are the actor object, the data object, whether or not it's
     // editable, the items array, and the effects array.
     const context = super.getData();
+
+    context.sheetSettings = {};
+    context.sheetSettings.isLimited = (this.actor.permission == 1) ? true : false;
+    context.sheetSettings.isObserver = (this.actor.permission == 2 || this.actor.compendium?.locked) ? true : false;
 
     // Use a safe clone of the actor data for further operations.
     const actorData = this.actor.toObject(false);
@@ -201,29 +205,98 @@ export class ParanoiaActorSheet extends ActorSheet {
    */
   _onRoll(event) {
     event.preventDefault();
-    const element = event.currentTarget;
-    const dataset = element.dataset;
+    const triggeringElement = event.currentTarget;
+    const rollData = this.actor.getRollData();
+    console.log(rollData);
+    console.log(event);
 
-    // Handle item rolls.
-    if (dataset.rollType) {
-      if (dataset.rollType == 'item') {
-        const itemId = element.closest('.item').dataset.itemId;
-        const item = this.actor.items.get(itemId);
-        if (item) return item.roll();
+
+    switch(triggeringElement.id){
+      case 'paranoia-character-roller':
+        let NODE = parseInt(this.getStatisticsNODEFromSheet(triggeringElement, rollData));
+        let equipmentModifier = parseInt(this.getEquipmentModifierFromSheet(triggeringElement));
+        let initiativeModifier = parseInt(this.getInitiativeModifierFromSheet(triggeringElement));
+
+        NODE += equipmentModifier;
+        NODE -= initiativeModifier;
+
+        if(NODE > 0){
+          this.rollNode(NODE, equipmentModifier, initiativeModifier);
+        }
+        else if(NODE != 0){
+          this.rollNode(NODE, equipmentModifier, initiativeModifier, true);
+        }
+        else{
+          let flavor = `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`
+          flavor += `Rolling with a level ${equipmentModifier} equipment.`
+          if(initiativeModifier != 0){
+            flavor += `<br>Rolling with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
+          }
+          ChatMessage.create({
+            flavor: flavor
+          })
+        }
+        this.rollComputerDice();
+        break;
+    }
+
+  }
+
+  rollNode(NODE, equipmentModifier, initiativeModifier, negativeNODE=false){
+    let roll;
+    roll = new Roll(`${NODE}d6`)
+    let flavor = '';
+    if(negativeNODE){
+      roll = new Roll(`${NODE * -1}d6`);
+      flavor = 'Rolling with negative node. Good luck, citizen.<br>';
+    }
+    flavor += `Rolling with a level ${equipmentModifier} equipment.`
+    if(initiativeModifier != 0){
+      flavor += `<br>Rolling with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
+    }
+    roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: flavor,
+      rollMode: game.settings.get('core', 'rollMode'),
+    });
+  }
+
+  getStatisticsNODEFromSheet(htmlElement, rollData){
+    let stat = htmlElement.form[26].value.toLowerCase()
+    let skill = htmlElement.form[27].value
+    let statNODE = parseInt(rollData.abilities[stat].value);
+    let skillNODE;
+
+    Object.values(rollData.abilities).forEach(ability => {
+
+      if(ability.hasOwnProperty('skills') && ability.skills.hasOwnProperty(skill)){
+        skillNODE = parseInt(ability.skills[skill].value);
       }
-    }
+    });
 
-    // Handle rolls that supply the formula directly.
-    if (dataset.roll) {
-      let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
-      roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label,
-        rollMode: game.settings.get('core', 'rollMode'),
-      });
-      return roll;
+    return statNODE + skillNODE;
+  }
+
+  getEquipmentModifierFromSheet(htmlElement){
+    return htmlElement.form[28].value;
+  }
+
+  getInitiativeModifierFromSheet(htmlElement){
+    return htmlElement.form[29].value;
+  }
+
+  async rollComputerDice(){
+    let roll = await new Roll('1d6').roll();
+    let flavor = 'You manage to avoid The Computer\'s notice. This time.';
+
+    if(roll._total == 6){
+      flavor = 'The Computer turns its eye on your troubleshooter...'
     }
+    roll.toMessage({
+      speaker: {alias: 'The Computer'},
+      flavor: flavor,
+      rollMode: game.settings.get('core', 'rollMode'),
+    });
   }
 
 }

@@ -7,9 +7,10 @@
   return loadTemplates([
 
     // Actor partials.
-    "systems/paranoia/templates/actor/parts/actor-features.html",
-    "systems/paranoia/templates/actor/parts/actor-items.html",
-    "systems/paranoia/templates/actor/parts/actor-spells.html",
-    "systems/paranoia/templates/actor/parts/actor-effects.html",
+    "systems/paranoia/templates/actor/parts/actor-societal-role.html",
+    "systems/paranoia/templates/actor/parts/actor-productivity-profile.html",
+    "systems/paranoia/templates/actor/parts/actor-dice-roller.html",
+    "systems/paranoia/templates/actor/parts/actor-wellness-tab.html",
+    "systems/paranoia/templates/actor/parts/actor-naughty-side.html",
   ]);
 };

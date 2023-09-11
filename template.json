@@ -1,72 +1,187 @@
 {
   "Actor": {
-    "types": ["character", "npc"],
+    "types": [
+      "troubleshooter",
+      "npc"
+    ],
     "templates": {
       "base": {
         "health": {
-          "value": 10,
+          "value": 4,
           "min": 0,
-          "max": 10
+          "max": 4
         },
-        "power": {
+        "moxie": {
           "value": 5,
           "min": 0,
           "max": 5
-        },
-        "biography": ""
+        }
       }
     },
-    "character": {
-      "templates": ["base"],
+    "troubleshooter": {
+      "templates": [
+        "base"
+      ],
       "attributes": {
-        "level": {
-          "value": 1
+        "name": {
+          "value": ""
+        },
+        "team": {
+          "value": ""
+        },
+        "mbd": {
+          "value": ""
+        },
+        "serviceGroup": {
+          "value": ""
+        },
+        "treasonButton": {
+          "value": ""
+        },
+        "violenceButton": {
+          "value": ""
         }
       },
       "abilities": {
-        "str": {
-          "value": 10
+        "brains": {
+          "label": "Brains",
+          "value": 0,
+          "skills": {
+            "alphaComplex": {
+              "label": "Alpha Complex",
+              "value": 0
+            },
+            "bureaucracy": {
+              "label": "Bureaucracy",
+              "value": 0
+            },
+            "psychology": {
+              "label": "Psychology",
+              "value": 0
+            },
+            "science": {
+              "label": "Science",
+              "value": 0
+            }
+          }
         },
-        "dex": {
-          "value": 10
+        "chutzpah": {
+          "label": "Chutzpah",
+          "value": 0,
+          "skills": {
+            "bluff": {
+              "label": "Bluff",
+              "value": 0
+            },
+            "charm": {
+              "label": "Charm",
+              "value": 0
+            },
+            "intimidate": {
+              "label": "Intimidate",
+              "value": 0
+            },
+            "stealth": {
+              "label": "Stealth",
+              "value": 0
+            }
+          }
         },
-        "con": {
-          "value": 10
+        "mechanics": {
+          "label": "Mechanics",
+          "value": 0,
+          "skills": {
+            "demolitions": {
+              "label": "Demolitions",
+              "value": 0
+            },
+            "engineer": {
+              "label": "Engineer",
+              "value": 0
+            },
+            "operate": {
+              "label": "Operate",
+              "value": 0
+            },
+            "program": {
+              "label": "Program",
+              "value": 0
+            }
+          }
         },
-        "int": {
-          "value": 10
-        },
-        "wis": {
-          "value": 10
-        },
-        "cha": {
-          "value": 10
+        "violence": {
+          "label": "Violence",
+          "value": 0,
+          "skills": {
+            "athletics": {
+              "label": "Athletics",
+              "value": 0
+            },
+            "guns": {
+              "label": "Guns",
+              "value": 2
+            },
+            "melee": {
+              "label": "Melee",
+              "value": 0
+            },
+            "throw": {
+              "label": "Throw",
+              "value": 0
+            }
+          }
         }
-      }
+      },
+      "woundFlags": [
+        "Fine",
+        "Hurt",
+        "Injured",
+        "Maimed",
+        "Dead"
+      ],
+      "loyaltyFlags": [
+        "Loyal",
+        "Greylisted",
+        "Restricted",
+        "Citize-of-Interest",
+        "Wanted"
+      ]
     },
     "npc": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "cr": 0
     }
   },
   "Item": {
-    "types": ["item", "feature", "spell"],
+    "types": [
+      "item",
+      "feature",
+      "spell"
+    ],
     "templates": {
       "base": {
         "description": ""
       }
     },
     "item": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "quantity": 1,
       "weight": 0,
       "formula": "d20 + @str.mod + ceil(@lvl / 2)"
     },
     "feature": {
-      "templates": ["base"]
+      "templates": [
+        "base"
+      ]
     },
     "spell": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "spellLevel": 1
     }
   }
