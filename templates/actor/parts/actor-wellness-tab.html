@@ -1,0 +1,57 @@
+<section class="grid grid-3col">
+
+    <section class="paranoia-container">
+
+        <div class="paranoia-header">
+
+            <label class="resource-label center-align" for="paranoia-hurtometer">Wounds</label>
+
+        </div>
+
+        <div id="paranoia-hurtometer paranoia-checkbox-list" class="flex">
+
+            {{#each system.woundFlags as |wound|}}
+            <div class="paranoia-checkbox-combo">
+                <label for="fine" class="paranoia-checkbox-label flex-left">{{wound}}</label>
+                <input class="paranoia-hurtometer-value flex-right" type="checkbox" id="fine"><br>
+            </div>
+            {{/each}}
+
+        </div>
+
+    </section>
+
+    <section class="paranoia-container">
+
+        <div class="paranoia-header">
+            <label class="resource-label center-align" for="paranoia-flags">Flags</label>
+        </div>
+
+        <div id="paranoia-flags" class="flex paranoia-checkbox-list">
+
+            {{#each system.loyaltyFlags as |loyalty|}}
+            <div class="paranoia-checkbox-combo">
+
+                <label for="loyal" class="paranoia-checkbox-label flex-left">{{loyalty}}</label>
+                <input class="paranoia-checkbox-value flex-right" type="checkbox" id="loyal"><br>
+
+            </div>
+            {{/each}}
+
+        </div>
+    </section>
+    <section>
+        <section class="paranoia-container">
+            <div class="paranoia-header">
+                <label class="resource-label center-align" for="paranoia-xp-points">XP Points</label>
+            </div>
+            <textarea class="paranoia-xp-points paranoia-wellness-input" type="number"></textarea>
+        </section>
+        <section class="paranoia-container">
+            <div class="paranoia-header">
+                <label class="resource-label center-align" for="paranoia-moxie">Moxie</label>
+            </div>
+            <textarea class="paranoia-moxie paranoia-wellness-input" type="number"></textarea>
+        </section>
+    </section>
+</section>

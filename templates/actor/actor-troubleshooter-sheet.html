@@ -9,7 +9,7 @@
       <div class="paranoia-pii-header">
         <h1>Part 1: Personally Identifiable Information (PII)</h1>
       </div>
-      <div class="resources grid grid-2col paranoia-PII-container">
+      <div class="resources grid grid-2col paranoia-container paranoia-pii">
 
         {{!-- "flex-group-center" is also defined in the _grid.scss file
         and it will add a small amount of padding, a border, and will
@@ -73,80 +73,32 @@
     <a class="item" data-tab="productivityProfile">Part Too: Productivity Profile</a>
     <a class="item" data-tab="wellness">Third Part: Wellness</a>
     <a class="item" data-tab="role">Part the Fourth: Role in Society</a>
+    {{#unless (or sheetSettings.isLimited sheetSettings.isObserver)}}
+    <a class="item" data-tab="naughty">Back of the Sheet: the Naughty Side</a>
+    {{/unless}}
   </nav>
 
   {{!-- Sheet Body --}}
   <section class="sheet-body">
 
-    {{!-- Owned Features Tab --}}
-    <div class="tab features" data-group="primary" data-tab="productivityProfile">
-      <section class="grid grid-4col">
-        {{#each system.abilities as |ability akey|}}
-        {{#if ability.label}}
-          <div class="ability flexcol flex-group-center paranoia-ability-container">
-            <div class="paranoia-stat-header">
-              
-              <label for="system.abilities.{{akey}}.value" class="resource-label flexlarge align-left"
-                data-label="{{ability.label}}">{{ability.label}}</label>
-
-            </div>
-            
-            <input type="text" name="system.abilities.{{akey}}.value" value="{{ability.value}}" data-dtype="Number" />
-            
-            {{#each ability.skills as |skill skey|}}
-          
-              <label for="system.abilities.skills.{{skey}}.value" class="paranoia-skill-label flexlarge align-left"
-                data-label="{{skill.label}}">{{skill.label}}</label>
-
-              <input type="text" name="system.abilities.{{akey}}.skills.{{skey}}.value" value="{{skill.value}}" data-dtype="Number" />
-
-            {{/each}}
-          </div>
-        {{/if}}
-        {{/each}}
-      </section>
-
-      <section>
-        <div class="ability flexcol flex-group-center paranoia-rolling-container">
-
-          <span>Infrared Clearance Dice Roller</span>
-
-          <div>
-
-            <select id="paranoia-roll-stat" data-dtype="String">              
-              {{#each system.abilities as |ability akey|}}
-                {{#if ability.label}}
-                  <option vale="{{akey}}">{{ability.label}}</option>
-                {{/if}}
-              {{/each}}
-            </select>
-
-            <select id="paranoia-roll-skill" data-dtype="String">              
-              {{#each system.abilities as |ability|}}
-                {{#each ability.skills as |skill skey|}}
-                  <option value="{{skey}}">{{skill.label}}</option>
-                {{/each}}
-              {{/each}}
-            </select>
-
-          </div> 
-
-          <button id="paranoia-character-roller" class="rollable">Roll some dice!</button>
-
-        </div>
-      </section>
+    {{!-- Part Too: Productivity Profile Tab --}}
+    <div class="tab paranoia-productivity-profile" data-group="primary" data-tab="productivityProfile">
+      {{> "systems/paranoia/templates/actor/parts/actor-productivity-profile.html"}}
     </div>
 
-    {{!-- Biography Tab --}}
-    <div class="tab biography" data-group="primary" data-tab="wellness">
-      {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actor's roll data to
-      the rollData property. --}}
-      {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
+    {{!-- Third Part: Wellness Tab --}}
+    <div class="tab paranoia-wellness" data-group="primary" data-tab="wellness">
+      {{> "systems/paranoia/templates/actor/parts/actor-wellness-tab.html"}}
     </div>
 
-    {{!-- Owned Items Tab --}}
-    <div class="tab items" data-group="primary" data-tab="role">
+    {{!-- Part the Fourth: Role In Society --}}
+    <div class="tab paranoia-role" data-group="primary" data-tab="role">
       {{> "systems/paranoia/templates/actor/parts/actor-items.html"}}
+    </div>
+
+    {{!-- Back of the Sheet: The Naughty Stuff --}}
+    <div class="tab paranoia-role" data-group="primary" data-tab="naughty">
+      {{> "systems/paranoia/templates/actor/parts/actor-naughty-side.html"}}
     </div>
 
   </section>

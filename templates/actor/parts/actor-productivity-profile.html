@@ -1,0 +1,28 @@
+<section class="grid grid-4col">
+    {{#each system.abilities as |ability akey|}}
+    {{#if ability.label}}
+    <div class="ability flexcol flex-group-center paranoia-container">
+        <div class="paranoia-header">
+
+            <label for="system.abilities.{{akey}}.value" class="resource-label flexlarge align-left"
+                data-label="{{ability.label}}">{{ability.label}}</label>
+
+        </div>
+
+        <input type="text" name="system.abilities.{{akey}}.value" value="{{ability.value}}" data-dtype="Number" />
+
+        {{#each ability.skills as |skill skey|}}
+
+        <label for="system.abilities.skills.{{skey}}.value" class="paranoia-skill-label flexlarge align-left"
+            data-label="{{skill.label}}">{{skill.label}}</label>
+
+        <input type="text" name="system.abilities.{{akey}}.skills.{{skey}}.value" value="{{skill.value}}"
+            data-dtype="Number" />
+
+        {{/each}}
+    </div>
+    {{/if}}
+    {{/each}}
+</section>
+
+{{> "systems/paranoia/templates/actor/parts/actor-dice-roller.html"}}

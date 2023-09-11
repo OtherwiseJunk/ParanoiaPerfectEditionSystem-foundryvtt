@@ -1,6 +1,9 @@
 {
   "Actor": {
-    "types": [ "troubleshooter","npc"],
+    "types": [
+      "troubleshooter",
+      "npc"
+    ],
     "templates": {
       "base": {
         "health": {
@@ -12,7 +15,7 @@
           "value": 5,
           "min": 0,
           "max": 5
-        }        
+        }
       }
     },
     "troubleshooter": {
@@ -128,7 +131,21 @@
             }
           }
         }
-      }
+      },
+      "woundFlags": [
+        "Fine",
+        "Hurt",
+        "Injured",
+        "Maimed",
+        "Dead"
+      ],
+      "loyaltyFlags": [
+        "Loyal",
+        "Greylisted",
+        "Restricted",
+        "Citize-of-Interest",
+        "Wanted"
+      ]
     },
     "npc": {
       "templates": [

@@ -26,6 +26,7 @@
     padding: 0px;
     margin: 5px 0;
     border-bottom: 0;
+
     input {
       width: 100%;
       height: 100%;
@@ -54,40 +55,63 @@
   }
 }
 
-.paranoia-stat-header {
+.paranoia-checkbox-combo {
+  display: grid;
+  grid-template-columns: auto 30px;
+  justify-content: space-between;
+}
+
+.paranoia-checkbox-value {
+  justify-content: end;
+}
+
+.paranoia-checkbox-label {
+  justify-content: start;
+  padding-left: 2px;
+}
+
+.paranoia-header {
   background-color: darkred;
   width: 100%;
   color: white;
+  text-align: center;
 }
 
 .paranoia-skill-label {
   margin: 3px;
 }
 
-.paranoia-ability-container {
-  outline: 2px;
-  outline-style: groove;
-}
-
-.paranoia-rolling-container {
-  outline: 2px;
-  outline-style: groove;
+.paranoia-rolling {
   margin: 4px;
   padding-top: 5px;
 }
 
-.troubleshooter{
+.troubleshooter {
   background-color: rgb(199, 199, 199);
 }
 
-.paranoia-pii-header{
+.paranoia-pii-header {
   text-align: center;
   font-style: bold;
 }
 
-.paranoia-PII-container{
+.paranoia-container {
   outline: 2px;
   outline-style: groove;
+}
+
+.paranoia-pii {
   margin: 1px;
   padding: 5px;
+}
+
+.paranoia-wellness-input {
+  height: 1.2em;
+  text-align: center;
+  font-size: 48px;
+}
+
+.paranoia-roll-label {
+  text-align: center;
+  padding-right: 2px;
 }

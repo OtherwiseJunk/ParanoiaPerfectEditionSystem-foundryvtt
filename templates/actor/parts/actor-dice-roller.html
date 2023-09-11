@@ -1,0 +1,53 @@
+<section>
+    <div class="ability flexcol flex-group-center paranoia-container paranoia-rolling">
+
+        <span>Infrared Clearance Dice Roller</span>
+
+        <div class="paranoia-roll-selector">
+            <label class="resource-label paranoia-roll-label">Skill and Attribute: </label>
+            <select id="paranoia-roll-stat" class="paranoia-roll-selector" data-dtype="String">
+                {{#each system.abilities as |ability akey|}}
+                {{#if ability.label}}
+                <option vale="{{akey}}">{{ability.label}}</option>
+                {{/if}}
+                {{/each}}
+            </select>
+
+            <select id="paranoia-roll-skill" class="paranoia-roll-selector" data-dtype="String">
+                {{#each system.abilities as |ability|}}
+                {{#each ability.skills as |skill skey|}}
+                <option value="{{skey}}">{{skill.label}}</option>
+                {{/each}}
+                {{/each}}
+            </select>
+
+        </div>
+
+        <div class="paranoia-roll-selector">
+            <label class="resource-label paranoia-roll-label">Equipment Modifier: </label>
+            <select id="paranoia-roll-equipment" class="paranoia-roll-selector" data-dtype="Number">
+                <option value=0>0</option>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+            </select>
+        </div>
+
+        <div class="paranoia-roll-selector">
+            <label class="resource-label paranoia-roll-label">Initiative Jumping Modifier: </label>
+            <select id="paranoia-roll-initiative" class="paranoia-roll-selector" data-dtype="Number">
+                <option value=0>0</option>
+                <option value=1>-1</option>
+                <option value=2>-2</option>
+                <option value=3>-3</option>
+                <option value=4>-4</option>
+                <option value=5>-5</option>
+            </select>
+        </div>
+
+        <button id="paranoia-character-roller" class="rollable">Roll some dice!</button>
+
+    </div>
+</section>
