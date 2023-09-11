@@ -1,5 +1,4 @@
 <form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
-
   {{!-- Sheet Header --}}
   <header class="sheet-header">
     <div class="header-fields">
@@ -16,10 +15,9 @@
         center all of its child elements content and text. --}}
 
         <div class="resource flex-group-center">
-          <label for="system.attributes.name.value" class="resource-label">Name</label>
+          <label for="name" class="resource-label">Name</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="system.attributes.name.value" value="{{system.attributes.name.value}}"
-              data-dtype="String" />
+            <input type="text" name="name" value="{{actor.name}}" data-dtype="String" />
           </div>
         </div>
 
