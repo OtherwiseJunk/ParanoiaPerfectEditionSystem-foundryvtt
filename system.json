@@ -32,7 +32,7 @@
   "gridDistance": 5,
   "gridUnits": "ft",
   "primaryTokenAttribute": "health",
-  "secondaryTokenAttribute": "power",
+  "secondaryTokenAttribute": "moxie",
   "url": "",
   "manifest": "",
   "download": "",

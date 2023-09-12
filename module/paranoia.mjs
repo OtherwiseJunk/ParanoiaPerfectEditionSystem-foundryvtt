@@ -63,6 +63,10 @@ Handlebars.registerHelper('concat', function() {
   return outStr;
 });
 
+Handlebars.registerHelper('add', function(a, b) {
+  return a + b;
+});
+
 Handlebars.registerHelper('toLowerCase', function(str) {
   return str.toLowerCase();
 });
