@@ -160,6 +160,11 @@ export class ParanoiaActorSheet extends ActorSheet {
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
 
+    //Paranoia-Specific Listeners
+    html.find('.paranoia-rolling-atribute').change((event) =>{
+      let attributeElement = event.delegateTarget;
+      this.checkAttributeValue(attributeElement);
+    });
     // Drag events for macros.
     if (this.actor.isOwner) {
       let handler = ev => this._onDragStart(ev);
@@ -213,22 +218,27 @@ export class ParanoiaActorSheet extends ActorSheet {
 
     switch(triggeringElement.id){
       case 'paranoia-character-roller':
+        let hurtLevel = this.getHurtLevelFromSheet(triggeringElement);
         let NODE = parseInt(this.getStatisticsNODEFromSheet(triggeringElement, rollData));
         let equipmentModifier = parseInt(this.getEquipmentModifierFromSheet(triggeringElement));
         let initiativeModifier = parseInt(this.getInitiativeModifierFromSheet(triggeringElement));
 
         NODE += equipmentModifier;
         NODE -= initiativeModifier;
+        NODE -= hurtLevel;
 
         if(NODE > 0){
-          this.rollNode(NODE, equipmentModifier, initiativeModifier);
+          this.rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel);
         }
         else if(NODE != 0){
-          this.rollNode(NODE, equipmentModifier, initiativeModifier, true);
+          this.rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel, true);
         }
         else{
           let flavor = `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`
           flavor += `Rolling with a level ${equipmentModifier} equipment.`
+          if(hurtLevel != 0){
+            flavor += `<br>Rolling with ${hurtLevel} less NODE due to current wounds`
+          }
           if(initiativeModifier != 0){
             flavor += `<br>Rolling with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
           }
@@ -236,13 +246,14 @@ export class ParanoiaActorSheet extends ActorSheet {
             flavor: flavor
           })
         }
-        this.rollComputerDice();
+        let flagLevel = this.getFlagLevelFromSheet(triggeringElement);
+        this.rollComputerDice(flagLevel);
         break;
     }
 
   }
 
-  rollNode(NODE, equipmentModifier, initiativeModifier, negativeNODE=false){
+  rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel, negativeNODE=false){
     let roll;
     roll = new Roll(`${NODE}d6`)
     let flavor = '';
@@ -251,6 +262,9 @@ export class ParanoiaActorSheet extends ActorSheet {
       flavor = 'Rolling with negative node. Good luck, citizen.<br>';
     }
     flavor += `Rolling with a level ${equipmentModifier} equipment.`
+    if(hurtLevel != 0){
+      flavor += `<br>Rolling with ${hurtLevel} less NODE due to current wounds`
+    }
     if(initiativeModifier != 0){
       flavor += `<br>Rolling with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
     }
@@ -285,18 +299,81 @@ export class ParanoiaActorSheet extends ActorSheet {
     return htmlElement.form[29].value;
   }
 
-  async rollComputerDice(){
+  getHurtLevelFromSheet(htmlElement){
+    if(htmlElement.form[35].checked){
+      return 4;
+    }
+    else if(htmlElement.form[34].checked){
+      return 3;
+    }
+    else if(htmlElement.form[33].checked){
+      return 2;
+    }
+    else if(htmlElement.form[32].checked){
+      return 1;
+    }
+    return 0;
+  }
+
+  getFlagLevelFromSheet(htmlElement){
+    if(htmlElement.form[40].checked){
+      return 4;
+    }
+    else if(htmlElement.form[39].checked){
+      return 3;
+    }
+    else if(htmlElement.form[38].checked){
+      return 2;
+    }
+    else if(htmlElement.form[37].checked){
+      return 1;
+    }
+    return 0;
+  }
+
+  checkAttributeValue(sender){
+    const min = -5
+    const max = 5
+    let value = parseInt(sender.value);
+    console.log(`Detected value ${value}`);
+    if(isNaN(value)){
+      console.log('detected NaN');
+      sender.value = 0;
+    }
+    else if (value>max) {
+        sender.value = max;
+    } else if (value<min) {
+        sender.value = min;
+    }
+  }
+
+  async rollComputerDice(flagLevel){
     let roll = await new Roll('1d6').roll();
     let flavor = 'You manage to avoid The Computer\'s notice. This time.';
-
-    if(roll._total == 6){
-      flavor = 'The Computer turns its eye on your troubleshooter...'
+    let content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/Computer_Eye.webp\"/>";
+    if(roll._total >= (6-flagLevel) ){
+      flavor = `The Computer turns its eye on your troubleshooter... (Rolled a ${roll._total} as a ${this.flagLevelToDescription(flagLevel)}).`
+      content = "<img style=\"animation: tilt-shaking 0.15s infinite;\" src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/Computer_Eye.webp\"/>";
     }
     roll.toMessage({
       speaker: {alias: 'The Computer'},
       flavor: flavor,
       rollMode: game.settings.get('core', 'rollMode'),
+      content: content
     });
   }
-
+  flagLevelToDescription(flagLevel){
+    switch(flagLevel){
+      case 4:
+        return "Wanted Enemy of The Computer and Alpha Complex"
+      case 3:
+        return "Citizen-Of-Interest"
+      case 2:
+        return "Restricted Citizen"
+      case 1:
+        return "Greylisted Citizen"
+      case 0:
+        return "Loyal Citizen of Alpha Complex"
+    }
+  }
 }

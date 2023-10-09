@@ -12,8 +12,8 @@
 
             {{#each system.woundFlags as |wound|}}
             <div class="paranoia-checkbox-combo">
-                <label for="fine" class="paranoia-checkbox-label flex-left">{{wound}}</label>
-                <input class="paranoia-hurtometer-value flex-right" type="checkbox" id="fine"><br>
+                <label for="hurt-{{@index}}" class="paranoia-checkbox-label flex-left">{{wound}}</label>
+                <input class="paranoia-hurtometer-value flex-right" type="checkbox" id="hurt-{{@index}}"><br>
             </div>
             {{/each}}
 
@@ -32,8 +32,8 @@
             {{#each system.loyaltyFlags as |loyalty|}}
             <div class="paranoia-checkbox-combo">
 
-                <label for="loyal" class="paranoia-checkbox-label flex-left">{{loyalty}}</label>
-                <input class="paranoia-checkbox-value flex-right" type="checkbox" id="loyal"><br>
+                <label for="flag-{{@index}}" class="paranoia-checkbox-label flex-left">{{loyalty}}</label>
+                <input class="paranoia-checkbox-value flex-right" type="checkbox" id="flag-{{@index}}"><br>
 
             </div>
             {{/each}}

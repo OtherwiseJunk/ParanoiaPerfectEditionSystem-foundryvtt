@@ -71,6 +71,7 @@
     <a class="item" data-tab="productivityProfile">Part Too: Productivity Profile</a>
     <a class="item" data-tab="wellness">Third Part: Wellness</a>
     <a class="item" data-tab="role">Part the Fourth: Role in Society</a>
+    <a class="item" data-tab="foundry">Part E: Foundry Data</a>
     {{#unless (or sheetSettings.isLimited sheetSettings.isObserver)}}
     <a class="item" data-tab="naughty">Back of the Sheet: the Naughty Side</a>
     {{/unless}}
@@ -92,6 +93,11 @@
     {{!-- Part the Fourth: Role In Society --}}
     <div class="tab paranoia-role" data-group="primary" data-tab="role">
       {{> "systems/paranoia/templates/actor/parts/actor-societal-role.html"}}
+    </div>
+
+    {{!-- Part E: Foundry Information 👁️ --}}
+    <div class="tab paranoia-role" data-group="primary" data-tab="foundry">
+      {{> "systems/paranoia/templates/actor/parts/actor-foundry-data.html"}}
     </div>
 
     {{!-- Back of the Sheet: The Naughty Stuff --}}

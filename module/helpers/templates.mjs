@@ -12,5 +12,6 @@
     "systems/paranoia/templates/actor/parts/actor-dice-roller.html",
     "systems/paranoia/templates/actor/parts/actor-wellness-tab.html",
     "systems/paranoia/templates/actor/parts/actor-naughty-side.html",
+    "systems/paranoia/templates/actor/parts/actor-foundry-data.html",
   ]);
 };
