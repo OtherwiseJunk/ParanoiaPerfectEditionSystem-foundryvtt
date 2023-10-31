@@ -12,7 +12,7 @@
           "max": 4
         },
         "flag":{
-          "value": 4,
+          "value": 0,
           "min": 0,
           "max": 4
         },
@@ -137,20 +137,20 @@
           }
         }
       },
-      "woundFlags": [
-        "Fine",
-        "Hurt",
-        "Injured",
-        "Maimed",
-        "Dead"
-      ],
-      "loyaltyFlags": [
-        "Loyal",
-        "Greylisted",
-        "Restricted",
-        "Citizen-of-Interest",
-        "Wanted"
-      ]
+      "xp": "",
+      "missionObjectives": "",
+      "assignedGear": "",
+      "secrets":{
+        "aliases": "",
+        "secretObjective": "",
+        "serviceGroupFavors": "",
+        "secretSociety": "",
+        "mutantPower": "",
+        "secretSocietyFavors": "",
+        "treasonousGear":"",
+        "evidence":"",
+        "notes": ""
+      }
     },
     "npc": {
       "templates": [

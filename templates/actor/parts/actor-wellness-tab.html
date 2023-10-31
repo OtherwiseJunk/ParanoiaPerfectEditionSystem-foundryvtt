@@ -1,57 +1,48 @@
-<section class="grid grid-3col">
+<section class="grid grid-2col">
 
     <section class="paranoia-container">
-
         <div class="paranoia-header">
 
             <label class="resource-label center-align" for="paranoia-hurtometer">Wounds</label>
 
         </div>
 
-        <div id="paranoia-hurtometer paranoia-checkbox-list" class="flex">
-
-            {{#each system.woundFlags as |wound|}}
-            <div class="paranoia-checkbox-combo">
-                <label for="hurt-{{@index}}" class="paranoia-checkbox-label flex-left">{{wound}}</label>
-                <input class="paranoia-hurtometer-value flex-right" type="checkbox" id="hurt-{{@index}}"><br>
-            </div>
-            {{/each}}
-
+        <div id="paranoia-hurtometer" class="center grid grid-1col">
+            <label class="paranoia-wellness-status-label" for="system.health.value">{{lookup healthFlags
+                system.health.value}}</label>
+            <textarea class="paranoia-wellness-input paranoia-health-indicator" name="system.health.value"
+                data-dtype="Number">{{system.health.value}}</textarea>
+            {{log system.health.value}}
         </div>
 
     </section>
 
-    <section class="paranoia-container">
+    <section class=" paranoia-container">
 
         <div class="paranoia-header">
             <label class="resource-label center-align" for="paranoia-flags">Flags</label>
         </div>
 
-        <div id="paranoia-flags" class="flex paranoia-checkbox-list">
-
-            {{#each system.loyaltyFlags as |loyalty|}}
-            <div class="paranoia-checkbox-combo">
-
-                <label for="flag-{{@index}}" class="paranoia-checkbox-label flex-left">{{loyalty}}</label>
-                <input class="paranoia-checkbox-value flex-right" type="checkbox" id="flag-{{@index}}"><br>
-
-            </div>
-            {{/each}}
-
+        <div id="paranoia-flags" class="grid grid-1col">
+            <label class="paranoia-wellness-status-label" for="system.flag.value">{{lookup wantedFlags
+                system.flag.value}}</label>
+            <textarea class="paranoia-wellness-input paranoia-flag-indicator" name="system.flag.value"
+                data-dtype="Number">{{system.flag.value}}</textarea>
         </div>
+        {{log system.flag.value}}
     </section>
-    <section>
-        <section class="paranoia-container">
-            <div class="paranoia-header">
-                <label class="resource-label center-align" for="paranoia-xp-points">XP Points</label>
-            </div>
-            <textarea class="paranoia-xp-points paranoia-wellness-input" type="number"></textarea>
-        </section>
-        <section class="paranoia-container">
-            <div class="paranoia-header">
-                <label class="resource-label center-align" for="paranoia-moxie">Moxie</label>
-            </div>
-            <textarea class="paranoia-moxie paranoia-wellness-input" type="number"></textarea>
-        </section>
+    <section class="paranoia-container">
+        <div class="paranoia-header">
+            <label class="resource-label center-align" for="system.xp">XP Points</label>
+        </div>
+        <textarea class="paranoia-xp-points paranoia-wellness-input" name="system.xp"
+            type="number">{{system.xp}}</textarea>
+    </section>
+    <section class="paranoia-container">
+        <div class="paranoia-header">
+            <label class="resource-label center-align" for="system.moxie">Moxie</label>
+        </div>
+        <textarea class="paranoia-moxie paranoia-wellness-input" name="system.moxie.value"
+            data-dtype="Number">{{system.moxie.value}}</textarea>
     </section>
 </section>

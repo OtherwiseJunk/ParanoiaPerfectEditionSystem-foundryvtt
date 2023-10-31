@@ -36,6 +36,21 @@ export class ParanoiaActorSheet extends ActorSheet {
     context.sheetSettings.isLimited = (this.actor.permission == 1) ? true : false;
     context.sheetSettings.isObserver = (this.actor.permission == 2 || this.actor.compendium?.locked) ? true : false;
 
+    context.healthFlags = {
+      4: "Fine",
+      3: "Hurt",
+      2: "Injured",
+      1: "Maimed",
+      0: "Dead"
+    }
+    context.wantedFlags = {
+      0:"Loyal",
+      1:"Greylisted",
+      2:"Restricted",
+      3:"Citizen-Of-Interest",
+      4:"Wanted"
+    }
+
     // Use a safe clone of the actor data for further operations.
     const actorData = this.actor.toObject(false);
 
@@ -165,6 +180,16 @@ export class ParanoiaActorSheet extends ActorSheet {
       let attributeElement = event.delegateTarget;
       this.checkAttributeValue(attributeElement);
     });
+    html.find('.paranoia-health-indicator').change((event) =>{
+      const eventValue = parseInt(event.target.value);
+      const actorHealth = this.actor.system.health;
+      this.validateWellnessChange(eventValue, event.target, actorHealth);
+    });
+    html.find('.paranoia-flag-indicator').change((event) =>{
+      const eventValue = parseInt(event.target.value);
+      const actorFlag = this.actor.system.flag;
+      this.validateWellnessChange(eventValue, event.target, actorFlag);
+    });
     // Drag events for macros.
     if (this.actor.isOwner) {
       let handler = ev => this._onDragStart(ev);
@@ -212,13 +237,11 @@ export class ParanoiaActorSheet extends ActorSheet {
     event.preventDefault();
     const triggeringElement = event.currentTarget;
     const rollData = this.actor.getRollData();
-    console.log(rollData);
-    console.log(event);
 
 
     switch(triggeringElement.id){
       case 'paranoia-character-roller':
-        let hurtLevel = this.getHurtLevelFromSheet(triggeringElement);
+        let hurtLevel = (4 - this.actor.system.health.value);
         let NODE = parseInt(this.getStatisticsNODEFromSheet(triggeringElement, rollData));
         let equipmentModifier = parseInt(this.getEquipmentModifierFromSheet(triggeringElement));
         let initiativeModifier = parseInt(this.getInitiativeModifierFromSheet(triggeringElement));
@@ -246,7 +269,7 @@ export class ParanoiaActorSheet extends ActorSheet {
             flavor: flavor
           })
         }
-        let flagLevel = this.getFlagLevelFromSheet(triggeringElement);
+        const flagLevel = this.actor.system.flag.value;
         this.rollComputerDice(flagLevel);
         break;
     }
@@ -299,38 +322,6 @@ export class ParanoiaActorSheet extends ActorSheet {
     return htmlElement.form[29].value;
   }
 
-  getHurtLevelFromSheet(htmlElement){
-    if(htmlElement.form[35].checked){
-      return 4;
-    }
-    else if(htmlElement.form[34].checked){
-      return 3;
-    }
-    else if(htmlElement.form[33].checked){
-      return 2;
-    }
-    else if(htmlElement.form[32].checked){
-      return 1;
-    }
-    return 0;
-  }
-
-  getFlagLevelFromSheet(htmlElement){
-    if(htmlElement.form[40].checked){
-      return 4;
-    }
-    else if(htmlElement.form[39].checked){
-      return 3;
-    }
-    else if(htmlElement.form[38].checked){
-      return 2;
-    }
-    else if(htmlElement.form[37].checked){
-      return 1;
-    }
-    return 0;
-  }
-
   checkAttributeValue(sender){
     const min = -5
     const max = 5
@@ -362,6 +353,7 @@ export class ParanoiaActorSheet extends ActorSheet {
       content: content
     });
   }
+
   flagLevelToDescription(flagLevel){
     switch(flagLevel){
       case 4:
@@ -374,6 +366,18 @@ export class ParanoiaActorSheet extends ActorSheet {
         return "Greylisted Citizen"
       case 0:
         return "Loyal Citizen of Alpha Complex"
+    }
+  }
+
+  validateWellnessChange(eventValue, eventTarget, actorValue){
+    if(isNaN(eventValue)){
+      eventTarget.value = actorValue.value;
+    }
+    if(eventValue > actorValue.max){
+      eventTarget.value = actorValue.max;
+    }
+    if(eventValue < actorValue.min){
+      eventTarget.value = actorValue.min;
     }
   }
 }

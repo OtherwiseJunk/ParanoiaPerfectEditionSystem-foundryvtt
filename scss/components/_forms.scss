@@ -98,6 +98,7 @@
 .paranoia-container {
   outline: 2px;
   outline-style: groove;
+  margin: 2px;
 }
 
 .paranoia-pii {
@@ -122,6 +123,29 @@
 
 .paranoia-profile-img {
   justify-items: center;
+}
+
+.paranoia-hurtometer {
+  justify-content: center;
+}
+
+.paranoia-wellness-status-label {
+  font-size: x-large;
+  font-weight: bolder;
+  justify-self: center;
+}
+
+.paranoia-checkbox-analog {
+  max-width: fit-content;
+  font-size: large;
+}
+
+.paranoia-hurtometer {
+  justify-content: center;
+}
+
+.paranoia-flags {
+  justify-content: center;
 }
 
 @keyframes tilt-shaking {
