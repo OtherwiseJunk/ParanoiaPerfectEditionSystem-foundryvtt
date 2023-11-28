@@ -2,6 +2,7 @@
 
 ![Foundry v10](https://img.shields.io/badge/foundry-v10-green)
 ![Foundry v11](https://img.shields.io/badge/foundry-v11-green)
+![Download count image for latest version](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.2.0/total.png "Download count for version v1.0.1")
 
 An attempt at adopting the upcoming [Paranoia: Perfect Edition](https://www.kickstarter.com/projects/1990654819/paranoia-rpg-the-perfect-edition) into FoundryVTT as a system.
 
