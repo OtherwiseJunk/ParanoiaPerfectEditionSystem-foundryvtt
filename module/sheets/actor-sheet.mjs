@@ -341,10 +341,10 @@ export class ParanoiaActorSheet extends ActorSheet {
   async rollComputerDice(flagLevel){
     let roll = await new Roll('1d6').roll();
     let flavor = 'You manage to avoid The Computer\'s notice. This time.';
-    let content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/Computer_Eye.webp\"/>";
+    let content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye.webp\"/>";
     if(roll._total >= (6-flagLevel) ){
       flavor = `The Computer turns its eye on your troubleshooter... (Rolled a ${roll._total} as a ${this.flagLevelToDescription(flagLevel)}).`
-      content = "<img style=\"animation: tilt-shaking 0.15s infinite;\" src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/Computer_Eye.webp\"/>";
+      content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye_Red.png\"/>";
     }
     roll.toMessage({
       speaker: {alias: 'The Computer'},
