@@ -31,7 +31,7 @@
   "secondaryTokenAttribute": "moxie",
   "url": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt",
   "manifest": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/v0.2.1/system.json",
-  "download": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/v0.2.1/ParanoiaPerfectEditionSystem-foundryvttv0.1.0.zip",
+  "download": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/v0.2.1/ParanoiaPerfectEditionSystem-foundryvttv0.2.1.zip",
   "license": "LICENSE.txt",
   "changelog": "CHANGELOG.md"
 }
