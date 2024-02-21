@@ -1,4 +1,4 @@
-import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
+import { onManageActiveEffect, prepareActiveEffectCategories } from "../helpers/effects.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -44,11 +44,11 @@ export class ParanoiaActorSheet extends ActorSheet {
       0: "Dead"
     }
     context.wantedFlags = {
-      0:"Loyal",
-      1:"Greylisted",
-      2:"Restricted",
-      3:"Citizen-Of-Interest",
-      4:"Wanted"
+      0: "Loyal",
+      1: "Greylisted",
+      2: "Restricted",
+      3: "Citizen-Of-Interest",
+      4: "Wanted"
     }
 
     // Use a safe clone of the actor data for further operations.
@@ -147,85 +147,27 @@ export class ParanoiaActorSheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
-    // Render the item sheet for viewing/editing prior to the editable check.
-    html.find('.item-edit').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
-      item.sheet.render(true);
-    });
-
     // -------------------------------------------------------------
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
-
-    // Add Inventory Item
-    html.find('.item-create').click(this._onItemCreate.bind(this));
-
-    // Delete Inventory Item
-    html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
-      item.delete();
-      li.slideUp(200, () => this.render(false));
-    });
-
-    // Active Effect management
-    html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
-
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
 
     //Paranoia-Specific Listeners
-    html.find('.paranoia-rolling-atribute').change((event) =>{
+    html.find('.paranoia-rolling-atribute').change((event) => {
       let attributeElement = event.delegateTarget;
       this.checkAttributeValue(attributeElement);
     });
-    html.find('.paranoia-health-indicator').change((event) =>{
+    html.find('.paranoia-health-indicator').change((event) => {
       const eventValue = parseInt(event.target.value);
       const actorHealth = this.actor.system.health;
       this.validateWellnessChange(eventValue, event.target, actorHealth);
     });
-    html.find('.paranoia-flag-indicator').change((event) =>{
+    html.find('.paranoia-flag-indicator').change((event) => {
       const eventValue = parseInt(event.target.value);
       const actorFlag = this.actor.system.flag;
       this.validateWellnessChange(eventValue, event.target, actorFlag);
     });
-    // Drag events for macros.
-    if (this.actor.isOwner) {
-      let handler = ev => this._onDragStart(ev);
-      html.find('li.item').each((i, li) => {
-        if (li.classList.contains("inventory-header")) return;
-        li.setAttribute("draggable", true);
-        li.addEventListener("dragstart", handler, false);
-      });
-    }
-  }
-
-  /**
-   * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
-   * @param {Event} event   The originating click event
-   * @private
-   */
-  async _onItemCreate(event) {
-    event.preventDefault();
-    const header = event.currentTarget;
-    // Get the type of item to create.
-    const type = header.dataset.type;
-    // Grab any data associated with this control.
-    const data = duplicate(header.dataset);
-    // Initialize a default name.
-    const name = `New ${type.capitalize()}`;
-    // Prepare the item object.
-    const itemData = {
-      name: name,
-      type: type,
-      system: data
-    };
-    // Remove the type from the dataset since it's in the itemData.type prop.
-    delete itemData.system["type"];
-
-    // Finally, create the item!
-    return await Item.create(itemData, {parent: this.actor});
   }
 
   /**
@@ -239,7 +181,7 @@ export class ParanoiaActorSheet extends ActorSheet {
     const rollData = this.actor.getRollData();
 
 
-    switch(triggeringElement.id){
+    switch (triggeringElement.id) {
       case 'paranoia-character-roller':
         let hurtLevel = (4 - this.actor.system.health.value);
         let NODE = parseInt(this.getStatisticsNODEFromSheet(triggeringElement, rollData));
@@ -250,19 +192,19 @@ export class ParanoiaActorSheet extends ActorSheet {
         NODE -= initiativeModifier;
         NODE -= hurtLevel;
 
-        if(NODE > 0){
+        if (NODE > 0) {
           this.rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel);
         }
-        else if(NODE != 0){
+        else if (NODE != 0) {
           this.rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel, true);
         }
-        else{
+        else {
           let flavor = `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`
           flavor += `Rolling with a level ${equipmentModifier} equipment.`
-          if(hurtLevel != 0){
+          if (hurtLevel != 0) {
             flavor += `<br>Rolling with ${hurtLevel} less NODE due to current wounds`
           }
-          if(initiativeModifier != 0){
+          if (initiativeModifier != 0) {
             flavor += `<br>Rolling with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
           }
           ChatMessage.create({
@@ -276,19 +218,19 @@ export class ParanoiaActorSheet extends ActorSheet {
 
   }
 
-  rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel, negativeNODE=false){
+  rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel, negativeNODE = false) {
     let roll;
     roll = new Roll(`${NODE}d6`)
     let flavor = '';
-    if(negativeNODE){
+    if (negativeNODE) {
       roll = new Roll(`${NODE * -1}d6`);
       flavor = 'Rolling with negative node. Good luck, citizen.<br>';
     }
     flavor += `Rolling with a level ${equipmentModifier} equipment.`
-    if(hurtLevel != 0){
+    if (hurtLevel != 0) {
       flavor += `<br>Rolling with ${hurtLevel} less NODE due to current wounds`
     }
-    if(initiativeModifier != 0){
+    if (initiativeModifier != 0) {
       flavor += `<br>Rolling with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
     }
     roll.toMessage({
@@ -298,7 +240,7 @@ export class ParanoiaActorSheet extends ActorSheet {
     });
   }
 
-  getStatisticsNODEFromSheet(htmlElement, rollData){
+  getStatisticsNODEFromSheet(htmlElement, rollData) {
     let stat = htmlElement.form[26].value.toLowerCase()
     let skill = htmlElement.form[27].value
     let statNODE = parseInt(rollData.abilities[stat].value);
@@ -306,7 +248,7 @@ export class ParanoiaActorSheet extends ActorSheet {
 
     Object.values(rollData.abilities).forEach(ability => {
 
-      if(ability.hasOwnProperty('skills') && ability.skills.hasOwnProperty(skill)){
+      if (ability.hasOwnProperty('skills') && ability.skills.hasOwnProperty(skill)) {
         skillNODE = parseInt(ability.skills[skill].value);
       }
     });
@@ -314,48 +256,48 @@ export class ParanoiaActorSheet extends ActorSheet {
     return statNODE + skillNODE;
   }
 
-  getEquipmentModifierFromSheet(htmlElement){
+  getEquipmentModifierFromSheet(htmlElement) {
     return htmlElement.form[28].value;
   }
 
-  getInitiativeModifierFromSheet(htmlElement){
+  getInitiativeModifierFromSheet(htmlElement) {
     return htmlElement.form[29].value;
   }
 
-  checkAttributeValue(sender){
+  checkAttributeValue(sender) {
     const min = -5
     const max = 5
     let value = parseInt(sender.value);
     console.log(`Detected value ${value}`);
-    if(isNaN(value)){
+    if (isNaN(value)) {
       console.log('detected NaN');
       sender.value = 0;
     }
-    else if (value>max) {
-        sender.value = max;
-    } else if (value<min) {
-        sender.value = min;
+    else if (value > max) {
+      sender.value = max;
+    } else if (value < min) {
+      sender.value = min;
     }
   }
 
-  async rollComputerDice(flagLevel){
+  async rollComputerDice(flagLevel) {
     let roll = await new Roll('1d6').roll();
     let flavor = 'You manage to avoid The Computer\'s notice. This time.';
     let content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye.webp\"/>";
-    if(roll._total >= (6-flagLevel) ){
+    if (roll._total >= (6 - flagLevel)) {
       flavor = `The Computer turns its eye on your troubleshooter... (Rolled a ${roll._total} as a ${this.flagLevelToDescription(flagLevel)}).`
       content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye_Red.png\"/>";
     }
     roll.toMessage({
-      speaker: {alias: 'The Computer'},
+      speaker: { alias: 'The Computer' },
       flavor: flavor,
       rollMode: game.settings.get('core', 'rollMode'),
       content: content
     });
   }
 
-  flagLevelToDescription(flagLevel){
-    switch(flagLevel){
+  flagLevelToDescription(flagLevel) {
+    switch (flagLevel) {
       case 4:
         return "Wanted Enemy of The Computer and Alpha Complex"
       case 3:
@@ -369,14 +311,14 @@ export class ParanoiaActorSheet extends ActorSheet {
     }
   }
 
-  validateWellnessChange(eventValue, eventTarget, actorValue){
-    if(isNaN(eventValue)){
+  validateWellnessChange(eventValue, eventTarget, actorValue) {
+    if (isNaN(eventValue)) {
       eventTarget.value = actorValue.value;
     }
-    if(eventValue > actorValue.max){
+    if (eventValue > actorValue.max) {
       eventTarget.value = actorValue.max;
     }
-    if(eventValue < actorValue.min){
+    if (eventValue < actorValue.min) {
       eventTarget.value = actorValue.min;
     }
   }
