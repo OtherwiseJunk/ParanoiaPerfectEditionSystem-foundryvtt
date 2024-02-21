@@ -1,22 +1,3 @@
 {
-  "PARANOIA.AbilityStr": "Strength",
-  "PARANOIA.AbilityCon": "Constitution",
-  "PARANOIA.AbilityDex": "Dexterity",
-  "PARANOIA.AbilityInt": "Intelligence",
-  "PARANOIA.AbilityWis": "Wisdom",
-  "PARANOIA.AbilityCha": "Charisma",
-
-  "PARANOIA.AbilityStrAbbr": "str",
-  "PARANOIA.AbilityConAbbr": "con",
-  "PARANOIA.AbilityDexAbbr": "dex",
-  "PARANOIA.AbilityIntAbbr": "int",
-  "PARANOIA.AbilityWisAbbr": "wis",
-  "PARANOIA.AbilityChaAbbr": "cha",
-
-  "PARANOIA.EffectCreate": "Create Effect",
-  "PARANOIA.EffectToggle": "Toggle Effect",
-  "PARANOIA.EffectEdit": "Edit Effect",
-  "PARANOIA.EffectDelete": "Delete Effect",
-
-  "PARANOIA.Add": "Add"
+  
 }
