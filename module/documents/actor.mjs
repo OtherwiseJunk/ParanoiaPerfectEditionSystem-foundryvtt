@@ -78,18 +78,42 @@ export class ParanoiaActor extends Actor {
    */
   _getCharacterRollData(data) {
     if (this.type !== 'troubleshooter') return;
+    console.log('Troubleshooter Rolling...');
+    console.log(data);
 
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.
     if (data.abilities) {
-      for (let [k, v] of Object.entries(data.abilities)) {
-        data[k] = foundry.utils.deepClone(v);
+      console.log('data has abilities');
+      console.log(data.abilities);
+      
+      for (let [abilityName, ability] of Object.entries(data.abilities)) {
+        let shorthand = this.getAbilityShorthand(abilityName);
+        data[abilityName] = ability.value;
+        if(shorthand !== ''){
+          data[shorthand] = ability.value;
+        }
+        for(let [skillName, skill] of Object.entries(ability.skills)){
+          let santiziedName = skillName.replace(' ','').toLocaleLowerCase();
+          console.log(santiziedName);
+          data[santiziedName] = skill.value;
+        }
       }
     }
+  }
 
-    // Add level for easier access, or fall back to 0.
-    if (data.attributes.level) {
-      data.lvl = data.attributes.level.value ?? 0;
+  getAbilityShorthand(abilityName){
+    switch(abilityName){
+      case 'brains':
+        return 'brn';
+      case 'chutzpah':
+        return 'chtz';
+      case 'mechanics':
+        return 'mec';
+      case 'violence':
+        return 'vio';
+      default: 
+        return '';
     }
   }
 
