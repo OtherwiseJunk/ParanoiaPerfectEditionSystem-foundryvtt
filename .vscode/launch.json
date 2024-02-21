@@ -5,7 +5,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "chrome Debug",
-            "url": "https://vtt.cacheblasters.com/game",
+            "url": "http://lildebby:30000",
         }
     ]
   }
