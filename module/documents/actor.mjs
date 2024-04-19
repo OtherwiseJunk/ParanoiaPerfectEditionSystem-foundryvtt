@@ -82,7 +82,7 @@ export class ParanoiaActor extends Actor {
     console.log(data);
 
     // Copy the ability scores to the top level, so that rolls can use
-    // formulas like `@str.mod + 4`.
+    // formulas like `/roll @brainsd6`.
     if (data.abilities) {
       console.log('data has abilities');
       console.log(data.abilities);
