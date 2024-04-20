@@ -1,5 +1,26 @@
 # Change Log
 
+## 0.4.0
+
+Derives the character's security clearance based on their name, assuming it meets the expected format.
+
+We expect names to be in the format of `<FirstName>-<Security Clearance Letter>-<Sector>`, following the regex of `/.*-[R,r,O,o,Y,y,G,g,B,b,I,i,V,v]-.*/`.
+
+If we are able to successfully derive security clearance, we assign the actor's securityClearance value to the appropriate value
+
+R (Red):2
+O (Orange):3
+Y (Yellow):4
+G (Green):5
+B (Blue):6
+I (Indigo):7
+V (Violet):8
+
+If we're unable to derive the security clearance, we assume the actor is infrared and assign them a value of 1.
+
+This value is now used in initiative "rolls", replacing the formula with whatever value of security clearance we identify for the actor.
+
+These values also can be used in macros if desired, with either `@securityClearance` or `@sec`.
 ## 0.3.0
 
 Makes it easier to reference troubleshooter Stats/Skills when sending a /roll message or similar.
