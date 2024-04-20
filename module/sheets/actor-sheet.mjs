@@ -268,9 +268,7 @@ export class ParanoiaActorSheet extends ActorSheet {
     const min = -5
     const max = 5
     let value = parseInt(sender.value);
-    console.log(`Detected value ${value}`);
     if (isNaN(value)) {
-      console.log('detected NaN');
       sender.value = 0;
     }
     else if (value > max) {

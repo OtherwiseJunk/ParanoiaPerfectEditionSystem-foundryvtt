@@ -24,6 +24,10 @@ Hooks.once('init', async function() {
   // Define custom Document classes
   CONFIG.Actor.documentClass = ParanoiaActor;
 
+  CONFIG.Combat.initiative = {
+    formula: "@sec"
+  }
+
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("paranoia", ParanoiaActorSheet, { makeDefault: true });

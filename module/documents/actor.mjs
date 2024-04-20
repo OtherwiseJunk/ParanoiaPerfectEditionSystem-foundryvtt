@@ -1,3 +1,13 @@
+let SecurityClearance =Object.freeze({
+  r:2,
+  o:3,
+  y:4,
+  g:5,
+  b:6,
+  i:7,
+  v:8
+});
+
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -32,6 +42,7 @@ export class ParanoiaActor extends Actor {
     const actorData = this;
     const systemData = actorData.system;
     const flags = actorData.flags.paranoia || {};
+    this.updateSecurityClearanceFromName(actorData.name, systemData);
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
@@ -44,9 +55,6 @@ export class ParanoiaActor extends Actor {
    */
   _prepareCharacterData(actorData) {
     if (actorData.type !== 'troubleshooter') return;
-
-    // Make modifications to data here. For example:
-    const systemData = actorData.system;
   }
 
   /**
@@ -66,6 +74,9 @@ export class ParanoiaActor extends Actor {
   getRollData() {
     const data = super.getRollData();
 
+    data['securityClearance'] = data.securityClearance ?? 1;
+    data['sec'] = data.securityClearance ?? 1;
+    
     // Prepare character roll data.
     this._getCharacterRollData(data);
     this._getNpcRollData(data);
@@ -78,14 +89,9 @@ export class ParanoiaActor extends Actor {
    */
   _getCharacterRollData(data) {
     if (this.type !== 'troubleshooter') return;
-    console.log('Troubleshooter Rolling...');
-    console.log(data);
-
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `/roll @brainsd6`.
     if (data.abilities) {
-      console.log('data has abilities');
-      console.log(data.abilities);
       
       for (let [abilityName, ability] of Object.entries(data.abilities)) {
         let shorthand = this.getAbilityShorthand(abilityName);
@@ -95,7 +101,6 @@ export class ParanoiaActor extends Actor {
         }
         for(let [skillName, skill] of Object.entries(ability.skills)){
           let santiziedName = skillName.replace(' ','').toLocaleLowerCase();
-          console.log(santiziedName);
           data[santiziedName] = skill.value;
         }
       }
@@ -126,4 +131,15 @@ export class ParanoiaActor extends Actor {
     // Process additional NPC data here.
   }
 
+  updateSecurityClearanceFromName(name, systemData){
+    if(/.*-[R,r,O,o,Y,y,G,g,B,b,I,i,V,v]-.*/.test(name)){
+      systemData.securityClearance = this.extractSecurityClearance(name);
+    }
+  }
+
+  extractSecurityClearance(value){
+    const nameParts = value.split('-');
+    const securityCharacter = nameParts[1].toLowerCase();
+    return SecurityClearance[securityCharacter];
+  }
 }
