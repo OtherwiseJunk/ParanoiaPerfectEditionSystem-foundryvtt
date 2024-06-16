@@ -141,15 +141,15 @@
       "missionObjectives": "",
       "assignedGear": "",
       "secrets":{
-        "aliases": "",
-        "secretObjective": "",
-        "serviceGroupFavors": "",
-        "secretSociety": "",
-        "mutantPower": "",
-        "secretSocietyFavors": "",
-        "treasonousGear":"",
-        "evidence":"",
-        "notes": ""
+        "aliases": "List your alternative identities. Perfect for when you need to blend in... or stand out!",
+        "secretObjective": "Record your covert mission. Stay discreet; we wouldn't want any surprises, would we?",
+        "serviceGroupFavors": "Track favors owed to you by your service group and those you've called in. Cooperation keeps Alpha Complex running smoothly!",
+        "secretSociety": "Document your treasonous society. Remember, revealing this could lead to unauthorized fun!",
+        "mutantPower": "Note your forbidden abilities. Remember, unauthorized mutations are not a laughing matter... unless they're hilarious!",
+        "secretSocietyFavors": "Note favors from your society and any favors asked of you by fellow members. Loyalty earns perks... and sometimes, extra lives!",
+        "treasonousGear": "Catalog illegal items here. Not that you would have anything like that, of course.",
+        "evidence": "Log evidence against traitors. Blackmail can be such a delightful team-building exercise!",
+        "notes": "Keep track of any other interesting, potentially-treasonous details. A well-documented traitor is a well-prepared traitor!"
       }
     },
     "npc": {

@@ -169,3 +169,15 @@
     transform: rotate(0deg);
   }
 }
+
+.paranoia-editor-container {
+  margin: 5px;
+}
+
+.paranoia-editor-container .editor-content {
+  min-height: 50px;
+}
+
+.paranoia-editor-container .editor.prosemirror{
+  min-height: 150px;
+}
