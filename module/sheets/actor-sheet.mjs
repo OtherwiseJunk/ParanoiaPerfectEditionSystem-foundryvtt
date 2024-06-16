@@ -25,7 +25,7 @@ export class ParanoiaActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData() {
     // Retrieve the data structure from the base sheet. You can inspect or log
     // the context variable to see the structure, but some key properties for
     // sheets are the actor object, the data object, whether or not it's
@@ -58,6 +58,16 @@ export class ParanoiaActorSheet extends ActorSheet {
     context.system = actorData.system;
     context.flags = actorData.flags;
 
+    context.enrichedAliases = await TextEditor.enrichHTML(context.system.secrets.aliases)
+    context.enrichedSecretSocieties = await TextEditor.enrichHTML(context.system.secrets.secretSociety)
+    context.enrichedSecretObjective = await TextEditor.enrichHTML(context.system.secrets.secretObjective)
+    context.enrichedMutantPowers = await TextEditor.enrichHTML(context.system.secrets.mutantPower)
+    context.enrichedServiceGroupFavors = await TextEditor.enrichHTML(context.system.secrets.serviceGroupFavors)
+    context.enrichedSecretSocietyFavors = await TextEditor.enrichHTML(context.system.secrets.secretSocietyFavors)
+    context.enrichedTreasonousGear = await TextEditor.enrichHTML(context.system.secrets.treasonousGear)
+    context.enrichedEvidence = await TextEditor.enrichHTML(context.system.secrets.evidence)
+    context.enrichedSecretNotes = await TextEditor.enrichHTML(context.system.secrets.notes)
+
     // Prepare character data and items.
     if (actorData.type == 'character') {
       this._prepareItems(context);
@@ -75,7 +85,7 @@ export class ParanoiaActorSheet extends ActorSheet {
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
 
-    return context;
+    return context
   }
 
   /**
@@ -169,6 +179,24 @@ export class ParanoiaActorSheet extends ActorSheet {
       this.validateWellnessChange(eventValue, event.target, actorFlag);
     });
   }
+
+  /** @inheritDoc */
+  async activateEditor(name, options={}, initialContent="") {
+    console.log('Ok we got here tho so like. Nice?');
+    console.log('Name: ', name);
+    console.log('Options: ', options);
+    console.log('Initial Content: ', initialContent);
+    options.engine="prosemirror"
+    options.relativeLinks = true;
+    options.plugins = {
+      menu: ProseMirror.ProseMirrorMenu.build(ProseMirror.defaultSchema, {
+        compact: true,
+        destroyOnSave: false,
+        onSave: () => this.saveEditor(name, { remove: false })
+      })
+    };
+    return super.activateEditor(name, options, initialContent);
+    }
 
   /**
    * Handle clickable rolls.
