@@ -308,7 +308,7 @@ export class ParanoiaActorSheet extends ActorSheet {
 
   async rollComputerDice(flagLevel) {
     let roll = await new Roll('1d6').roll();
-    let flavor = 'You manage to avoid The Computer\'s notice. This time.';
+    let flavor = `You manage to avoid The Computer\'s notice... this time. (Player rolled a ${roll} on the computer dice)`;
     let content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye.webp\"/>";
     if (roll._total >= (6 - flagLevel)) {
       flavor = `The Computer turns its eye on your troubleshooter... (Rolled a ${roll._total} as a ${this.flagLevelToDescription(flagLevel)}).`
