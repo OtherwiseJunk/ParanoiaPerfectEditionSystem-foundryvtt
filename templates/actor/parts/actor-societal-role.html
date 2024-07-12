@@ -3,14 +3,28 @@
         <div class="paranoia-header">
             <label for="paranoia-mission-objectives">Mission Objectives</label>
         </div>
-        <textarea class="paranoia-role-textarea" name="system.missionObjectives"
-            placeholder="Mission Objective(s)">{{system.missionObjectives}}</textarea>
+        <div class="paranoia-editor-container paranoia-societal">
+            {{editor 
+            enrichedMissionObjectives
+            target="system.missionObjectives"
+            button=true
+            engine="prosemirror"
+            editable=editable
+            collaborate=false }}
+        </div>
     </div>
     <div>
         <div class="paranoia-header">
             <label for="paranoia-gear">Assigned Gear</label>
         </div>
-        <textarea class="paranoia-role-textarea" name="system.assignedGear"
-            placeholder="Assigned Gear">{{system.assignedGear}}</textarea>
+        <div class="paranoia-editor-container paranoia-societal">
+            {{editor 
+            enrichedGear
+            target="system.assignedGear"
+            button=true
+            engine="prosemirror"
+            editable=editable
+            collaborate=false }}
+        </div>
     </div>
 </section>

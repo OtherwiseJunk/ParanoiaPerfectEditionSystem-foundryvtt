@@ -138,8 +138,8 @@
         }
       },
       "xp": "",
-      "missionObjectives": "",
-      "assignedGear": "",
+      "missionObjectives": "When you are given your assignment you can keep track of the objective here, that way you don't forget anything important, Citizen!",
+      "assignedGear": "List any of the gear you're responsible for here. Be sure to keep it in tip-top shape!",
       "secrets":{
         "aliases": "List your alternative identities. Perfect for when you need to blend in... or stand out!",
         "secretObjective": "Record your covert mission. Stay discreet; we wouldn't want any surprises, would we?",

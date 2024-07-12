@@ -67,6 +67,8 @@ export class ParanoiaActorSheet extends ActorSheet {
     context.enrichedTreasonousGear = await TextEditor.enrichHTML(context.system.secrets.treasonousGear)
     context.enrichedEvidence = await TextEditor.enrichHTML(context.system.secrets.evidence)
     context.enrichedSecretNotes = await TextEditor.enrichHTML(context.system.secrets.notes)
+    context.enrichedGear = await TextEditor.enrichHTML(context.system.assignedGear)
+    context.enrichedMissionObjectives = await TextEditor.enrichHTML(context.system.missionObjectives)
 
     // Prepare character data and items.
     if (actorData.type == 'character') {
@@ -308,7 +310,7 @@ export class ParanoiaActorSheet extends ActorSheet {
 
   async rollComputerDice(flagLevel) {
     let roll = await new Roll('1d6').roll();
-    let flavor = 'You manage to avoid The Computer\'s notice. This time.';
+    let flavor = `You manage to avoid The Computer\'s notice... this time. (Player rolled a ${roll._total} on the computer dice)`;
     let content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye.webp\"/>";
     if (roll._total >= (6 - flagLevel)) {
       flavor = `The Computer turns its eye on your troubleshooter... (Rolled a ${roll._total} as a ${this.flagLevelToDescription(flagLevel)}).`
