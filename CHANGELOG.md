@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.2
+
+Use ProseMirror instead of text areas in most areas of the troubleshooter sheet
+Display Computer Dice results even when FriendComptuer doesn't take notice of the troubleshooter.
+
+Bump maximum version to FoundryVTT 12. Mininal testing has been performed, so please report any issues!
+
 ## 0.4.0
 
 Derives the character's security clearance based on their name, assuming it meets the expected format.

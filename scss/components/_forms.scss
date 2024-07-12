@@ -172,12 +172,31 @@
 
 .paranoia-editor-container {
   margin: 5px;
+  outline: 2px;
+  outline-style: groove;
+  padding: 10px;
 }
 
-.paranoia-editor-container .editor-content {
-  min-height: 50px;
+.paranoia-editor-container > .editor-content {
+  min-height: 75px;
+  height: auto;
 }
 
-.paranoia-editor-container .editor.prosemirror{
+.paranoia-editor-container > .editor.prosemirror{
   min-height: 150px;
+  height: auto;
+}
+
+.paranoia-societal .editor.prosemirror{
+  min-height: 300px;
+}
+
+.paranoia-societal {
+  min-height: 300px;
+}
+
+.paranoia{
+  font-family: "Roboto Mono", monospace;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
