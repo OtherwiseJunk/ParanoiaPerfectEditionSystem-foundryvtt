@@ -7,6 +7,10 @@ Display Computer Dice results even when FriendComptuer doesn't take notice of th
 
 Bump maximum version to FoundryVTT 12. Mininal testing has been performed, so please report any issues!
 
+## 0.4.1
+
+Fixes a bug caused by too many lines of text being present in the Naughty side of the character sheet that would prevent the dice roller on the productivity profile from working.
+
 ## 0.4.0
 
 Derives the character's security clearance based on their name, assuming it meets the expected format.
@@ -28,6 +32,7 @@ If we're unable to derive the security clearance, we assume the actor is infrare
 This value is now used in initiative "rolls", replacing the formula with whatever value of security clearance we identify for the actor.
 
 These values also can be used in macros if desired, with either `@securityClearance` or `@sec`.
+
 ## 0.3.0
 
 Makes it easier to reference troubleshooter Stats/Skills when sending a /roll message or similar.
