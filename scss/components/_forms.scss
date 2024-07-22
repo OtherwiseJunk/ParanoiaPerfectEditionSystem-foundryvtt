@@ -199,11 +199,34 @@
   font-family: "Cutive Mono", monospace;
   font-weight: 400;
   font-style: normal;
+  background-color: white;
 }
 
 .paranoia-attribute-label{
-
+  margin-right: auto;
+  padding: 5px;
+  font-size: medium;
 }
-.paranoia-attribute-input{
 
+.paranoia-attribute-input{
+  margin-left: auto;
+  background-color: white;
+  color: black;
+  flex: 0 0 calc(100% / 5);
+}
+
+.paranoia-attribute-container{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 5px;
+  align-items: center;
+}
+
+.paranoia-skill-input{
+  outline: 2px solid red;
+}
+
+.profile-img{
+  background-color: #333;
 }

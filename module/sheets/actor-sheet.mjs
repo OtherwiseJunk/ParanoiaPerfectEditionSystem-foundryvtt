@@ -8,7 +8,7 @@ export class ParanoiaActorSheet extends ActorSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["paranoia", "sheet", "actor"],
       template: "systems/paranoia/templates/actor/actor-sheet.html",
       width: 900,
