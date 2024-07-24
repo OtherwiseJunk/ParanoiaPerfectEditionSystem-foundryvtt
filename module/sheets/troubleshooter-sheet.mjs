@@ -4,13 +4,13 @@ import { onManageActiveEffect, prepareActiveEffectCategories } from "../helpers/
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
-export class ParanoiaActorSheet extends ActorSheet {
+export class ParanoiaTroubleshooterSheet extends ActorSheet {
 
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["paranoia", "sheet", "actor"],
-      template: "systems/paranoia/templates/actor/actor-sheet.html",
+      template: "systems/paranoia/templates/actor/troubleshooter-sheet.html",
       width: 900,
       height: 675,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
@@ -19,7 +19,7 @@ export class ParanoiaActorSheet extends ActorSheet {
 
   /** @override */
   get template() {
-    return `systems/paranoia/templates/actor/actor-${this.actor.type}-sheet.html`;
+    return `systems/paranoia/templates/actor/${this.actor.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
@@ -184,10 +184,6 @@ export class ParanoiaActorSheet extends ActorSheet {
 
   /** @inheritDoc */
   async activateEditor(name, options={}, initialContent="") {
-    console.log('Ok we got here tho so like. Nice?');
-    console.log('Name: ', name);
-    console.log('Options: ', options);
-    console.log('Initial Content: ', initialContent);
     options.engine="prosemirror"
     options.relativeLinks = true;
     options.plugins = {

@@ -1,15 +1,24 @@
 // Import document classes.
 import { ParanoiaActor } from "./documents/actor.mjs";
 // Import sheet classes.
-import { ParanoiaActorSheet } from "./sheets/actor-sheet.mjs";
+import { ParanoiaTroubleshooterSheet } from "./sheets/troubleshooter-sheet.mjs";
+import { ParanoiaNobodySheet } from "./sheets/nobody-sheet.mjs";
+import { ParanoiaSomebodySheet } from "./sheets/somebody-sheet.mjs";
+import { ParanoiaAccompliceSheet } from "./sheets/accomplice-sheet.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { PARANOIA } from "./helpers/config.mjs";
+import { 
+  ParanoiaTroubleshooterData,
+  ParanoiaNobodyData,
+  ParanoiaSomebodyData, 
+  ParanoiaAccompliceData
+} from "./data/index.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
 /* -------------------------------------------- */
-
+const blah = {};
 Hooks.once('init', async function() {
 
   // Add utility classes to the global game object so that they're more easily
@@ -28,9 +37,19 @@ Hooks.once('init', async function() {
     formula: "@sec"
   }
 
+  Object.assign(CONFIG.Actor.dataModels, {
+    troubleshooter: ParanoiaTroubleshooterData,
+    nobody: ParanoiaNobodyData,
+    somebody: ParanoiaSomebodyData,
+    acomplice: ParanoiaAccompliceData,
+  })
+
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("paranoia", ParanoiaActorSheet, { makeDefault: true });
+  Actors.registerSheet("paranoia", ParanoiaTroubleshooterSheet, { types: ["troubleshooter"], makeDefault: true });
+  Actors.registerSheet("paranoia", ParanoiaNobodySheet, { types: ["nobody"], makeDefault: true });
+  Actors.registerSheet("paranoia", ParanoiaSomebodySheet, { types: ["somebody"], makeDefault: true });
+  Actors.registerSheet("paranoia", ParanoiaAccompliceSheet, { types: ["accomplice"], makeDefault: true });
 
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
