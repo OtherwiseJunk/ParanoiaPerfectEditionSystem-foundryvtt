@@ -15,8 +15,8 @@ Currently the only real functionality from Paranoia: PE that has been implemente
 ![First tab of the Paranoia: Perfect Edition sheet, demonstrating the header with the character's ever-present PII, and their Productivity Profile which shows their skills/ability scores and the dice roller.](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-cs1.webp)
 ![Second tab of the Paranoia: Perfect Edition sheet, showing the header with the character's ever-present PII, and their Wellness information demonstrating how hurt they are, how Loyal Friend Computer perceives them to be, their XP, and their Moxie.](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-cs2.webp)
 ![Third tab of the Paranoia: Perfect Edition sheet, showing the header with the character's ever-present PII, and their role in society, allowing players to track their Mission Objectives and currently assigned gear.](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-cs3.webp)
-!["Back" (Fifth tab) of the Paranoia: Perfect Edition sheet, showing the header with the character's ever-present PII, and their private, traitorous information including their aliases, secret societies, secret objectives, mutant powers, contraband, and evidence against other players.](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-cs5.webp)
 ![Fourth tab of the Paranoia: Perfect Edition sheet, allowing the user to set their character's avatar image.](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-cs4.webp)
+!["Back" (Fifth tab) of the Paranoia: Perfect Edition sheet, showing the header with the character's ever-present PII, and their private, traitorous information including their aliases, secret societies, secret objectives, mutant powers, contraband, and evidence against other players.](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-cs5.webp)
 
 ## Dice Roller
 
@@ -28,6 +28,6 @@ Computer dice are rolled separately "by" Friend Computer, for easier tracking.
 
 # NPC Sheets
 
-![Nobody sheet, allowing the DM to track the Looks, Quirks, and Plans of nobody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-nobody.webp)
-![Somebody sheet, allowing the DM to track the Looks, Quirks, Plans, Gear, Basics (service group and secret society), and a quote of somebody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-somebody.webp)
+![Nobody sheet, allowing the DM to track the Looks, Quirks, and Plans of nobody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevvt-nobody.webp)
+![Somebody sheet, allowing the DM to track the Looks, Quirks, Plans, Gear, Basics (service group and secret society), and a quote of somebody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-sombody.webp)
 ![Accomplice sheet, allowing the DM to track the Looks, Quirks, Plans, Gear, Basics (service group and secret society), health, moxie, mutant powers, and a quote of accomplice npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-accomplice.webp)
