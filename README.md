@@ -28,6 +28,6 @@ Computer dice are rolled separately "by" Friend Computer, for easier tracking.
 
 # NPC Sheets
 
-![Nobody sheet, allowing the DM to track the Looks, Quirks, and Plans of nobody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevvt-nobody.webp)
-![Somebody sheet, allowing the DM to track the Looks, Quirks, Plans, Gear, Basics (service group and secret society), and a quote of somebody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-sombody.webp)
+![Nobody sheet, allowing the DM to track the Looks, Quirks, and Plans of nobody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-nobody.webp)
+![Somebody sheet, allowing the DM to track the Looks, Quirks, Plans, Gear, Basics (service group and secret society), and a quote of somebody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-somebody.webp)
 ![Accomplice sheet, allowing the DM to track the Looks, Quirks, Plans, Gear, Basics (service group and secret society), health, moxie, mutant powers, and a quote of accomplice npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-accomplice.webp)
