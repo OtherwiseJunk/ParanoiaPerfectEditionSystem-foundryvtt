@@ -1,4 +1,7 @@
-<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
+<form class="{{cssClass}} {{actor.type}} flexcol paranoia" autocomplete="off">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
   {{!-- Sheet Header --}}
   <header class="sheet-header">
     <div class="header-fields">
@@ -22,42 +25,42 @@
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.attributes.team.value" class="resource-label">Team Name</label>
+          <label for="system.team" class="resource-label">Team Name</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="system.attributes.team.value" value="{{system.attributes.team.value}}"
+            <input type="text" name="system.team" value="{{system.team}}"
               data-dtype="String" />
           </div>
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.attributes.mbd.value" class="resource-label">Mandatory Bonus Duty</label>
+          <label for="system.mbd" class="resource-label">Mandatory Bonus Duty</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="system.attributes.mbd.value" value="{{system.attributes.mbd.value}}"
+            <input type="text" name="system.mbd" value="{{system.mbd}}"
               data-dtype="String" />
           </div>
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.attributes.serviceGroup.value" class="resource-label">Service Group</label>
+          <label for="system.serviceGroup" class="resource-label">Service Group</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="system.attributes.serviceGroup.value"
-              value="{{system.attributes.serviceGroup.value}}" data-dtype="String" />
+            <input type="text" name="system.serviceGroup"
+              value="{{system.serviceGroup}}" data-dtype="String" />
           </div>
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.attributes.treasonButton.value" class="resource-label">Treason Button</label>
+          <label for="system.treasonButton" class="resource-label">Treason Button</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="system.attributes.treasonButton.value"
-              value="{{system.attributes.treasonButton.value}}" data-dtype="String" />
+            <input type="text" name="system.treasonButton"
+              value="{{system.treasonButton}}" data-dtype="String" />
           </div>
         </div>
 
         <div class="resource flex-group-center">
-          <label for="system.attributes.violenceButton.value" class="resource-label">Violence Button</label>
+          <label for="system.violenceButton" class="resource-label">Violence Button</label>
           <div class="resource-content flexrow flex-center flex-between">
-            <input type="text" name="system.attributes.violenceButton.value"
-              value="{{system.attributes.violenceButton.value}}" data-dtype="String" />
+            <input type="text" name="system.violenceButton"
+              value="{{system.violenceButton}}" data-dtype="String" />
           </div>
         </div>
 

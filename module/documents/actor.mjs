@@ -53,20 +53,12 @@ export class ParanoiaActor extends Actor {
   /**
    * Prepare Character type specific data
    */
-  _prepareCharacterData(actorData) {
-    if (actorData.type !== 'troubleshooter') return;
-  }
+  _prepareCharacterData(actorData) {}
 
   /**
    * Prepare NPC type specific data.
    */
-  _prepareNpcData(actorData) {
-    if (actorData.type !== 'npc') return;
-
-    // Make modifications to data here. For example:
-    const systemData = actorData.system;
-    systemData.xp = (systemData.cr * systemData.cr) * 100;
-  }
+  _prepareNpcData(actorData) {}
 
   /**
    * Override getRollData() that's supplied to rolls.

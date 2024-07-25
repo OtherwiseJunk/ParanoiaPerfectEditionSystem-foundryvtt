@@ -1,0 +1,38 @@
+<form class="{{cssClass}} {{actor.type}} flexcol paranoia" autocomplete="off">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
+  <div class="grid grid-3col">
+    <div class="paranoia-npc-info">
+      <img class="paranoia-npc-image" src="{{actor.img}}" data-edit="img" name="paranoia.actor.image"
+      title="{{actor.name}}'s ugly mug" height="250" />
+    </div>
+    <div class="paranoia-npc-info grid-span-2">
+      <div class="resource flex-group-center">
+        <label for="name" class="resource-label">Name</label>
+        <div class="resource-content flexrow flex-center flex-between">
+          <input class="paranoia-actor-name" type="text" name="name" value="{{actor.name}}" data-dtype="String" />
+        </div>
+      </div>
+      <div class="resource flex-group-center">
+        <label for="system.looks" class="resource-label">Looks</label>
+        <div class="resource-content flexrow flex-center flex-between">
+          <input type="text" name="system.looks" value="{{system.looks}}" data-dtype="String" />
+        </div>
+      </div>
+      <div class="resource flex-group-center">
+        <label for="system.quirks" class="resource-label">Quirks</label>
+        <div class="resource-content flexrow flex-center flex-between">
+          <input type="text" name="system.quirks" value="{{system.quirks}}" data-dtype="String" width="350" />
+        </div>
+      </div>
+      <div class="resource flex-group-center">
+        <label for="system.plans" class="resource-label">Plans</label>
+        <div class="resource-content flexrow flex-center flex-between">
+          <input type="text" name="system.plans" value="{{system.plans}}" data-dtype="String" />
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
