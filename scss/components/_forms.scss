@@ -177,17 +177,17 @@
   padding: 10px;
 }
 
-.paranoia-editor-container > .editor-content {
+.paranoia-editor-container>.editor-content {
   min-height: 75px;
   height: auto;
 }
 
-.paranoia-editor-container > .editor.prosemirror{
+.paranoia-editor-container>.editor.prosemirror {
   min-height: 150px;
   height: auto;
 }
 
-.paranoia-societal .editor.prosemirror{
+.paranoia-societal .editor.prosemirror {
   min-height: 300px;
 }
 
@@ -202,26 +202,26 @@
   background-color: white;
 }
 
-button{
+button {
   font-family: "Cutive Mono", monospace;
   font-weight: 400;
   font-style: normal;
 }
 
-.paranoia-attribute-label{
+.paranoia-attribute-label {
   margin-right: auto;
   padding: 5px;
   font-size: medium;
 }
 
-.paranoia-attribute-input{
+.paranoia-attribute-input {
   margin-left: auto;
   background-color: white;
   color: black;
   flex: 0 0 calc(100% / 5);
 }
 
-.paranoia-attribute-container{
+.paranoia-attribute-container {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -229,11 +229,11 @@ button{
   align-items: center;
 }
 
-.paranoia-skill-input{
+.paranoia-skill-input {
   outline: 2px solid red;
 }
 
-.profile-img{
+.profile-img {
   background-color: #333;
 }
 
@@ -248,4 +248,8 @@ button{
   width: 100%;
   height: 80%;
   background-color: darkred;
+}
+
+.paranoia-select {
+  text-align-last: center;
 }

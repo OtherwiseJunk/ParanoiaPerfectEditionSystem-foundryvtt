@@ -5,11 +5,11 @@
       "nobody",
       "somebody",
       "accomplice"
-    ]    
+    ]
   },
   "Item": {
     "types": [
-      "item"
+      "equipment"
     ]
   }
 }

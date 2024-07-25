@@ -1,4 +1,4 @@
-import { onManageActiveEffect, prepareActiveEffectCategories } from "../helpers/effects.mjs";
+import { onManageActiveEffect, prepareActiveEffectCategories } from "../../helpers/effects.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -183,8 +183,8 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
   }
 
   /** @inheritDoc */
-  async activateEditor(name, options={}, initialContent="") {
-    options.engine="prosemirror"
+  async activateEditor(name, options = {}, initialContent = "") {
+    options.engine = "prosemirror"
     options.relativeLinks = true;
     options.plugins = {
       menu: ProseMirror.ProseMirrorMenu.build(ProseMirror.defaultSchema, {
@@ -194,7 +194,7 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
       })
     };
     return super.activateEditor(name, options, initialContent);
-    }
+  }
 
   /**
    * Handle clickable rolls.

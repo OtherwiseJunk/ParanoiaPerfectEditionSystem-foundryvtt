@@ -1,4 +1,4 @@
-import { ParanoiaSomebodyData, resourceField } from "./index.mjs";
+import { ParanoiaSomebodyData, resourceField } from "../index.mjs";
 
 export class ParanoiaAccompliceData extends ParanoiaSomebodyData {
 
@@ -10,7 +10,7 @@ export class ParanoiaAccompliceData extends ParanoiaSomebodyData {
             ...parentFields,
             moxie: resourceField(8, 99),
             mutantPower: new StringField(),
-            health: resourceField(4,4)
+            health: resourceField(4, 4)
         }
     }
 }
