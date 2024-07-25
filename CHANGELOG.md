@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.0
+
+Modifies the look and feel of the troubleshooter sheet.
+Adds Equipment Sheet (Currently troubleshooters cannot add these items to a gear list)
+Adds NPC sheets for Accomplices, Somebodies, and Nobodies
+
 ## 0.4.2
 
 Use ProseMirror instead of text areas in most areas of the troubleshooter sheet
