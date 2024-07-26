@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.1
+
+Fix issue with item sheet by simplifying sheet
+
 ## 0.5.0
 
 Modifies the look and feel of the troubleshooter sheet.
