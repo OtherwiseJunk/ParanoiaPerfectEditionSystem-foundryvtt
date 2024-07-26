@@ -32,9 +32,7 @@
             <div class="resource flex-group-center">
                 <label for="system.clearance" class="resource-label">Clearance</label>
                 <div class="resource-content flexrow flex-center flex-between">
-                    <select class="paranoia-select" name="system.clearance">
-                        {{selectOptions equipmentClearanceLevels selected=system.clearance}}
-                    </select>
+                    <input type="text" name="system.clearance" value="{{system.clearance}}" data-dtype="String" />
                 </div>
             </div>
             <div class="resource flex-group-center">

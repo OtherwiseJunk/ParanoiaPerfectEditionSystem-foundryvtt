@@ -19,18 +19,6 @@ export class ParanoiaEquipmentSheet extends ItemSheet {
 
         const itemData = this.item.toObject(false);
         data.system = itemData.system;
-        data.equipmentClearanceLevels = [
-            "Infrared",
-            "Red",
-            "Orange",
-            "Yellow",
-            "Green",
-            "Blue",
-            "Indigo",
-            "Violet",
-            "Ultra Violet",
-            "Treasonous"
-        ]
 
         return data;
     }

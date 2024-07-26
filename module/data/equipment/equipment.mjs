@@ -6,7 +6,7 @@ export class ParanoiaEquipmentData extends foundry.abstract.TypeDataModel {
         return {
             description: new StringField(),
             level: new NumberField(),
-            clearance: new NumberField(),
+            clearance: new StringField(),
             success: new StringField(),
             treason: new StringField(),
             assigned: new BooleanField({ initial: false }),
