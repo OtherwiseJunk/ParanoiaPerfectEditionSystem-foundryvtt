@@ -2,7 +2,7 @@
   "id": "paranoia",
   "title": "Paranoia Perfect Edition",
   "description": "Paranoia Perfect Edition - DING! Attention citizen. Welcome to the first of your six lives here in Alpha Complex. I am your best friend, The Computer. Do not worry. I am here to protect you, educate you and help you stay loyal. This will make you happy and productive, as cases of severe anxiety and PTSD have dropped considerably. You have been decanted from your clone tank and are ready to serve. How may I help you be successful?",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "compatibility": {
     "minimum": "11",
     "verified": "11",

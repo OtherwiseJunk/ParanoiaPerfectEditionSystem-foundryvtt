@@ -1,6 +1,6 @@
 {
   "name": "foundryvtt-paranoia",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "FoundryVTT Paranoia Perfect Edition System",
   "scripts": {
     "build": "gulp build",

@@ -201,69 +201,89 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  _onRoll(event) {
+  async _onRoll(event) {
     event.preventDefault();
     const triggeringElement = event.currentTarget;
-    const rollData = this.actor.getRollData();
 
 
     switch (triggeringElement.id) {
       case 'paranoia-character-roller':
+        const flagLevel = this.actor.system.flag.value;
         let hurtLevel = (4 - this.actor.system.health.value);
-        let NODE = parseInt(this.getStatisticsNODEFromSheet(triggeringElement, rollData));
         let equipmentModifier = parseInt(this.getEquipmentModifierFromSheet(triggeringElement));
         let initiativeModifier = parseInt(this.getInitiativeModifierFromSheet(triggeringElement));
 
-        NODE += equipmentModifier;
-        NODE -= initiativeModifier;
-        NODE -= hurtLevel;
+        let NODE = this.calculateNODE(triggeringElement, equipmentModifier, initiativeModifier, hurtLevel);
 
-        if (NODE > 0) {
-          this.rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel);
-        }
-        else if (NODE != 0) {
-          this.rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel, true);
-        }
-        else {
-          let flavor = `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`
-          flavor += `Rolling with a level ${equipmentModifier} equipment.`
-          if (hurtLevel != 0) {
-            flavor += `<br>Rolling with ${hurtLevel} less NODE due to current wounds`
-          }
-          if (initiativeModifier != 0) {
-            flavor += `<br>Rolling with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
-          }
-          ChatMessage.create({
-            flavor: flavor
-          })
-        }
-        const flagLevel = this.actor.system.flag.value;
-        this.rollComputerDice(flagLevel);
+        let roll = await new Roll(`${Math.abs(NODE)}d6`).evaluate();
+        let successes = this.calculateRollSuccesses(roll, NODE < 0);
+        let attractedComputersAttention = this.computerDiceAttractsAttention(roll, flagLevel);
+
+        await this.sendRollResults(roll, NODE, successes, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention);
         break;
     }
 
   }
 
-  rollNode(NODE, equipmentModifier, initiativeModifier, hurtLevel, negativeNODE = false) {
-    let roll;
-    roll = new Roll(`${NODE}d6`)
+  computerDiceAttractsAttention(roll, flagLevel) {
+    let computerDiceResult = roll.dice.at(-1).results[0].result;
+
+    return computerDiceResult >= (6 - flagLevel)
+  }
+
+  calculateRollSuccesses(roll, isNegativeNODE) {
+    let successes = 0;
+    console.log(roll.dice);
+    roll.dice.forEach(dice =>{
+      dice.results.forEach(roll =>{
+        if(!roll.active) return;
+
+        if(roll.result >= 5) successes++;
+        else if(isNegativeNODE) successes--; 
+      })
+    });
+
+    return successes;
+  }
+
+  async sendRollResults(roll, NODE, successes, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention) {
     let flavor = '';
-    if (negativeNODE) {
-      roll = new Roll(`${NODE * -1}d6`);
-      flavor = 'Rolling with negative node. Good luck, citizen.<br>';
+    let pluralSuccesses = successes != 1 && successes != -1;
+    if(NODE === 1){
+      flavor += `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`
     }
-    flavor += `Rolling with a level ${equipmentModifier} equipment.`
+    if(NODE < 0) {
+      flavor += 'Rolled with negative node. Non-Successes subtract from your success count! Good luck, citizen.<br>';
+    }
+    flavor += `Rolled with a level ${equipmentModifier} equipment.`
     if (hurtLevel != 0) {
-      flavor += `<br>Rolling with ${hurtLevel} less NODE due to current wounds`
+      flavor += `<br>Rolled with ${hurtLevel} less NODE due to current wounds`
     }
     if (initiativeModifier != 0) {
-      flavor += `<br>Rolling with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
+      flavor += `<br>Rolled with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
     }
-    roll.toMessage({
-      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-      flavor: flavor,
-      rollMode: game.settings.get('core', 'rollMode'),
-    });
+
+    flavor += `<br>${successes} success${pluralSuccesses ? 'es' : ''}.`
+
+    roll.toMessage({ flavor, speaker: ChatMessage.getSpeaker({ actor: this.actor }) });
+
+    await this.sendComputerRollResults(attractedComputersAttention, roll.dice.at(-1).results[0].result, flagLevel);
+  }
+
+  calculateNODE(triggeringElement, equipmentModifier, initiativeModifier, hurtLevel) {
+    const rollData = this.actor.getRollData();
+
+    let NODE = parseInt(this.getStatisticsNODEFromSheet(triggeringElement, rollData));
+
+    NODE += equipmentModifier;
+    NODE -= initiativeModifier;
+    NODE -= hurtLevel;
+    
+    if(NODE < 0){
+      return NODE - 1; // "add" Computer Dice
+    }
+
+    return NODE + 1; // add Computer Dice
   }
 
   getStatisticsNODEFromSheet(htmlElement, rollData) {
@@ -304,18 +324,17 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
     }
   }
 
-  async rollComputerDice(flagLevel) {
-    let roll = await new Roll('1d6').roll();
-    let flavor = `You manage to avoid The Computer\'s notice... this time. (Player rolled a ${roll._total} on the computer dice)`;
+  async sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
+    let flavor = `You manage to avoid Friend Computer\'s notice... this time.`;
     let content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye.webp\"/>";
-    if (roll._total >= (6 - flagLevel)) {
-      flavor = `The Computer turns its eye on your troubleshooter... (Rolled a ${roll._total} as a ${this.flagLevelToDescription(flagLevel)}).`
+    if (attractedComputersAttention) {
+      flavor = `Friend Computer turns its eye on your troubleshooter... (Citizen is a ${this.flagLevelToDescription(flagLevel)} and rolled a ${computerDiceResult}).`
       content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye_Red.png\"/>";
     }
-    roll.toMessage({
-      speaker: { alias: 'The Computer' },
+
+    ChatMessage.create({
+      speaker: { alias: 'Friend Computer' },
       flavor: flavor,
-      rollMode: game.settings.get('core', 'rollMode'),
       content: content
     });
   }
