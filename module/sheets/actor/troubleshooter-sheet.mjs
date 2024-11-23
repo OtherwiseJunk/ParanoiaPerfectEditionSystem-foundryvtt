@@ -214,12 +214,18 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
         let initiativeModifier = parseInt(this.getInitiativeModifierFromSheet(triggeringElement));
 
         let NODE = this.calculateNODE(triggeringElement, equipmentModifier, initiativeModifier, hurtLevel);
+        let rollString = this.generateRollString(NODE);
 
-        let roll = await new Roll(`${Math.abs(NODE)}d6`).evaluate();
-        let successes = this.calculateRollSuccesses(roll, NODE < 0);
+        let roll = await new Roll(rollString).evaluate();
+        // Simplified the displayed formula to reduce confusion. 2 * (Xd6cs>=5) - X is weird.
+        if(NODE < 0) {
+          roll._formula = `${Math.abs(NODE)}d6cs>=5`;
+        }
+
+
         let attractedComputersAttention = this.computerDiceAttractsAttention(roll, flagLevel);
 
-        await this.sendRollResults(roll, NODE, successes, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention);
+        await this.sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention);
         break;
     }
 
@@ -231,24 +237,15 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
     return computerDiceResult >= (6 - flagLevel)
   }
 
-  calculateRollSuccesses(roll, isNegativeNODE) {
-    let successes = 0;
-    console.log(roll.dice);
-    roll.dice.forEach(dice =>{
-      dice.results.forEach(roll =>{
-        if(!roll.active) return;
+  generateRollString(NODE) {
+    if(NODE > 0) return `${Math.abs(NODE)}d6cs>=5`;
 
-        if(roll.result >= 5) successes++;
-        else if(isNegativeNODE) successes--; 
-      })
-    });
-
-    return successes;
+    let positiveNode = Math.abs(NODE);
+    return `2 * (${positiveNode}d6cs>=5) - ${positiveNode}`;
   }
 
-  async sendRollResults(roll, NODE, successes, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention) {
+  async sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention) {
     let flavor = '';
-    let pluralSuccesses = successes != 1 && successes != -1;
     if(NODE === 1){
       flavor += `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`
     }
@@ -263,9 +260,8 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
       flavor += `<br>Rolled with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
     }
 
-    flavor += `<br>${successes} success${pluralSuccesses ? 'es' : ''}.`
-
-    roll.toMessage({ flavor, speaker: ChatMessage.getSpeaker({ actor: this.actor }) });
+    const message = await roll.toMessage({ flavor, speaker: ChatMessage.getSpeaker({ actor: this.actor }) });
+    console.log(message);
 
     await this.sendComputerRollResults(attractedComputersAttention, roll.dice.at(-1).results[0].result, flagLevel);
   }
