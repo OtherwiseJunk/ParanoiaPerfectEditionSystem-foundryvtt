@@ -46,9 +46,7 @@ jobs:
           # Insert the version header and commit message below the top line
           sed -i "1a\\
 ## $VERSION\\
-
 $MESSAGE\\
-
 " CHANGELOG.md
 
       - name: Package files
