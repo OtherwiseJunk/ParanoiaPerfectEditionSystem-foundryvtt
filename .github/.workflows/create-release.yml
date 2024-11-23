@@ -1,0 +1,86 @@
+name: Prepare FoundryVTT Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*" # Triggers on tags like v0.5.1
+
+jobs:
+  prepare-release:
+    name: Prepare Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18 # Use your project's Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Extract version tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Update package.json version
+        run: |
+          VERSION=${{ env.version }}
+          jq ".version = \"$VERSION\"" package.json > temp.json && mv temp.json package.json
+
+      - name: Update system.json values
+        run: |
+          VERSION=${{ env.version }}
+          jq ".version = \"$VERSION\" |
+              .manifest = \"https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/$VERSION/system.json\" |
+              .download = \"https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/$VERSION/ParanoiaPerfectEditionSystem-foundryvtt$VERSION.zip\"" \
+              system.json > temp.json && mv temp.json system.json
+
+      - name: Update CHANGELOG.md
+        run: |
+          VERSION=${{ env.version }}
+          MESSAGE=$(git log -1 --pretty=%B)
+          echo -e "# Change Log\n\n## $VERSION\n$MESSAGE\n$(cat CHANGELOG.md)" > CHANGELOG.md
+
+      - name: Package files
+        run: |
+          VERSION=${{ env.version }}
+          ZIP_NAME="ParanoiaPerfectEditionSystem-foundryvtt$VERSION.zip"
+          zip -r $ZIP_NAME \
+            CHANGELOG.md gulpfile.js LICENSE.txt package-lock.json package.json README.md system.json template.json \
+            css module lang scss templates
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.version }}
+          release_name: Release ${{ env.version }}
+          draft: false
+          prerelease: false
+
+      - name: Upload assets to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.ZIP_NAME }}
+          asset_name: ${{ env.ZIP_NAME }}
+          asset_content_type: application/zip
+
+      - name: Upload system.json to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: system.json
+          asset_name: system.json
+          asset_content_type: application/json
