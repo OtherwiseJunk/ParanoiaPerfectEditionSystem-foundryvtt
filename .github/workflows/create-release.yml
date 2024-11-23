@@ -43,11 +43,7 @@ jobs:
         run: |
           VERSION=${{ env.version }}
           MESSAGE=$(git log -1 --pretty=%B)
-          # Insert the version header and commit message below the top line
-          sed -i "1a\\
-## $VERSION\\
-$MESSAGE\\
-" CHANGELOG.md
+          echo -e "# Change Log\n\n## $VERSION\n$MESSAGE\n$(cat CHANGELOG.md)" > CHANGELOG.md
 
       - name: Package files
         run: |

@@ -1,5 +1,3 @@
-# Change Log
-
 ## 0.5.1
 
 Fix issue with item sheet by simplifying sheet
