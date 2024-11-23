@@ -5,7 +5,7 @@
   "version": "0.6.0",
   "compatibility": {
     "minimum": "11",
-    "verified": "11",
+    "verified": "12",
     "maximum": "12"
   },
   "authors": [
@@ -25,8 +25,10 @@
       "path": "lang/en.json"
     }
   ],
-  "gridDistance": 5,
-  "gridUnits": "ft",
+  "grid":{
+    "distance": "10",
+    "units": "ft"
+  },  
   "primaryTokenAttribute": "health",
   "secondaryTokenAttribute": "moxie",
   "url": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt",
