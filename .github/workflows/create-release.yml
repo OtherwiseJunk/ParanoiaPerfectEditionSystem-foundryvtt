@@ -42,8 +42,8 @@ jobs:
       - name: Update CHANGELOG.md
         run: |
           VERSION=${{ env.version }}
-          MESSAGE=$(git log -1 --pretty=%B)
-          echo -e "# Change Log\n\n## $VERSION\n\n$MESSAGE\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
+          TAG_MESSAGE=$(git tag -l --format='%(contents)' $VERSION)
+          echo -e "# Change Log\n\n## $VERSION\n\n$TAG_MESSAGE\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
 
       - name: Package files
         run: |
