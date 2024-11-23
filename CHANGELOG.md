@@ -1,9 +1,5 @@
 # Change Log
 
-## 0.6.0
-
-Add success count to roll results. This involved a refactor of the rolling logic, so if you notice any edge case failures please create a bug report on the github!
-
 ## 0.5.1
 
 Fix issue with item sheet by simplifying sheet
