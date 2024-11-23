@@ -43,7 +43,7 @@ jobs:
         run: |
           VERSION=${{ env.version }}
           MESSAGE=$(git log -1 --pretty=%B)
-          echo -e "# Change Log\n\n## $VERSION\n$MESSAGE\n$(cat CHANGELOG.md)" > CHANGELOG.md
+          echo -e "# Change Log\n\n## $VERSION\n\n$MESSAGE\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
 
       - name: Package files
         run: |
