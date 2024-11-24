@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  dev-container:
+    image: mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm
+    container_name: dev-container
+    volumes:
+      - ..:/workspace
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    depends_on:
+      - foundryvtt
+  foundryvtt:
+    image: felddy/foundryvtt:12.331.0
+    container_name: foundryvtt
+    environment:
+      - FOUNDRY_RELEASE_URL=<Timed URL Generated from https://foundryvtt.com/community/<Your Username>>
+      - FOUNDRY_ADMIN_KEY=admin
+    ports:
+      - "30000:30000"
+    restart: unless-stopped
+    volumes:
+      - ..:/data/Data/systems/paranoia

@@ -8,7 +8,9 @@ An attempt at adopting the upcoming [Paranoia: Perfect Edition](https://www.kick
 
 Currently only tested against Foundry V10 and V11
 
-# Character Sheet
+## Features
+
+### Character Sheet
 
 Currently the only real functionality from Paranoia: PE that has been implemented. Allows players to participate in character creation, keep track of their current mission, and their secrets.
 
@@ -18,7 +20,7 @@ Currently the only real functionality from Paranoia: PE that has been implemente
 ![Fourth tab of the Paranoia: Perfect Edition sheet, allowing the user to set their character's avatar image.](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-cs4.webp)
 !["Back" (Fifth tab) of the Paranoia: Perfect Edition sheet, showing the header with the character's ever-present PII, and their private, traitorous information including their aliases, secret societies, secret objectives, mutant powers, contraband, and evidence against other players.](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-cs5.webp)
 
-## Dice Roller
+### Dice Roller
 
 Dice roller allows a player to select their attribute/skill combo, indicate the level of any equipment they're using, and indicate if they'd like to take a NODE penalty to increase their initiative order this round.
 
@@ -26,8 +28,14 @@ Computer dice are rolled separately "by" Friend Computer, for easier tracking.
 
 ![An example of the messages generated when a player uses the "Infrared Clearance Dice Roller"](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-dice.png)
 
-# NPC Sheets
+### NPC Sheets
 
 ![Nobody sheet, allowing the DM to track the Looks, Quirks, and Plans of nobody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-nobody.webp)
 ![Somebody sheet, allowing the DM to track the Looks, Quirks, Plans, Gear, Basics (service group and secret society), and a quote of somebody npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-somebody.webp)
 ![Accomplice sheet, allowing the DM to track the Looks, Quirks, Plans, Gear, Basics (service group and secret society), health, moxie, mutant powers, and a quote of accomplice npcs](https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/ppevtt-accomplice.webp)
+
+## Working With Dev Container
+
+The dev container attached to this repository requires you to request a timed url for the version of FoundryVTT you want to develop against.
+
+The dev container spins up a container with node.js for actual development, and mounts that same workspace onto the container running FoundryVTT, allowing your changes to be directly run in the foundry instance listening on <http://localhost:30000>.

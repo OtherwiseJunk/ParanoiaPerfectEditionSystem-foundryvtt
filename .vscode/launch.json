@@ -5,7 +5,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "chrome Debug",
-            "url": "http://lildebby:30000",
+            "url": "http://localhost:30000",
         }
     ]
-  }
+}
