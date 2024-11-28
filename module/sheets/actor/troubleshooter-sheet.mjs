@@ -322,17 +322,28 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
 
   async sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
     let flavor = `You manage to avoid Friend Computer\'s notice... this time.`;
-    let content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye.webp\"/>";
     if (attractedComputersAttention) {
-      flavor = `Friend Computer turns its eye on your troubleshooter... (Citizen is a ${this.flagLevelToDescription(flagLevel)} and rolled a ${computerDiceResult}).`
-      content = "<img src=\"https://cacheblasters.nyc3.cdn.digitaloceanspaces.com/paranoiavtt/Computer_Eye_Red.png\"/>";
+      flavor = `Friend Computer turns its eye on your troubleshooter... (Citizen is a ${this.flagLevelToDescription(flagLevel)} and rolled a ${computerDiceResult}).`;      
     }
-
+    
+    let content = this.GenerateFriendComputerMessage(flavor, attractedComputersAttention);
     ChatMessage.create({
       speaker: { alias: 'Friend Computer' },
-      flavor: flavor,
-      content: content
+      content: content,
+      flavor: flavor
     });
+  }
+
+  GenerateFriendComputerMessage(message, isAngry){
+    let theme = isAngry ? 'paranoia-red-theme' : 'paranoia-blue-theme';
+
+    return`<div class="paranoia-friend-computer-container ${theme}">
+    <div class="paranoia-screen">
+      <div class="paranoia-eye">
+        <div class="paranoia-pupil"></div>
+      </div>
+    </div>
+  </div>`
   }
 
   flagLevelToDescription(flagLevel) {

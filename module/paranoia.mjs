@@ -94,6 +94,30 @@ Handlebars.registerHelper('toLowerCase', function (str) {
 
 Hooks.once("ready", async function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
+
+  //Friend Computer Eye Tracking
+  document.addEventListener('mousemove', (event) => {
+    const eyes = document.querySelectorAll('.paranoia-eye');
+    const screens = document.querySelectorAll('.paranoia-screen');
+    eyes.forEach((eye, index) => {
+      const screen = screens[index];
+      const rect = screen.getBoundingClientRect();
+      const screenCenterX = rect.left + rect.width / 2;
+      const screenCenterY = rect.top + rect.height / 2;
+
+      const dx = event.clientX - screenCenterX;
+      const dy = event.clientY - screenCenterY;
+
+      const maxMovement = rect.width * 0.1;
+      const distance = Math.min(maxMovement, Math.sqrt(dx * dx + dy * dy));
+      const angle = Math.atan2(dy, dx);
+
+      const offsetX = Math.cos(angle) * distance;
+      const offsetY = Math.sin(angle) * distance;
+
+      eye.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    });
+  });
 });
 
 /* -------------------------------------------- */

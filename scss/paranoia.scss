@@ -19,3 +19,88 @@
   @import 'components/items';
   @import 'components/effects';
 }
+
+.paranoia-blue-theme {
+  --main-color: #008cff; /* Default blue */
+  --glow-color: rgba(0, 255, 255, 0.5);
+  --font-color: #00ccff; /* Friend Computer blue */
+  --cursor-color: #00ffcc; /* Bright cyan */
+}
+
+/* Red Theme */
+.paranoia-red-theme {
+  --main-color: #ff4500;
+  --glow-color: rgba(255, 100, 0, 0.5);
+  --font-color: #ff4500;
+  --cursor-color: #ff6600;
+}
+
+.paranoia-friend-computer-container {
+  width: 98%;
+  height: 200px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.paranoia-screen {
+  width: 95%;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, #111, #333);
+  border: 3px solid #444;
+  border-radius: 10px;
+  box-shadow: 0 0 20px var(--glow-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.paranoia-eye {
+  width: 60%;
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle, #004488, var(--main-color), #00f);
+  border-radius: 50%;
+  box-shadow: 0 0 20px var(--glow-color);
+  position: absolute;
+  transition: transform 0.1s linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.paranoia-eye::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, transparent 50%, var(--main-color) 60%, transparent 70%),
+              conic-gradient(from 0deg at center, var(--main-color), transparent 30%, var(--main-color));
+  mask: radial-gradient(circle, transparent 70%, black 100%);
+  mix-blend-mode: lighten;
+  z-index: -1;
+}
+
+.paranoia-pupil {
+  width: 25%;
+  aspect-ratio: 1 / 1;
+  background: black;
+  border-radius: 50%;
+}
+
+// Override default chat message styling.
+
+.chat-message {
+  background: white;
+  border: 4px solid darkred;
+  font-family: "Cutive Mono", monospace;
+}
+
+.editor{
+  min-height: 50px;
+}
