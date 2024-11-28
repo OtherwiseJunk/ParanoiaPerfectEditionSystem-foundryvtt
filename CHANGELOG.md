@@ -1,3 +1,9 @@
+## v0.6.1
+
+Fix issue with blank fields not being able to be editted.
+Add new display for Friend Computer Dice Result.
+Make text messages look a bit more like character sheet.
+
 ## v0.6.0
 
 Add success count to roll results. This involved a refactor of the rolling logic, so if you notice any edge case failures please create a bug report on the github!
