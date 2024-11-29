@@ -1,3 +1,9 @@
+## v0.7.0
+
+Add new default background image for worlds
+Clean up NPC Actor sheets to make better use of space
+Add Mission Givers compendium with some ready made Sombody npcs to serve as mission givers.
+
 ## v0.6.1
 
 Fix issue with blank fields not being able to be editted.
