@@ -5,8 +5,8 @@ export class ParanoiaSomebodySheet extends ParanoiaActor {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["paranoia", "sheet", "actor"],
       template: "systems/paranoia/templates/actor/somebody-sheet.html",
-      width: 800,
-      height: 375
+      width: 1100,
+      height: 425
     });
   }
 }

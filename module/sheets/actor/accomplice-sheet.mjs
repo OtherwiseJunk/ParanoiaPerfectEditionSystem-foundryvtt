@@ -5,8 +5,8 @@ export class ParanoiaAccompliceSheet extends ParanoiaActor {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["paranoia", "sheet", "actor"],
       template: "systems/paranoia/templates/actor/accomplice-sheet.html",
-      width: 800,
-      height: 450
+      width: 1100,
+      height: 425
     });
   }
 

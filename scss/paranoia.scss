@@ -43,7 +43,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Cutive Mono", monospace;
 }
 
 .paranoia-screen {
@@ -95,12 +95,11 @@
 
 // Override default chat message styling.
 
-.chat-message {
+#sidebar .chat-message {
   background: white;
   border: 4px solid darkred;
-  font-family: "Cutive Mono", monospace;
 }
 
 .editor{
-  min-height: 50px;
+  min-height: 100%;
 }
