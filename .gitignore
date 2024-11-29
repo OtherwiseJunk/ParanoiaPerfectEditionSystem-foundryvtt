@@ -12,3 +12,4 @@ jsconfig.json
 foundry
 .DS_Store
 *.zip
+/packs

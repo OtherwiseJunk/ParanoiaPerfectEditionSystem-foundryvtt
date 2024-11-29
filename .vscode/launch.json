@@ -6,6 +6,13 @@
             "request": "launch",
             "name": "chrome Debug",
             "url": "http://localhost:30000",
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Pack Compendium",
+            "program": "${workspaceFolder}/tools/pushLDBtoJSON.mjs",
+            "outFiles": ["${workspaceFolder}/compendium_scripts/**/*.js"]
+          }
     ]
 }

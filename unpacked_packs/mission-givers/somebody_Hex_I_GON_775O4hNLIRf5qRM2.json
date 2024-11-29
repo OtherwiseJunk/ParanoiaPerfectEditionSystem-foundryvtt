@@ -1,0 +1,122 @@
+{
+  "folder": "b0Nczq9wW9n5g9VA",
+  "name": "Hex-I-GON",
+  "type": "somebody",
+  "_id": "775O4hNLIRf5qRM2",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "quote": "I see the _patterns_.",
+    "looks": "Wears a cloak covered in geometric shapes",
+    "quirks": "Draws hexagons everywhere, including this very briefing room.",
+    "plans": "Decode hidden messages in Alpha Complex geometry",
+    "basics": "R&D, Secret Society: Mystics, Mutant Power: Geometric Perception",
+    "gear": "Laster Ruler"
+  },
+  "prototypeToken": {
+    "name": "Hex-I-GON",
+    "displayName": 0,
+    "actorLink": false,
+    "appendNumber": false,
+    "prependAdjective": false,
+    "width": 1,
+    "height": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "hexagonalShape": 0,
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": -1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": "health"
+    },
+    "bar2": {
+      "attribute": "moxie"
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "sight": {
+      "enabled": false,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "flags": {},
+    "randomImg": false
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.331",
+    "systemId": "paranoia",
+    "systemVersion": "0.6.0",
+    "createdTime": 1732909302069,
+    "modifiedTime": 1732912498588,
+    "lastModifiedBy": "uJmjZokXWYweTBbC"
+  },
+  "sort": 106250,
+  "ownership": {
+    "default": 0,
+    "uJmjZokXWYweTBbC": 3
+  },
+  "_key": "!actors!775O4hNLIRf5qRM2"
+}

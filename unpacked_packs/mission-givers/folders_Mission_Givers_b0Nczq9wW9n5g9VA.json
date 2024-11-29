@@ -1,0 +1,22 @@
+{
+  "name": "Mission Givers",
+  "sorting": "a",
+  "folder": null,
+  "type": "Actor",
+  "_id": "b0Nczq9wW9n5g9VA",
+  "description": "",
+  "sort": 0,
+  "color": "#ff9e00",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.331",
+    "systemId": "paranoia",
+    "systemVersion": "0.6.0",
+    "createdTime": 1732912488086,
+    "modifiedTime": 1732912552411,
+    "lastModifiedBy": "uJmjZokXWYweTBbC"
+  },
+  "_key": "!folders!b0Nczq9wW9n5g9VA"
+}

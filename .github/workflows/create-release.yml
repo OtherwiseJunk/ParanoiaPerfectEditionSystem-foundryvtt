@@ -45,13 +45,16 @@ jobs:
           TAG_MESSAGE=$(git tag -l --format='%(contents)' $VERSION)
           echo -e "# Change Log\n\n## $VERSION\n\n$TAG_MESSAGE\n\n$(cat CHANGELOG.md)" > CHANGELOG.md
 
+      - name: Pack Compendium Files
+        run: npm run pullJSONtoLDB
+
       - name: Package files
         run: |
           VERSION=${{ env.version }}
           ZIP_NAME="ParanoiaPerfectEditionSystem-foundryvtt$VERSION.zip"
           zip -r $ZIP_NAME \
             CHANGELOG.md gulpfile.js LICENSE.txt package-lock.json package.json README.md system.json template.json \
-            css module lang scss templates
+            css module lang scss templates media packs
           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
 
       - name: Create GitHub Release

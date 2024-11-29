@@ -17,7 +17,21 @@
   "esmodules": ["module/paranoia.mjs"],
   "styles": ["css/paranoia.css"],
   "scripts": [],
-  "packs": [],
+  "packs": [
+    {
+      "name": "MissionGivers",
+      "label": "Mission Givers",
+      "system": "paranoia",
+      "path": "packs/mission-givers",
+      "type": "Actor",
+      "private": false,
+      "flags": {
+        "paranoia": {
+          "types": ["somebody"]
+        }
+      }
+    }
+  ],
   "languages": [
     {
       "lang": "en",
@@ -31,6 +45,7 @@
   },  
   "primaryTokenAttribute": "health",
   "secondaryTokenAttribute": "moxie",
+  "background": "systems/paranoia/media/paranoia_background.webp",
   "url": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt",
   "manifest": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/v0.5.1/system.json",
   "download": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/v0.5.1/ParanoiaPerfectEditionSystem-foundryvttv0.5.1.zip",

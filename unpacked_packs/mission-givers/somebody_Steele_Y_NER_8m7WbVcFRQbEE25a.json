@@ -1,0 +1,122 @@
+{
+  "folder": "b0Nczq9wW9n5g9VA",
+  "name": "Steele-Y-NER",
+  "type": "somebody",
+  "_id": "8m7WbVcFRQbEE25a",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "quote": "What doesn’t kill you makes you stronger",
+    "looks": "Buff, shiny bald head, scars all over.",
+    "quirks": "Flexes dramatically during conversations.",
+    "plans": "Wants to uncover treason in physical fitness programs.",
+    "basics": "Armed Forces, Secret Society: Death Leopard, Mutant Power: Super Strength.",
+    "gear": "Weighted baton, protein bars."
+  },
+  "prototypeToken": {
+    "name": "Actor (5)",
+    "displayName": 0,
+    "actorLink": false,
+    "appendNumber": false,
+    "prependAdjective": false,
+    "width": 1,
+    "height": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "hexagonalShape": 0,
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": -1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": "health"
+    },
+    "bar2": {
+      "attribute": "moxie"
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "sight": {
+      "enabled": false,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "detectionModes": [],
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "flags": {},
+    "randomImg": false
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.331",
+    "systemId": "paranoia",
+    "systemVersion": "0.6.0",
+    "createdTime": 1732909302069,
+    "modifiedTime": 1732912511704,
+    "lastModifiedBy": "uJmjZokXWYweTBbC"
+  },
+  "sort": 100391,
+  "ownership": {
+    "default": 0,
+    "uJmjZokXWYweTBbC": 3
+  },
+  "_key": "!actors!8m7WbVcFRQbEE25a"
+}
