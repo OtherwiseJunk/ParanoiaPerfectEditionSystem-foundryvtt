@@ -1,6 +1,7 @@
 // Import document classes.
 import { ParanoiaActor } from "./documents/actor.mjs";
 import { ParanoiaEquipment } from "./documents/equipment.mjs";
+import { ParanoiaTokenDocument } from "./documents/token.mjs";
 // Import sheet classes.
 import { ParanoiaTroubleshooterSheet } from "./sheets/actor/troubleshooter-sheet.mjs";
 import { ParanoiaNobodySheet } from "./sheets/actor/nobody-sheet.mjs";
@@ -37,6 +38,7 @@ Hooks.once('init', async function () {
   // Define custom Document classes
   CONFIG.Actor.documentClass = ParanoiaActor;
   CONFIG.Item.documentClass = ParanoiaEquipment;
+  CONFIG.Token.documentClass = ParanoiaTokenDocument;
 
   CONFIG.Combat.initiative = {
     formula: "@sec"

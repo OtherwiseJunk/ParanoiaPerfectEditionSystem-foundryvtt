@@ -1,11 +1,12 @@
-let SecurityClearance =Object.freeze({
-  r:2,
-  o:3,
-  y:4,
-  g:5,
-  b:6,
-  i:7,
-  v:8
+export const SecurityClearance =Object.freeze({
+  r:1,
+  o:2,
+  y:3,
+  g:4,
+  b:5,
+  i:6,
+  v:7,
+  u:8
 });
 
 /**
@@ -131,7 +132,11 @@ export class ParanoiaActor extends Actor {
 
   extractSecurityClearance(value){
     const nameParts = value.split('-');
-    const securityCharacter = nameParts[1].toLowerCase();
-    return SecurityClearance[securityCharacter];
+    if(nameParts.length >= 3){
+      const securityCharacter = nameParts[1].toLowerCase();
+      return SecurityClearance[securityCharacter];
+    }
+
+    return 0;
   }
 }
