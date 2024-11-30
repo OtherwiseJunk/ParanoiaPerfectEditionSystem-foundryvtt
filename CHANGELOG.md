@@ -1,3 +1,7 @@
+## v0.7.1
+
+Fixes issue with blank test areas (reintroduced in v0.7.0)
+
 ## v0.7.0
 
 Add new default background image for worlds
