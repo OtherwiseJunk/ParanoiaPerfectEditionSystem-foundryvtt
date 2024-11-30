@@ -1,12 +1,14 @@
-export const SecurityClearance =Object.freeze({
-  r:1,
-  o:2,
-  y:3,
-  g:4,
-  b:5,
-  i:6,
-  v:7,
-  u:8
+import { ParanoiaTokenDocument } from "./token.mjs";
+
+export const SecurityClearance = Object.freeze({
+  r: 1,
+  o: 2,
+  y: 3,
+  g: 4,
+  b: 5,
+  i: 6,
+  v: 7,
+  u: 8
 });
 
 /**
@@ -43,7 +45,6 @@ export class ParanoiaActor extends Actor {
     const actorData = this;
     const systemData = actorData.system;
     const flags = actorData.flags.paranoia || {};
-    this.updateSecurityClearanceFromName(actorData.name, systemData);
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
@@ -54,12 +55,12 @@ export class ParanoiaActor extends Actor {
   /**
    * Prepare Character type specific data
    */
-  _prepareCharacterData(actorData) {}
+  _prepareCharacterData(actorData) { }
 
   /**
    * Prepare NPC type specific data.
    */
-  _prepareNpcData(actorData) {}
+  _prepareNpcData(actorData) { }
 
   /**
    * Override getRollData() that's supplied to rolls.
@@ -67,9 +68,9 @@ export class ParanoiaActor extends Actor {
   getRollData() {
     const data = super.getRollData();
 
-    data['securityClearance'] = data.securityClearance ?? 1;
-    data['sec'] = data.securityClearance ?? 1;
-    
+    data['securityClearance'] = data.securityClearance ?? 0;
+    data['sec'] = data.securityClearance ?? 0;
+
     // Prepare character roll data.
     this._getCharacterRollData(data);
     this._getNpcRollData(data);
@@ -85,23 +86,77 @@ export class ParanoiaActor extends Actor {
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `/roll @brainsd6`.
     if (data.abilities) {
-      
+
       for (let [abilityName, ability] of Object.entries(data.abilities)) {
         let shorthand = this.getAbilityShorthand(abilityName);
         data[abilityName] = ability.value;
-        if(shorthand !== ''){
+        if (shorthand !== '') {
           data[shorthand] = ability.value;
         }
-        for(let [skillName, skill] of Object.entries(ability.skills)){
-          let santiziedName = skillName.replace(' ','').toLocaleLowerCase();
+        for (let [skillName, skill] of Object.entries(ability.skills)) {
+          let santiziedName = skillName.replace(' ', '').toLocaleLowerCase();
           data[santiziedName] = skill.value;
         }
       }
     }
   }
 
-  getAbilityShorthand(abilityName){
-    switch(abilityName){
+  /**
+   *
+   * @param {*} data - The initial data object provided to the document creation request
+   * @param {*} options - Additional options which modify the creation request
+   * @param {*} userId - The id of the User requesting the document update
+   */
+  async _preCreate(data, options, userId) {
+    if ((await super._preCreate(data, options, userId)) === false) return false;
+    this.updateSecurityClearanceFromName(data.name, this.system);
+
+    const prototypeToken = ParanoiaTokenDocument.buildPrototypeTokenData(this.system.securityClearance);
+    if (this.type === "troubleshooter") Object.assign(prototypeToken, {
+      sight: { enabled: true }, actorLink: true,
+    });
+
+    this.updateSource({
+      "prototypeToken.ring.enabled": prototypeToken.enabled,
+      "prototypeToken.ring.subject.scale": prototypeToken.scale,
+      "prototypeToken.ring.colors.ring": prototypeToken.color,
+      "prototypeToken.ring.effects": prototypeToken.effects,
+      "prototypeToken.sight": prototypeToken.sight,
+      "prototypeToken.actorLink": prototypeToken.actorLink ?? false
+    });
+
+  }
+
+  /**
+   *
+   * @param {*} changed - The differential data that was changed relative to the documents prior values
+   * @param {*} options - Additional options which modify the update request
+   * @param {*} userId - The id of the User requesting the document update
+   */
+  async _onUpdate(changed, options, userId) {
+    super._onUpdate(changed, options, userId);
+
+    const isNameUpdate = !!changed.name;
+
+    if (isNameUpdate) {
+      this.updateSecurityClearanceFromName(changed.name, this.system);
+      const prototypeToken = ParanoiaTokenDocument.buildPrototypeTokenData(this.system.securityClearance);
+      this.updateSource({
+        "prototypeToken.ring.colors.ring": prototypeToken.color,
+        "prototypeToken.ring.effects": prototypeToken.effects,
+      });
+      this.getActiveTokens().forEach(token => {
+        token.document.updateSource({
+          "ring.colors.ring": prototypeToken.color,
+          "ring.effects": prototypeToken.effects
+        });
+        token.renderFlags.set({ redraw: true })
+      });
+    }
+  }
+
+  getAbilityShorthand(abilityName) {
+    switch (abilityName) {
       case 'brains':
         return 'brn';
       case 'chutzpah':
@@ -110,7 +165,7 @@ export class ParanoiaActor extends Actor {
         return 'mec';
       case 'violence':
         return 'vio';
-      default: 
+      default:
         return '';
     }
   }
@@ -124,19 +179,20 @@ export class ParanoiaActor extends Actor {
     // Process additional NPC data here.
   }
 
-  updateSecurityClearanceFromName(name, systemData){
-    if(/.*-[R,r,O,o,Y,y,G,g,B,b,I,i,V,v]-.*/.test(name)){
+  updateSecurityClearanceFromName(name, systemData) {
+    if (/.*-[R,r,O,o,Y,y,G,g,B,b,I,i,V,v,u,U]-.*/.test(name)) {
       systemData.securityClearance = this.extractSecurityClearance(name);
+    }
+    else {
+      systemData.securityClearance = 0;
     }
   }
 
-  extractSecurityClearance(value){
+  extractSecurityClearance(value) {
     const nameParts = value.split('-');
-    if(nameParts.length >= 3){
-      const securityCharacter = nameParts[1].toLowerCase();
-      return SecurityClearance[securityCharacter];
-    }
 
-    return 0;
+    const securityCharacter = nameParts[1].toLowerCase();
+    const clearance = SecurityClearance[securityCharacter];
+    return clearance;
   }
 }
