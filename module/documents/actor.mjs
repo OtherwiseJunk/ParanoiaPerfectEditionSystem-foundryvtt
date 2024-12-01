@@ -1,5 +1,3 @@
-import { ParanoiaTokenDocument } from "./token.mjs";
-
 export const SecurityClearance = Object.freeze({
   r: 1,
   o: 2,
@@ -111,7 +109,7 @@ export class ParanoiaActor extends Actor {
     if ((await super._preCreate(data, options, userId)) === false) return false;
     this.updateSecurityClearanceFromName(data.name, this.system);
 
-    const prototypeToken = ParanoiaTokenDocument.buildPrototypeTokenData(this.system.securityClearance);
+    const prototypeToken = this.buildDynamicTokenRingData(this.system.securityClearance);
     if (this.type === "troubleshooter") Object.assign(prototypeToken, {
       sight: { enabled: true }, actorLink: true,
     });
@@ -136,23 +134,101 @@ export class ParanoiaActor extends Actor {
   async _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
 
-    const isNameUpdate = !!changed.name;
+    const isNameUpdate = !!changed?.name;
+    const isMoxieUpdate = !!changed?.system?.moxie;
 
     if (isNameUpdate) {
-      this.updateSecurityClearanceFromName(changed.name, this.system);
-      const prototypeToken = ParanoiaTokenDocument.buildPrototypeTokenData(this.system.securityClearance);
-      this.updateSource({
-        "prototypeToken.ring.colors.ring": prototypeToken.color,
-        "prototypeToken.ring.effects": prototypeToken.effects,
-      });
-      this.getActiveTokens().forEach(token => {
-        token.document.updateSource({
-          "ring.colors.ring": prototypeToken.color,
-          "ring.effects": prototypeToken.effects
-        });
-        token.renderFlags.set({ redraw: true })
-      });
+      this.triggerSecurityClearanceChange(changed.name);
     }
+
+    if (isMoxieUpdate && changed.system.moxie.value < 1) {
+      this.triggerLoseItDynamicRingEffect();
+      this.sendLosingItMessage();
+    }
+  }
+
+  triggerSecurityClearanceChange(name) {
+    this.updateSecurityClearanceFromName(name, this.system);
+    const prototypeToken = this.buildDynamicTokenRingData(this.system.securityClearance);
+    this.updateSource({
+      "prototypeToken.ring.enabled": prototypeToken.enabled,
+      "prototypeToken.ring.subject.scale": prototypeToken.scale,
+      "prototypeToken.ring.colors.ring": prototypeToken.color,
+      "prototypeToken.ring.effects": prototypeToken.effects,
+    });
+    this.getActiveTokens().forEach(token => {
+      token.document.update({
+        "ring.enabled": prototypeToken.enabled,
+        "ring.subject.scale": prototypeToken.scale,
+        "ring.colors.ring": prototypeToken.color,
+        "ring.effects": prototypeToken.effects
+      });
+      token.renderFlags.set({ redraw: true })
+    });
+  }
+
+  buildDynamicTokenRingData(securityClearance) {
+    let prototype = {
+      enabled: true,
+      scale: 0.8,
+      effects: 1
+    }
+
+    switch (securityClearance) {
+      case SecurityClearance.r:
+        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Red;
+        break;
+      case SecurityClearance.o:
+        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Orange;
+        break;
+      case SecurityClearance.y:
+        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Yellow;
+        break;
+      case SecurityClearance.g:
+        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Green;
+        break;
+      case SecurityClearance.b:
+        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Blue;
+        break;
+      case SecurityClearance.i:
+        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Indigo;
+        break;
+      case SecurityClearance.v:
+        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Violet;
+        break;
+      case SecurityClearance.u:
+        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Ultraviolet;
+        prototype.effects = 2;
+        break;
+      default:
+        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Infrared;
+        break;
+    }
+
+    return prototype;
+  }
+
+  triggerLoseItDynamicRingEffect() {
+    console.log(foundry.canvas.tokens.TokenRing);
+    let dynamicTokenData = this.buildDynamicTokenRingData(this.system.securityClearance);
+    this.getActiveTokens().forEach(token => {
+      console.log('updating token for character losing it');
+      token.ring.flashColor(dynamicTokenData.color, {
+        duration: 750,
+        easing: this.easeFourPeaks
+      });
+    });
+  }
+
+  sendLosingItMessage() {
+    ChatMessage.create({
+      speaker: { actor: this },
+      content: "I'm LOSING IT!",
+    });
+  }
+
+  easeFourPeaks(t) {
+    return Math.sin(t * Math.PI * 3);
   }
 
   getAbilityShorthand(abilityName) {
