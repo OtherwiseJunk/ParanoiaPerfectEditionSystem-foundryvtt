@@ -1,3 +1,7 @@
+## v0.8.0
+
+Adds DynamicRing support for displaying security clearance. Also add a message when a character loses it.
+
 ## v0.7.1
 
 Fixes issue with blank test areas (reintroduced in v0.7.0)
