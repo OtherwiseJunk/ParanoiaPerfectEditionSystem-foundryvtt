@@ -1,50 +1,76 @@
-<form class="{{cssClass}} {{actor.type}} flexcol paranoia" autocomplete="off">
+<form class="{{cssClass}} {{actor.type}} flexcol paranoia paranoia-item" autocomplete="off">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
-    <div class="grid grid-3col">
-        <div class="paranoia-item-info-container">
-            <img class="paranoia-npc-image" src="{{item.img}}" data-edit="img" name="paranoia.item.image"
+    <div class="grid grid-6col">
+        <div class="paranoia-item-info-container grid-span-2">
+            <img class="paranoia-item-image" src="{{item.img}}" data-edit="img" name="paranoia.item.image"
                 title="{{item.name}}" height="250" />
             <input type="checkbox" name="system.assigned" {{checked system.assigned}} />
             <label for="system.assigned" class="resource-label">Assigned?</label>
         </div>
-        <div class="paranoia-item-info-container grid-span-2">
-            <div class="resource flex-group-center">
-                <label for="name" class="resource-label">Name</label>
-                <div class="resource-content flexrow flex-center flex-between">
-                    <input class="paranoia-actor-name" type="text" name="name" value="{{item.name}}"
+        <div class="paranoia-item-info-container grid-span-4">
+            <div class="paranoia-itemm-header resource flex-group-center grid grid-7col">
+                <div class="grid-span-5">
+                    <label for="name" class="resource-label">Name</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input class="paranoia-actor-name" type="text" name="name" value="{{item.name}}"
                         data-dtype="String" />
+                    </div>                    
+                </div>
+                <div class="grid-span-1">
+                    <label for="system.level" class="resource-label">Level</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="system.level" value="{{system.level}}" data-dtype="Number" />
+                    </div>
+                </div>
+                <div class="grid-span-1">
+                    <label for="system.clearance" class="resource-label">Clearance</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="system.clearance" value="{{system.clearance}}" data-dtype="String" />
+                    </div>
                 </div>
             </div>
             <div class="resource flex-group-center">
                 <label for="system.description" class="resource-label">Description</label>
                 <div class="resource-content flexrow flex-center flex-between">
-                    <input type="text" name="system.description" value="{{system.description}}" data-dtype="String" />
-                </div>
-            </div>
-            <div class="resource flex-group-center">
-                <label for="system.level" class="resource-label">Equipment Level</label>
-                <div class="resource-content flexrow flex-center flex-between">
-                    <input type="text" name="system.level" value="{{system.level}}" data-dtype="Number" />
-                </div>
-            </div>
-            <div class="resource flex-group-center">
-                <label for="system.clearance" class="resource-label">Clearance</label>
-                <div class="resource-content flexrow flex-center flex-between">
-                    <input type="text" name="system.clearance" value="{{system.clearance}}" data-dtype="String" />
+                    <div class="paranoia-editor-container">
+                        {{editor
+                        enrichedDescription
+                        target="system.description"
+                        button=true
+                        engine="prosemirror"
+                        editable=editable
+                        collaborate=false }}
+                      </div>
                 </div>
             </div>
             <div class="resource flex-group-center">
                 <label for="system.success" class="resource-label">Success</label>
                 <div class="resource-content flexrow flex-center flex-between">
-                    <input type="text" name="system.success" value="{{system.success}}" data-dtype="String" />
+                    <div class="paranoia-editor-container">
+                        {{editor
+                        enrichedSuccess
+                        target="system.suuccess"
+                        button=true
+                        engine="prosemirror"
+                        editable=editable
+                        collaborate=false }}
+                      </div>
                 </div>
             </div>
             <div class="resource flex-group-center">
                 <label for="system.treason" class="resource-label">Treason</label>
                 <div class="resource-content flexrow flex-center flex-between">
-                    <input type="text" name="system.treason" value="{{system.treason}}" data-dtype="String" />
+                    <div class="paranoia-editor-container">
+                        {{editor
+                        enrichedTreason
+                        target="system.treason"
+                        button=true
+                        engine="prosemirror"
+                        editable=editable
+                        collaborate=false }}
+                      </div>
                 </div>
             </div>
         </div>

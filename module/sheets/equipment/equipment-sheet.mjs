@@ -3,8 +3,8 @@ export class ParanoiaEquipmentSheet extends ItemSheet {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ['paranoia', 'sheet', 'item'],
-            width: 800,
-            height: 350,
+            width: 1100,
+            height: 450,
         });
     }
 
@@ -14,11 +14,15 @@ export class ParanoiaEquipmentSheet extends ItemSheet {
     }
 
     /** @override */
-    getData() {
+    async getData() {
         const data = super.getData();
 
         const itemData = this.item.toObject(false);
         data.system = itemData.system;
+
+        data.enrichedDescription = await TextEditor.enrichHTML(data.system.description);
+        data.enrichedSuccess = await TextEditor.enrichHTML(data.system.success);
+        data.enrichedTreason = await TextEditor.enrichHTML(data.system.treason);
 
         return data;
     }
