@@ -236,9 +236,15 @@ button {
   min-width: 90%;
 }
 
-.paranoia-npc-image {
+.paranoia-somebody-image {
   width: 100%;
-  height: 80%;
+  height: 67%;
+  background-color: darkred;
+}
+
+.paranoia-nobody-image {
+  width: 100%;
+  height: 100%;
   background-color: darkred;
 }
 

@@ -4,7 +4,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
   <div class="grid grid-3col">
     <div class="paranoia-npc-info">
-      <img class="paranoia-npc-image" src="{{actor.img}}" data-edit="img" name="paranoia.actor.image"
+      <img class="paranoia-nobody-image" src="{{actor.img}}" data-edit="img" name="paranoia.actor.image"
       title="{{actor.name}}'s ugly mug" height="250" />
     </div>
     <div class="paranoia-npc-info grid-span-2">
@@ -17,19 +17,43 @@
       <div class="resource flex-group-center" style="width: 100%">
         <label for="system.looks" class="resource-label">Looks</label>
         <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="system.looks" value="{{system.looks}}" data-dtype="String" />
+          <div class="paranoia-editor-container">
+            {{editor
+            enrichedLooks
+            target="system.looks"
+            button=true
+            engine="prosemirror"
+            editable=editable
+            collaborate=false }}
+          </div>
         </div>
       </div>
       <div class="resource flex-group-center" style="width: 100%">
         <label for="system.quirks" class="resource-label">Quirks</label>
         <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="system.quirks" value="{{system.quirks}}" data-dtype="String" />
+          <div class="paranoia-editor-container">
+            {{editor
+            enrichedQuirks
+            target="system.quirks"
+            button=true
+            engine="prosemirror"
+            editable=editable
+            collaborate=false }}
+          </div>
         </div>
       </div>
       <div class="resource flex-group-center" style="width: 100%">
         <label for="system.plans" class="resource-label">Plans</label>
         <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="system.plans" value="{{system.plans}}" data-dtype="String" />
+          <div class="paranoia-editor-container">
+            {{editor
+            enrichedPlans
+            target="system.plans"
+            button=true
+            engine="prosemirror"
+            editable=editable
+            collaborate=false }}
+          </div>
         </div>
       </div>
     </div>
