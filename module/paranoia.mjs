@@ -17,7 +17,7 @@ import {
   ParanoiaAccompliceData,
   ParanoiaEquipmentData
 } from "./data/index.mjs";
-import { registerGameSettings } from "./settings/settings";
+import { registerGameSettings } from "./settings/settings.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */

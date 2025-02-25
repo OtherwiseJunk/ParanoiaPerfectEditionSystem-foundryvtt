@@ -115,18 +115,6 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
     // Initialize containers.
     const gear = [];
     const features = [];
-    const spells = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      9: []
-    };
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
@@ -180,6 +168,11 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
       const actorFlag = this.actor.system.flag;
       this.validateWellnessChange(eventValue, event.target, actorFlag);
     });
+    html.find('.paranoia-moxie').change((event) => {
+      const eventValue = parseInt(event.target.value);
+      const actorMoxie = this.actor.system.moxie;
+      this.validateWellnessChange(eventValue, event.target, actorMoxie);
+    });
   }
 
   /** @inheritDoc */
@@ -218,7 +211,7 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
 
         let roll = await new Roll(rollString).evaluate();
         // Simplified the displayed formula to reduce confusion. 2 * (Xd6cs>=5) - X is weird.
-        if(NODE < 0) {
+        if (NODE < 0) {
           roll._formula = `${Math.abs(NODE)}d6cs>=5`;
         }
 
@@ -238,7 +231,7 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
   }
 
   generateRollString(NODE) {
-    if(NODE > 0) return `${Math.abs(NODE)}d6cs>=5`;
+    if (NODE > 0) return `${Math.abs(NODE)}d6cs>=5`;
 
     let positiveNode = Math.abs(NODE);
     return `2 * (${positiveNode}d6cs>=5) - ${positiveNode}`;
@@ -246,10 +239,10 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
 
   async sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention) {
     let flavor = '';
-    if(NODE === 1){
+    if (NODE === 1) {
       flavor += `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`
     }
-    if(NODE < 0) {
+    if (NODE < 0) {
       flavor += 'Rolled with negative node. Non-Successes subtract from your success count! Good luck, citizen.<br>';
     }
     flavor += `Rolled with a level ${equipmentModifier} equipment.`
@@ -274,8 +267,8 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
     NODE += equipmentModifier;
     NODE -= initiativeModifier;
     NODE -= hurtLevel;
-    
-    if(NODE < 0){
+
+    if (NODE < 0) {
       return NODE - 1; // "add" Computer Dice
     }
 
@@ -323,9 +316,9 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
   async sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
     let flavor = `You manage to avoid Friend Computer\'s notice... this time.`;
     if (attractedComputersAttention) {
-      flavor = `Friend Computer turns its eye on your troubleshooter... (Citizen is a ${this.flagLevelToDescription(flagLevel)} and rolled a ${computerDiceResult}).`;      
+      flavor = `Friend Computer turns its eye on your troubleshooter... (Citizen is a ${this.flagLevelToDescription(flagLevel)} and rolled a ${computerDiceResult}).`;
     }
-    
+
     let content = this.GenerateFriendComputerMessage(flavor, attractedComputersAttention);
     ChatMessage.create({
       speaker: { alias: 'Friend Computer' },
@@ -334,10 +327,10 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
     });
   }
 
-  GenerateFriendComputerMessage(message, isAngry){
+  GenerateFriendComputerMessage(message, isAngry) {
     let theme = isAngry ? 'paranoia-red-theme' : 'paranoia-blue-theme';
 
-    return`<div class="paranoia-friend-computer-container ${theme}">
+    return `<div class="paranoia-friend-computer-container ${theme}">
     <div class="paranoia-screen">
       <div class="paranoia-eye">
         <div class="paranoia-pupil"></div>

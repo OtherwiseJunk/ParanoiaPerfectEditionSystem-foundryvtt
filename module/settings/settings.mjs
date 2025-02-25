@@ -1,4 +1,4 @@
-export class SettingsKeys {
+export class SystemSettingsKeys {
     static get SYSTEM() {
         return "paranoia";
     }
@@ -12,7 +12,7 @@ export class SettingsKeys {
 }
 
 export function registerGameSettings() {
-    game.settings.register(SettingsKeys.SYSTEM, SettingsKeys.MAXIMUM_MOXIE, {
+    game.settings.register(SystemSettingsKeys.SYSTEM, SystemSettingsKeys.MAXIMUM_MOXIE, {
         name: "Maximum Moxie",
         hint: "The maximum number of Moxie points a character can have.",
         scope: "world",
@@ -22,7 +22,7 @@ export function registerGameSettings() {
         requiresReload: true
     });
 
-    game.settings.register(SettingsKeys.SYSTEM, SettingsKeys.STARTING_XP, {
+    game.settings.register(SystemSettingsKeys.SYSTEM, SystemSettingsKeys.STARTING_XP, {
         name: "Starting XP Points",
         hint: "The number of XP points a character starts with.",
         scope: "world",
