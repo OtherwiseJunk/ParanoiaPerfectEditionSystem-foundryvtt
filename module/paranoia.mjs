@@ -17,6 +17,7 @@ import {
   ParanoiaAccompliceData,
   ParanoiaEquipmentData
 } from "./data/index.mjs";
+import { registerGameSettings } from "./settings/settings";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -30,6 +31,8 @@ Hooks.once('init', async function () {
     ParanoiaActor,
     ParanoiaEquipment
   };
+
+  registerGameSettings()
 
   // Add custom constants for configuration.
   CONFIG.PARANOIA = PARANOIA;
