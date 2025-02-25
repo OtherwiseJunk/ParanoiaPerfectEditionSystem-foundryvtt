@@ -74,4 +74,15 @@ export class ParanoiaTroubleshooterData extends foundry.abstract.TypeDataModel {
             })
         }
     }
+
+    static migrateData(source) {
+        const maximumMoxie = game.settings.get(SystemSettingsKeys.SYSTEM, SystemSettingsKeys.MAXIMUM_MOXIE);
+        if (source.moxie.value > maximumMoxie) {
+            source.moxie.max = maximumMoxie;
+        }
+        if (source.moxie.value > source.moxie.max) {
+            source.moxie.value = source.moxie.max;
+        }
+        return super.migrateData(source);
+    }
 }
