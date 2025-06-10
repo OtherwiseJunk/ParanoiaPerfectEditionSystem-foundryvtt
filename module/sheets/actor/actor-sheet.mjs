@@ -1,3 +1,5 @@
+const ActorSheet = foundry.appv1.sheets.ActorSheet;
+
 export class ParanoiaActor extends ActorSheet {
     /** @override */
     get template() {
