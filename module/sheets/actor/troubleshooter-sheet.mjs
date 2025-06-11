@@ -1,10 +1,10 @@
 import { prepareActiveEffectCategories } from "../../helpers/effects.mjs";
-import { GetCompatibleTextEditor } from "../../utils/compatibility.mjs";
+import { getCompatibleTextEditor } from "../../utils/compatibility.mjs";
 import { ParanoiaActor } from "./actor-sheet.mjs";
 
 /**
- * Extend the basic ActorSheet with some very simple modifications
- * @extends {ActorSheet}
+ * Extends our base ParanoiaActor class to create a sheet for Troubleshooters.
+ * @extends {ParanoiaActor}
  */
 export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
 
@@ -55,7 +55,7 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     context.system = actorData.system;
     context.flags = actorData.flags;
 
-    const textEditor = GetCompatibleTextEditor()
+    const textEditor = getCompatibleTextEditor()
 
     context.enrichedAliases = await textEditor.enrichHTML(context.system.secrets.aliases)
     context.enrichedSecretSocieties = await textEditor.enrichHTML(context.system.secrets.secretSociety)

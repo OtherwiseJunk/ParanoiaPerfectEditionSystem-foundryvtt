@@ -17,7 +17,7 @@ import {
   ParanoiaAccompliceData,
   ParanoiaEquipmentData
 } from "./data/index.mjs";
-import { GetCompatibleActorsObject, GetCompatibleItemsObject } from "./utils/compatibility.mjs";
+import { getCompatibleActorsObject, getCompatibleItemsObject, getCompatibleActorSheet, getCompatibleItemSheet } from "./utils/compatibility.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -31,8 +31,8 @@ Hooks.once('init', async function () {
     ParanoiaActor,
     ParanoiaEquipment
   };
-  const items = GetCompatibleItemsObject();
-  const actors = GetCompatibleActorsObject();
+  const items = getCompatibleItemsObject();
+  const actors = getCompatibleActorsObject();
 
   // Add custom constants for configuration.
   CONFIG.PARANOIA = PARANOIA;
@@ -57,11 +57,12 @@ Hooks.once('init', async function () {
   })
 
   // Register sheet application classes
-  actors.unregisterSheet("core", ActorSheet);
+  actors.unregisterSheet("core", getCompatibleActorSheet());
+  items.unregisterSheet("core", getCompatibleItemSheet());
   actors.registerSheet("paranoia", ParanoiaTroubleshooterSheet, { types: ["troubleshooter"], makeDefault: true });
-  actors.registerSheet("paranoia", ParanoiaNobodySheet, { types: ["nobody"], makeDefault: true });
-  actors.registerSheet("paranoia", ParanoiaSomebodySheet, { types: ["somebody"], makeDefault: true });
-  actors.registerSheet("paranoia", ParanoiaAccompliceSheet, { types: ["accomplice"], makeDefault: true });
+  actors.registerSheet("paranoia", ParanoiaNobodySheet, { types: ["nobody"], makeDefault: false });
+  actors.registerSheet("paranoia", ParanoiaSomebodySheet, { types: ["somebody"], makeDefault: false });
+  actors.registerSheet("paranoia", ParanoiaAccompliceSheet, { types: ["accomplice"], makeDefault: false });
   items.registerSheet("paranoia", ParanoiaEquipmentSheet, { types: ["equipment"], makeDefault: true });
 
   // Preload Handlebars templates.

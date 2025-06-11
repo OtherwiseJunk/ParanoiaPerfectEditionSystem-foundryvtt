@@ -1,4 +1,6 @@
-export class ParanoiaEquipmentSheet extends ItemSheet {
+import { getCompatibleItemSheet } from "../../utils/compatibility.mjs";
+
+export class ParanoiaEquipmentSheet extends getCompatibleItemSheet() {
     /** @override */
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {

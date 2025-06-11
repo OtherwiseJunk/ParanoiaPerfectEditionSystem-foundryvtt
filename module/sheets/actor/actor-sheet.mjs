@@ -1,6 +1,6 @@
-const ActorSheet = foundry.appv1.sheets.ActorSheet;
+import { getCompatibleActorSheet } from "../../utils/compatibility.mjs";
 
-export class ParanoiaActor extends ActorSheet {
+export class ParanoiaActor extends getCompatibleActorSheet() {
     /** @override */
     get template() {
         return `systems/paranoia/templates/actor/${this.actor.type}-sheet.html`;

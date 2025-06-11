@@ -10,6 +10,9 @@ services:
     depends_on:
       - foundryvtt
   foundryvtt:
+    # Other Versions:
+    # image: felddy/foundryvtt:13.344.0
+    # image: felddy/foundryvtt:12.331.0
     image: felddy/foundryvtt:13.344.0
     container_name: foundryvtt
     environment:

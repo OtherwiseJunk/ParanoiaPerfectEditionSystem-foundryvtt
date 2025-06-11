@@ -1,26 +1,18 @@
-export function GetCompatibleTextEditor(){
-    if (foundry.utils.isNewerVersion(game.version, "13")) {
-        return foundry.applications.ux.TextEditor;
-    }
-    else{
-        return TextEditor;
-    }
+export function getCompatibleTextEditor(){
+    return foundry.applications.ux.TextEditor ?? TextEditor;
 }
 
-export function GetCompatibleActorsObject(){
-    if (foundry.utils.isNewerVersion(game.version, "13")) {
-        return foundry.documents.collections.Actors;
-    }
-    else{
-        return Actors;
-    }
+export function getCompatibleActorsObject(){
+    return foundry.documents.collections.Actors ?? Actors;
 }
 
-export function GetCompatibleItemsObject(){
-    if (foundry.utils.isNewerVersion(game.version, "13")) {
-        return foundry.documents.collections.Items;
-    }
-    else{
-        return Items;
-    }
+export function getCompatibleItemsObject(){
+    return foundry.documents.collections.Items ?? Items;
+}
+
+export function getCompatibleActorSheet(){
+    return foundry.appv1.sheets.ActorSheet ?? ActorSheet
+}
+export function getCompatibleItemSheet(){
+    return foundry.appv1.sheets.ItemSheet ?? ItemSheet;
 }
