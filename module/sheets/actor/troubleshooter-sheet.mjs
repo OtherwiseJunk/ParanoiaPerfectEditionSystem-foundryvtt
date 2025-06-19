@@ -1,10 +1,12 @@
-import { onManageActiveEffect, prepareActiveEffectCategories } from "../../helpers/effects.mjs";
+import { prepareActiveEffectCategories } from "../../helpers/effects.mjs";
+import { getCompatibleTextEditor } from "../../utils/compatibility.mjs";
+import { ParanoiaActor } from "./actor-sheet.mjs";
 
 /**
- * Extend the basic ActorSheet with some very simple modifications
- * @extends {ActorSheet}
+ * Extends our base ParanoiaActor class to create a sheet for Troubleshooters.
+ * @extends {ParanoiaActor}
  */
-export class ParanoiaTroubleshooterSheet extends ActorSheet {
+export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
 
   /** @override */
   static get defaultOptions() {
@@ -15,11 +17,6 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
       height: 675,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
     });
-  }
-
-  /** @override */
-  get template() {
-    return `systems/paranoia/templates/actor/${this.actor.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
@@ -33,8 +30,8 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
     const context = super.getData();
 
     context.sheetSettings = {};
-    context.sheetSettings.isLimited = (this.actor.permission == 1) ? true : false;
-    context.sheetSettings.isObserver = (this.actor.permission == 2 || this.actor.compendium?.locked) ? true : false;
+    context.sheetSettings.isLimited = this.actor.permission == CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED
+    context.sheetSettings.isObserver = (this.actor.permission === CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER || this.actor.compendium?.locked);
 
     context.healthFlags = {
       4: "Fine",
@@ -58,17 +55,19 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
     context.system = actorData.system;
     context.flags = actorData.flags;
 
-    context.enrichedAliases = await TextEditor.enrichHTML(context.system.secrets.aliases)
-    context.enrichedSecretSocieties = await TextEditor.enrichHTML(context.system.secrets.secretSociety)
-    context.enrichedSecretObjective = await TextEditor.enrichHTML(context.system.secrets.secretObjective)
-    context.enrichedMutantPowers = await TextEditor.enrichHTML(context.system.secrets.mutantPower)
-    context.enrichedServiceGroupFavors = await TextEditor.enrichHTML(context.system.secrets.serviceGroupFavors)
-    context.enrichedSecretSocietyFavors = await TextEditor.enrichHTML(context.system.secrets.secretSocietyFavors)
-    context.enrichedTreasonousGear = await TextEditor.enrichHTML(context.system.secrets.treasonousGear)
-    context.enrichedEvidence = await TextEditor.enrichHTML(context.system.secrets.evidence)
-    context.enrichedSecretNotes = await TextEditor.enrichHTML(context.system.secrets.notes)
-    context.enrichedGear = await TextEditor.enrichHTML(context.system.assignedGear)
-    context.enrichedMissionObjectives = await TextEditor.enrichHTML(context.system.missionObjectives)
+    const textEditor = getCompatibleTextEditor()
+
+    context.enrichedAliases = await textEditor.enrichHTML(context.system.secrets.aliases)
+    context.enrichedSecretSocieties = await textEditor.enrichHTML(context.system.secrets.secretSociety)
+    context.enrichedSecretObjective = await textEditor.enrichHTML(context.system.secrets.secretObjective)
+    context.enrichedMutantPowers = await textEditor.enrichHTML(context.system.secrets.mutantPower)
+    context.enrichedServiceGroupFavors = await textEditor.enrichHTML(context.system.secrets.serviceGroupFavors)
+    context.enrichedSecretSocietyFavors = await textEditor.enrichHTML(context.system.secrets.secretSocietyFavors)
+    context.enrichedTreasonousGear = await textEditor.enrichHTML(context.system.secrets.treasonousGear)
+    context.enrichedEvidence = await textEditor.enrichHTML(context.system.secrets.evidence)
+    context.enrichedSecretNotes = await textEditor.enrichHTML(context.system.secrets.notes)
+    context.enrichedGear = await textEditor.enrichHTML(context.system.assignedGear)
+    context.enrichedMissionObjectives = await textEditor.enrichHTML(context.system.missionObjectives)
 
     // Prepare character data and items.
     if (actorData.type == 'troubleshooter') {

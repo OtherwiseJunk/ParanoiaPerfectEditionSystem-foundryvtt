@@ -18,6 +18,7 @@ import {
   ParanoiaEquipmentData
 } from "./data/index.mjs";
 import { registerGameSettings } from "./settings/settings.mjs";
+import { getCompatibleActorsObject, getCompatibleItemsObject, getCompatibleActorSheet, getCompatibleItemSheet } from "./utils/compatibility.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -31,6 +32,8 @@ Hooks.once('init', async function () {
     ParanoiaActor,
     ParanoiaEquipment
   };
+  const items = getCompatibleItemsObject();
+  const actors = getCompatibleActorsObject();
 
   registerGameSettings()
 
@@ -57,12 +60,13 @@ Hooks.once('init', async function () {
   })
 
   // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("paranoia", ParanoiaTroubleshooterSheet, { types: ["troubleshooter"], makeDefault: true });
-  Actors.registerSheet("paranoia", ParanoiaNobodySheet, { types: ["nobody"], makeDefault: true });
-  Actors.registerSheet("paranoia", ParanoiaSomebodySheet, { types: ["somebody"], makeDefault: true });
-  Actors.registerSheet("paranoia", ParanoiaAccompliceSheet, { types: ["accomplice"], makeDefault: true });
-  Items.registerSheet("paranoia", ParanoiaEquipmentSheet, { types: ["equipment"], makeDefault: true });
+  actors.unregisterSheet("core", getCompatibleActorSheet());
+  items.unregisterSheet("core", getCompatibleItemSheet());
+  actors.registerSheet("paranoia", ParanoiaTroubleshooterSheet, { types: ["troubleshooter"], makeDefault: true });
+  actors.registerSheet("paranoia", ParanoiaNobodySheet, { types: ["nobody"], makeDefault: false });
+  actors.registerSheet("paranoia", ParanoiaSomebodySheet, { types: ["somebody"], makeDefault: false });
+  actors.registerSheet("paranoia", ParanoiaAccompliceSheet, { types: ["accomplice"], makeDefault: false });
+  items.registerSheet("paranoia", ParanoiaEquipmentSheet, { types: ["equipment"], makeDefault: true });
 
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();

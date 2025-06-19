@@ -4,7 +4,7 @@
  * @return {Promise}
  */
  export const preloadHandlebarsTemplates = async function() {
-  return loadTemplates([
+  const templates = [
 
     // Actor partials.
     "systems/paranoia/templates/actor/parts/actor-societal-role.html",
@@ -13,5 +13,12 @@
     "systems/paranoia/templates/actor/parts/actor-wellness-tab.html",
     "systems/paranoia/templates/actor/parts/actor-naughty-side.html",
     "systems/paranoia/templates/actor/parts/actor-foundry-data.html",
-  ]);
+  ];
+
+  if( foundry.utils.isNewerVersion(game.version, "13")) {
+    // If Foundry is version 13 or newer, use the new loadTemplates method
+    return foundry.applications.handlebars.loadTemplates(templates);
+  }
+  
+  return loadTemplates(templates);
 };
