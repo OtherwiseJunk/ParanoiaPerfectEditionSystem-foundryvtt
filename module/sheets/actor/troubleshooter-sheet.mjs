@@ -71,9 +71,9 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
     context.enrichedMissionObjectives = await TextEditor.enrichHTML(context.system.missionObjectives)
 
     // Prepare character data and items.
-    if (actorData.type == 'character') {
+    if (actorData.type == 'troubleshooter') {
       this._prepareItems(context);
-      this._prepareCharacterData(context);
+      // this._prepareCharacterData(context);
     }
 
     // Prepare NPC data and items.
@@ -111,34 +111,30 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
    *
    * @return {undefined}
    */
-  _prepareItems(context) {
+  async _prepareItems(context) {
     // Initialize containers.
-    const gear = [];
-    const features = [];
+    const publicGear = [];
+    const treasonousGear = [];
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
+      if (i.type !== 'equipment') continue;
+      if (i.system.type == undefined) continue;
       i.img = i.img || DEFAULT_TOKEN;
+      i.enrichedDescription = await TextEditor.enrichHTML(i.system.description);
       // Append to gear.
-      if (i.type === 'item') {
-        gear.push(i);
+      if (i.system.type === 'publicGear') {
+        publicGear.push(i);
       }
       // Append to features.
-      else if (i.type === 'feature') {
-        features.push(i);
-      }
-      // Append to spells.
-      else if (i.type === 'spell') {
-        if (i.system.spellLevel != undefined) {
-          spells[i.system.spellLevel].push(i);
-        }
+      else if (i.system.type === 'treasonousGear') {
+        treasonousGear.push(i);
       }
     }
 
     // Assign and return
-    context.gear = gear;
-    context.features = features;
-    context.spells = spells;
+    context.publicGear = publicGear;
+    context.treasonousGear = treasonousGear;
   }
 
   /* -------------------------------------------- */
@@ -173,6 +169,40 @@ export class ParanoiaTroubleshooterSheet extends ActorSheet {
       const actorMoxie = this.actor.system.moxie;
       this.validateWellnessChange(eventValue, event.target, actorMoxie);
     });
+    html.on('click', '.gear-create', this._onCreateGear.bind(this));
+    html.on('click', '.gear-edit', this._onItemEdit.bind(this));
+    html.on('click', '.gear-delete', this._onItemDelete.bind(this));
+  }
+
+  async _onCreateGear(event) {
+    event.preventDefault();
+    const header = event.currentTarget;
+    const itemData = {
+      name: "New Gear",
+      type: "equipment",
+      data: foundry.utils.duplicate(header.dataset),
+      system: {
+        type: header.dataset.type
+      }
+    };
+    delete itemData.data["type"];
+
+    var item = await Item.create(itemData, { parent: this.actor });
+    return item;
+  }
+
+  _onItemEdit(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    item.sheet.render(true);
+  }
+
+  _onItemDelete(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    item.delete();
   }
 
   /** @inheritDoc */
