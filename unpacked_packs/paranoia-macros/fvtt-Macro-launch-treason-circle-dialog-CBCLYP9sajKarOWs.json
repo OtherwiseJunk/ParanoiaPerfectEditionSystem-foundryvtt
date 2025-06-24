@@ -1,0 +1,27 @@
+{
+  "_id": "CBCLYP9sajKarOWs",
+  "_key": "!macros!CBCLYP9sajKarOWs",
+  "name": "Launch Treason Circle Dialog",
+  "type": "script",
+  "command": "new TreasonCircleApp().render(true);",
+  "img": "systems/paranoia/media/treason_circle_macro_icon.webp",
+  "author": "uJmjZokXWYweTBbC",
+  "scope": "global",
+  "folder": null,
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.344",
+    "systemId": "paranoia",
+    "systemVersion": "0.8.5",
+    "createdTime": 1750727166784,
+    "modifiedTime": 1750728990212,
+    "lastModifiedBy": "uJmjZokXWYweTBbC",
+    "exportSource": {
+      "worldId": "paranoia-perfect-edition-test-world",
+      "uuid": "Macro.CBCLYP9sajKarOWs",
+      "coreVersion": "13.344",
+      "systemId": "paranoia",
+      "systemVersion": "0.8.5"
+    }
+  }
+}

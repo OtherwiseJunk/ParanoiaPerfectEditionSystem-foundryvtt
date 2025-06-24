@@ -33,6 +33,14 @@
           "types": ["somebody"]
         }
       }
+    },
+    {
+      "name": "ParanoiaMacros",
+      "label": "Paranoia System Macros",
+      "system": "paranoia",
+      "type": "Macro",
+      "private": false,
+      "path": "packs/paranoia-macros"
     }
   ],
   "languages": [

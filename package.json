@@ -18,6 +18,7 @@
   "private": true,
   "devDependencies": {
     "@foundryvtt/foundryvtt-cli": "^1.0.3",
+    "execa": "^9.0.0",
     "gulp": "^5.0.0",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-sass": "^5.1.0",
