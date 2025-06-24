@@ -1,4 +1,4 @@
-<form>
+<form class = "paranoia">
     {{#if (eq state.status "pending")}}
     <div class="form-group">
         <label>Select Participants</label>
@@ -19,7 +19,12 @@
     <h3>Current Assignments</h3>
     <ol>
         {{#each state.participants}}
-        <li><strong>{{#with (lookup @root.actors this)}}{{this.name}}{{/with}}:</strong> {{#each (lookup @root.state.assignments this)}}{{@key}}: {{this}}, {{/each}}</li>
+        <li>
+            <strong>{{#with (lookup @root.actors this)}}{{this.name}}{{/with}}:</strong>
+            <span class="skill-tags">
+                {{#each (lookup @root.state.assignments this)}}<span class="skill-tag {{@key}}">{{@key}}: {{#if (gt this 0)}}+{{/if}}{{this}}</span>{{/each}}
+            </span>
+        </li>
         {{/each}}
     </ol>
 

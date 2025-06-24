@@ -21,13 +21,61 @@ import {
 } from "./data/index.mjs";
 import { registerGameSettings } from "./settings/settings.mjs";
 import { getCompatibleActorsObject, getCompatibleItemsObject, getCompatibleActorSheet, getCompatibleItemSheet } from "./utils/compatibility.mjs";
-import { SkillDraftController } from "./apps/SkillDraftController.js";
+import { SkillDraftController, SkillDraftEvent } from "./apps/SkillDraftController.js";
+import { SkillDraftPlayer } from "./apps/SkillDraftPlayer.js";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
 /* -------------------------------------------- */
-const blah = {};
+let skillDraftApp = null;
+export const socketEventChannel = "system.paranoia";
+
 Hooks.once('init', async function () {
+  game.socket.on(socketEventChannel, async (data) =>{
+    const myActorId = game.user.character?.id;
+    if (game.user.isGM) return;
+    const event = data.event;
+    const state = data.state;
+
+    switch (event) {
+      case SkillDraftEvent.START_DRAFT:
+        if(!state.participants.includes(myActorId)) return;
+
+        skillDraftApp = new SkillDraftPlayer(state);
+        skillDraftApp.render(true);
+        break;
+      case SkillDraftEvent.UPDATE_DRAFT_STATE:
+        if(skillDraftApp){
+          skillDraftApp.state = state;
+          skillDraftApp.render(true);
+        } else if (state.paricipants.includes(myActorId)) {
+          skillDraftApp = new SkillDraftPlayer(state);
+          skillDraftApp.render(true);
+        }
+        break;
+      case SkillDraftEvent.CLOSE_DRAFT:
+        if(!skillDraftApp) return;
+        skillDraftApp.close();
+        const myActor = game.actors.get(myActorId);
+        if (myActor) {
+          myActor.sheet.render(true);
+        }
+        skillDraftApp = null;    
+        break;
+    }
+  });
+
+  game.socket.on(SkillDraftEvent.CLOSE_DRAFT, () =>{
+    if (skillDraftApp) {
+      skillDraftApp.close();
+      // Open my actor sheet if it was closed
+      const myActor = game.actors.get(myActorId);
+      if (myActor) {
+        myActor.sheet.render(true);
+      }
+      skillDraftApp = null;
+    }
+  })
 
   globalThis.TreasonCircleApp = TreasonCircleApp;
   globalThis.SkillDraftController = SkillDraftController;
@@ -76,6 +124,8 @@ Hooks.once('init', async function () {
 
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
+  console.log(Config);
+  console.log("Paranoia | Paranoia system initialized");
 });
 
 /* -------------------------------------------- */
