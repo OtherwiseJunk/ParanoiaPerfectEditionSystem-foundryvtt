@@ -27,8 +27,22 @@ export class TreasonCircleApp extends FormApplication {
             height: 720,
             resizable: true,
             submitOnChange: false,
-            submitOnClose: false
+            submitOnClose: false,
+            classes: ["paranoia", "treason-circle"]
         });
+    }
+
+    /**
+     * @override
+     * We override render to check for GM permissions before proceeding.
+     * This prevents the application from being rendered for non-GM users.
+     */
+    render(force, options) {
+        if (!game.user.isGM) {
+            ui.notifications.error("Only Game Masters can use the Treason Circle Architect.");
+            return;
+        }
+        return super.render(force, options);
     }
 
     /**
