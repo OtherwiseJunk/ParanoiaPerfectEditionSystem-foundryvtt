@@ -7,6 +7,8 @@ import { ParanoiaNobodySheet } from "./sheets/actor/nobody-sheet.mjs";
 import { ParanoiaSomebodySheet } from "./sheets/actor/somebody-sheet.mjs";
 import { ParanoiaAccompliceSheet } from "./sheets/actor/accomplice-sheet.mjs";
 import { ParanoiaEquipmentSheet } from "./sheets/equipment/equipment-sheet.mjs";
+// Import application classes.
+import { TreasonCircleApp } from "./apps/TreasonCircleApp.js";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { PARANOIA } from "./helpers/config.mjs";
@@ -25,6 +27,8 @@ import { getCompatibleActorsObject, getCompatibleItemsObject, getCompatibleActor
 /* -------------------------------------------- */
 const blah = {};
 Hooks.once('init', async function () {
+
+  globalThis.TreasonCircleApp = TreasonCircleApp;
 
   // Add utility classes to the global game object so that they're more easily
   // accessible in global contexts.
