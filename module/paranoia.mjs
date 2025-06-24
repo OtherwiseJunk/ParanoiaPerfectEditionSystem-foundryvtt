@@ -21,6 +21,7 @@ import {
 } from "./data/index.mjs";
 import { registerGameSettings } from "./settings/settings.mjs";
 import { getCompatibleActorsObject, getCompatibleItemsObject, getCompatibleActorSheet, getCompatibleItemSheet } from "./utils/compatibility.mjs";
+import { SkillDraftController } from "./apps/SkillDraftController.js";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -29,6 +30,7 @@ const blah = {};
 Hooks.once('init', async function () {
 
   globalThis.TreasonCircleApp = TreasonCircleApp;
+  globalThis.SkillDraftController = SkillDraftController;
 
   // Add utility classes to the global game object so that they're more easily
   // accessible in global contexts.

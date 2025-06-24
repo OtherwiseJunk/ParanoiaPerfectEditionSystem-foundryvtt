@@ -1,0 +1,25 @@
+{
+  "name": "Launch Player Draft",
+  "type": "script",
+  "command": "new SkillDraftController().render(true);",
+  "img": "systems/paranoia/media/player_draft_icon.webp",
+  "author": "uJmjZokXWYweTBbC",
+  "scope": "global",
+  "folder": null,
+  "flags": {},
+  "_stats": {
+    "coreVersion": "13.344",
+    "systemId": "paranoia",
+    "systemVersion": "0.8.5",
+    "createdTime": 1750736731355,
+    "modifiedTime": 1750737858322,
+    "lastModifiedBy": "uJmjZokXWYweTBbC",
+    "exportSource": {
+      "worldId": "paranoia-perfect-edition-test-world",
+      "uuid": "Macro.6ZpEuFkTLRpDVE05",
+      "coreVersion": "13.344",
+      "systemId": "paranoia",
+      "systemVersion": "0.8.5"
+    }
+  }
+}

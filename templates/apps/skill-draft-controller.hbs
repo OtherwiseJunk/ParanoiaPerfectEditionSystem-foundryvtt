@@ -1,0 +1,30 @@
+<form>
+    {{#if (eq state.status "pending")}}
+    <div class="form-group">
+        <label>Select Participants</label>
+        <p class="notes">Select all player characters who will participate in the skill draft.</p>
+        <select name="participants" multiple>
+            {{#each playerActors}}
+            <option value="{{this.id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <button type="button" class="start-draft"><i class="fas fa-play"></i> Start Draft</button>
+
+    {{else if (eq state.status "active")}}
+    <h2>Draft in Progress</h2>
+    <p><strong>Round:</strong> +{{state.round}} / -{{state.round}}</p>
+    <p><strong>Current Turn:</strong> {{#with (lookup @root.actors state.participants.[state.turnIndex])}}{{this.name}}{{/with}}</p>
+
+    <h3>Current Assignments</h3>
+    <ol>
+        {{#each state.participants}}
+        <li><strong>{{#with (lookup @root.actors this)}}{{this.name}}{{/with}}:</strong> {{#each (lookup @root.state.assignments this)}}{{@key}}: {{this}}, {{/each}}</li>
+        {{/each}}
+    </ol>
+
+    <button type="button" class="finalize-draft"><i class="fas fa-check"></i> Finalize and Apply Skills</button>
+    {{else}}
+    <p>Draft is complete! All skills have been applied.</p>
+    {{/if}}
+</form>
