@@ -26,6 +26,7 @@ export class SkillDraftPlayer extends Application {
      */
     updateState(newState) {
         this.state = newState;
+
         this.render(true);
     }
 
@@ -33,13 +34,21 @@ export class SkillDraftPlayer extends Application {
     getData() {
         const myActorId = game.user.character?.id;
         const isMyTurn = this.state.participants[this.state.turnIndex] === myActorId;
+        const playerNamesByActorId = new Map();
+        this.state.participants.forEach(actorId => {
+            const actor = game.actors.get(actorId);
+            if (actor) {
+                playerNamesByActorId.set(actorId, actor.name);
+            }
+        });
+        const currentPlayerName = playerNamesByActorId.get(this.state.participants[this.state.currentPlayerIndex]) || "Unknown Player";
 
         return {
             state: this.state,
             isMyTurn,
             myActorId,
-            // We need to get the actor objects for the template
-            actors: game.actors,
+            playerNamesByActorId,
+            currentPlayerName,
             availableSkills: this.state.availableSkills || []
         };
     }

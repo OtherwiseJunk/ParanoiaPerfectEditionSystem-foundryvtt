@@ -46,8 +46,7 @@ Hooks.once('init', async function () {
         break;
       case SkillDraftEvent.UPDATE_DRAFT_STATE:
         if(skillDraftApp){
-          skillDraftApp.state = state;
-          skillDraftApp.render(true);
+          skillDraftApp.updateState(state);
         } else if (state.paricipants.includes(myActorId)) {
           skillDraftApp = new SkillDraftPlayer(state);
           skillDraftApp.render(true);
