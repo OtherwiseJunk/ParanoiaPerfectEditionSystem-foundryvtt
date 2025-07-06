@@ -1,4 +1,5 @@
 import { socketEventChannel } from "../paranoia.mjs";
+import { getMergeObjectFunction } from "../utils/compatibility.mjs";
 export const SkillDraftEvent = {
     START_DRAFT: 'draftStarted',
     UPDATE_DRAFT_STATE: 'draftStateUpdated',
@@ -29,7 +30,8 @@ export class SkillDraftController extends FormApplication {
             availableSkills: [],
             allDraftableSkills: [], 
             status: "pending",
-            playersWhoHaveGoneFirst: []
+            playersWhoHaveGoneFirst: [],
+            draftStarterIndex: -1
         };
 
         /**
@@ -39,17 +41,13 @@ export class SkillDraftController extends FormApplication {
          */
         this.skillToStatMap = {};
 
-        this.socketEventRoot = socketEventChannel;
-    }
-
-    /** @override */
-    _activateCoreListeners(html) {
-        super._activateCoreListeners(html);
-        game.socket.on(socketEventChannel, this._onSkillSelected.bind(this));
+        this.socketHandler = this._onSkillSelected.bind(this);
+        game.socket.on(socketEventChannel, this.socketHandler);
     }
 
     /** @override */
     static get defaultOptions() {
+        const mergeObject = getMergeObjectFunction();
         return mergeObject(super.defaultOptions, {
             id: "paranoia-skill-draft-controller",
             title: "Skill Draft Controller",
@@ -63,10 +61,17 @@ export class SkillDraftController extends FormApplication {
     /** @override */
     async getData() {
         const playerActors = game.actors.filter(a => a.hasPlayerOwner);
+        let currentPlayerName = "N/A";
+        if (this.state.status === 'active' && this.state.participants.length > 0) {
+            const currentPlayerId = this.state.participants[this.state.currentPlayerIndex];
+            const actor = game.actors.get(currentPlayerId);
+            if (actor) currentPlayerName = actor.name;
+        }
         return {
             playerActors,
             state: this.state,
-            actors: game.actors
+            actors: game.actors,
+            currentPlayerName
         };
     }
 
@@ -103,13 +108,24 @@ export class SkillDraftController extends FormApplication {
      * @private
      */
     _determineFirstPickForRound(){
-        let index = Math.floor(Math.random() * this.state.participants.length)
-        while (this.state.playersWhoHaveGoneFirst.includes(index)) {
-            index = Math.floor(Math.random() * this.state.participants.length)
+        const numParticipants = this.state.participants.length;
+
+        if (numParticipants <= 5) {
+            // For 5 or fewer players, cycle through who goes first based on the initial starter.
+            // The round is 1-based, so we subtract 1 for a zero-based offset.
+            const roundOffset = this.state.round - 1;
+            this.state.currentPlayerIndex = (this.state.draftStarterIndex + roundOffset) % numParticipants;
+        } else {
+            // For more than 5 players, randomly pick a player who hasn't gone first yet.
+            let index = Math.floor(Math.random() * numParticipants);
+            while (this.state.playersWhoHaveGoneFirst.includes(index)) {
+                index = Math.floor(Math.random() * numParticipants);
+            }
+            this.state.playersWhoHaveGoneFirst.push(index);
+            this.state.currentPlayerIndex = index;
         }
-        this.state.playersWhoHaveGoneFirst.push(index);
-        this.state.currentPlayerIndex = index;
-        this.state.nextPlayerIndex = (index + 1) % this.state.participants.length;
+
+        this.state.nextPlayerIndex = (this.state.currentPlayerIndex + 1) % numParticipants;
     }
 
     /**
@@ -166,6 +182,10 @@ export class SkillDraftController extends FormApplication {
         }
 
         this.state.participants = selectedActors;
+        if (this.state.participants.length <= 5) {
+            this.state.draftStarterIndex = Math.floor(Math.random() * this.state.participants.length);
+        }
+
         this.state.status = "active";
 
         for (const actorId of this.state.participants) {
@@ -183,16 +203,17 @@ export class SkillDraftController extends FormApplication {
      * @param {object} data - The data from the socket.
      * @private
      */
-    _onSkillSelected(data) {
+    _onSkillSelected(eventData) {
         if (!game.user.isGM) return;
 
-        const { actorId, skill, event } = data;
+        const { event, data } = eventData;
+        const { actorId, skill } = data;
         if(event !== SkillDraftEvent.SELECT_SKILL) return;
 
         const pickerActor = game.actors.get(actorId);
         const nextActor = game.actors.get(this.state.participants[this.state.nextPlayerIndex]);
 
-        const currentTurnActorId = this.state.participants[this.state.currentPlayerId];
+        const currentTurnActorId = this.state.participants[this.state.currentPlayerIndex];
         if (actorId !== currentTurnActorId) {
             return console.warn(`Paranoia | Received skill selection from wrong player. Expected ${currentTurnActorId}, got ${actorId}.`);
         }
@@ -203,10 +224,11 @@ export class SkillDraftController extends FormApplication {
         const nextPlayerActorId = this.state.participants[this.state.nextPlayerIndex];
         this.state.assignments[nextPlayerActorId][skill] = -1 * skillValue;
 
-        messageContent = `<strong>${pickerActor.name}</strong> has selected the skill <strong>${skill}</strong> with a value of ${skillValue}. <strong>${nextActor.name}</strong> has been assigned a value of ${-skillValue} for this skill.`;
+        const formattedSkillName = Handlebars.helpers.formatSkillName(skill);
+        let messageContent = `<strong>${pickerActor.name}</strong> has selected the skill <strong>${formattedSkillName}</strong> with a value of ${skillValue}. <strong>${nextActor.name}</strong> has been assigned a value of ${-skillValue} for this skill.`;
         this._sendChatMessage(messageContent);
 
-        this.state.currentPlayerIndex= nextPlayerIndex;
+        this.state.currentPlayerIndex= this.state.nextPlayerIndex;
         this.state.nextPlayerIndex = (this.state.nextPlayerIndex + 1) % this.state.participants.length;
 
         this._startNextTurn();
@@ -228,7 +250,7 @@ export class SkillDraftController extends FormApplication {
             for (const [skillName, modifier] of Object.entries(assignments)) {
                 const statName = this.skillToStatMap[skillName];
                 if (statName) {
-                    actorUpdates[`system.abilities.${statName}.skills.${skillName}.modifier`] = modifier;
+                    actorUpdates[`system.abilities.${statName}.skills.${skillName}.value`] = modifier;
                     if (modifier > 0) statTotals[statName]++;
                 }
             }
@@ -272,7 +294,7 @@ export class SkillDraftController extends FormApplication {
     /** @override */
     close(options) {
         game.socket.emit(socketEventChannel, {"event": SkillDraftEvent.CLOSE_DRAFT });
-        game.socket.off(socketEventChannel);
+        game.socket.off(socketEventChannel, this.socketHandler);
         return super.close(options);
     }
 }
