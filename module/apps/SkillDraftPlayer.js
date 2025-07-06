@@ -1,3 +1,6 @@
+import { getMergeObjectFunction } from "../utils/compatibility.mjs";
+import { SkillDraftEvent } from "../apps/SkillDraftController.js";
+
 /**
  * A player-facing application for participating in the skill draft.
  * @extends {Application}
@@ -10,6 +13,7 @@ export class SkillDraftPlayer extends Application {
 
     /** @override */
     static get defaultOptions() {
+        const mergeObject = getMergeObjectFunction();
         return mergeObject(super.defaultOptions, {
             id: "paranoia-skill-draft-player",
             title: "Skill Draft",
@@ -32,23 +36,27 @@ export class SkillDraftPlayer extends Application {
 
     /** @override */
     getData() {
+        console.log("Retrieving data for SkillDraftPlayer application", this.state);
         const myActorId = game.user.character?.id;
-        const isMyTurn = this.state.participants[this.state.turnIndex] === myActorId;
-        const playerNamesByActorId = new Map();
+        const isMyTurn = this.state.participants[this.state.currentPlayerIndex] === myActorId;
+        const playerNamesByActorId = {};
         this.state.participants.forEach(actorId => {
             const actor = game.actors.get(actorId);
             if (actor) {
-                playerNamesByActorId.set(actorId, actor.name);
+                playerNamesByActorId[actorId] = actor.name;
             }
         });
-        const currentPlayerName = playerNamesByActorId.get(this.state.participants[this.state.currentPlayerIndex]) || "Unknown Player";
+        const currentPlayerName = playerNamesByActorId[this.state.participants[this.state.currentPlayerIndex]] || "Unknown Player";
+        const nextPlayerName = playerNamesByActorId[this.state.participants[(this.state.nextPlayerIndex)]] || "Unknown Player";
 
         return {
             state: this.state,
+            actors: game.actors,
             isMyTurn,
             myActorId,
             playerNamesByActorId,
             currentPlayerName,
+            nextPlayerName,
             availableSkills: this.state.availableSkills || []
         };
     }
@@ -74,7 +82,7 @@ export class SkillDraftPlayer extends Application {
         }
 
         const payload = {
-            event: "skill_selected",
+            event: SkillDraftEvent.SELECT_SKILL,
             data: {
                 actorId: myActorId,
                 skill: skill
@@ -89,4 +97,3 @@ export class SkillDraftPlayer extends Application {
         ui.notifications.info(`You selected ${skill}. Waiting for the GM to process...`);
     }
 }
-
