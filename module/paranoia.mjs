@@ -31,6 +31,17 @@ let skillDraftApp = null;
 export const socketEventChannel = "system.paranoia";
 
 Hooks.once('init', async function () {
+  /**
+  * Formats a skill name for display.
+  * Capitalizes the first letter and handles special cases like "alphaComplex".
+  * @param {string} skillName - The machine-readable skill name.
+  * @returns {string} The formatted, human-readable skill name.
+  */
+  Handlebars.registerHelper('formatSkillName', function(skillName) {
+      if (skillName === 'alphaComplex') return 'Alpha Complex';
+      if (typeof skillName !== 'string' || skillName.length === 0) return '';
+      return skillName.charAt(0).toUpperCase() + skillName.slice(1);
+  });
   game.socket.on(socketEventChannel, async (data) =>{
     const myActorId = game.user.character?.id;
     if (game.user.isGM) return;
@@ -47,7 +58,7 @@ Hooks.once('init', async function () {
       case SkillDraftEvent.UPDATE_DRAFT_STATE:
         if(skillDraftApp){
           skillDraftApp.updateState(state);
-        } else if (state.paricipants.includes(myActorId)) {
+        } else if (state.participants.includes(myActorId)) {
           skillDraftApp = new SkillDraftPlayer(state);
           skillDraftApp.render(true);
         }
@@ -63,18 +74,6 @@ Hooks.once('init', async function () {
         break;
     }
   });
-
-  game.socket.on(SkillDraftEvent.CLOSE_DRAFT, () =>{
-    if (skillDraftApp) {
-      skillDraftApp.close();
-      // Open my actor sheet if it was closed
-      const myActor = game.actors.get(myActorId);
-      if (myActor) {
-        myActor.sheet.render(true);
-      }
-      skillDraftApp = null;
-    }
-  })
 
   globalThis.TreasonCircleApp = TreasonCircleApp;
   globalThis.SkillDraftController = SkillDraftController;
