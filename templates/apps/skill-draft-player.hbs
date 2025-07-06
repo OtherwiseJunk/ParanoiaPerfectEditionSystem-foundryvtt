@@ -1,8 +1,8 @@
 <div class="skill-draft-player paranoia">
-    {{log playerNamesByActorId}}
     <h2>Draft in Progress</h2>
     <p><strong>Round:</strong> +{{state.round}} / -{{state.round}}</p>
     <p><strong>Current Turn:</strong> {{currentPlayerName}}</p>
+    <p><strong>Next Player:</strong> {{nextPlayerName}}</p>
 
     <hr>
 
@@ -11,7 +11,7 @@
     <p>Select a skill to gain a +{{state.round}} bonus. The next player in line will receive a -{{state.round}} penalty to that same skill.</p>
     <div class="skill-list">
         {{#each state.availableSkills}}
-        <button type="button" class="skill-button" data-skill="{{this}}">{{this}}</button>
+        <button type="button" class="skill-button" data-skill="{{this}}">{{formatSkillName this}}</button>
         {{/each}}
     </div>
     {{else}}
@@ -23,12 +23,11 @@
 
     <h3>Current Assignments</h3>
     <ol class="assignments-list">
-        {{#each state.participants}}
+        {{#each state.participants as |participant|}}
         <li>
-            <strong>{{playerNamesByActorId.get(this)}}:</strong>
-            <span class="skill-tags">{{#each (lookup @root.state.assignments this)}}<span class="skill-tag {{@key}}">{{@key}}: {{#if (gt this 0)}}+{{/if}}{{this}}</span>{{/each}}</span>
+             <strong>{{lookup @root.playerNamesByActorId participant}}:</strong>
+            <span class="skill-tags">{{#each (lookup @root.state.assignments participant)}}<span class="skill-tag {{@key}}">{{formatSkillName @key}}: {{#if (gt this 0)}}+{{/if}}{{this}}</span>{{/each}}</span>
         </li>
         {{/each}}
     </ol>
 </div>
-
