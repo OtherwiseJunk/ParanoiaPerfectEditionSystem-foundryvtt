@@ -50,18 +50,8 @@ export class SkillDraftPlayer extends Application {
 
     /** @override */
     getData() {
-        console.log("Retrieving data for SkillDraftPlayer application", this.state);
         const myActorId = game.user.character?.id;
         const isMyTurn = this.state.participants[this.state.currentPlayerIndex] === myActorId;
-        const playerNamesByActorId = {};
-        this.state.participants.forEach(actorId => {
-            const actor = game.actors.get(actorId);
-            if (actor) {
-                playerNamesByActorId[actorId] = actor.name;
-            }
-        });
-        const currentPlayerName = playerNamesByActorId[this.state.participants[this.state.currentPlayerIndex]] || "Unknown Player";
-        const nextPlayerName = playerNamesByActorId[this.state.participants[(this.state.nextPlayerIndex)]] || "Unknown Player";
 
         return {
             state: this.state,

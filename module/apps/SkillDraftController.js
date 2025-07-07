@@ -66,17 +66,10 @@ export class SkillDraftController extends FormApplication {
     /** @override */
     async getData() {
         const playerActors = game.actors.filter(a => a.hasPlayerOwner);
-        let currentPlayerName = "N/A";
-        if (this.state.status === 'active' && this.state.participants.length > 0) {
-            const currentPlayerId = this.state.participants[this.state.currentPlayerIndex];
-            const actor = game.actors.get(currentPlayerId);
-            if (actor) currentPlayerName = actor.name;
-        }
         return {
             playerActors,
             state: this.state,
-            actors: game.actors,
-            currentPlayerName
+            actors: game.actors
         };
     }
 
@@ -244,9 +237,9 @@ export class SkillDraftController extends FormApplication {
         const { data } = eventData;
         const { actorId, skill } = data;
 
-        const pickerActor = game.actors.get(actorId);
-        const nextActor = game.actors.get(this.state.participants[this.state.nextPlayerIndex]);
         const currentTurnActorId = this.state.participants[this.state.currentPlayerIndex];
+        const nextPlayerActorId = this.state.participants[this.state.nextPlayerIndex];
+
 
         if (actorId !== currentTurnActorId) {
             return console.warn(`Paranoia | Received skill selection from wrong player. Expected ${currentTurnActorId}, got ${actorId}.`);
@@ -254,11 +247,12 @@ export class SkillDraftController extends FormApplication {
 
         const skillValue = this.state.round;
         this.state.assignments[actorId][skill] = skillValue;
-        const nextPlayerActorId = this.state.participants[this.state.nextPlayerIndex];
         this.state.assignments[nextPlayerActorId][skill] = -1 * skillValue;
 
+        const pickerName = this.state.playerNamesByActorId[actorId] || "Unknown Player";
+        const nextPlayerName = this.state.playerNamesByActorId[nextPlayerActorId] || "Unknown Player";
         const formattedSkillName = Handlebars.helpers.formatSkillName(skill);
-        let messageContent = `<strong>${pickerActor.name}</strong> has selected the skill <strong>${formattedSkillName}</strong> with a value of ${skillValue}. <strong>${nextActor.name}</strong> has been assigned a value of ${-skillValue} for this skill.`;
+        let messageContent = `<strong>${pickerName}</strong> has selected the skill <strong>${formattedSkillName}</strong> with a value of ${skillValue}. <strong>${nextPlayerName}</strong> has been assigned a value of ${-skillValue} for this skill.`;
         this._sendChatMessage(messageContent);
 
         this.state.currentPlayerIndex = this.state.nextPlayerIndex;
