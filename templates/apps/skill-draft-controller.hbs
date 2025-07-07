@@ -1,33 +1,58 @@
-<form class = "paranoia">
-    {{#if (eq state.status "pending")}}
-    <div class="form-group">
-        <label>Select Participants</label>
-        <p class="notes">Select all player characters who will participate in the skill draft.</p>
-        <select name="participants" multiple>
-            {{#each playerActors}}
-            <option value="{{this.id}}">{{this.name}}</option>
+<div class="skill-draft-controller paranoia">
+
+    <form>
+        {{#if (eq state.status "pending")}}
+        <div class="form-group">
+            <label>Select Participants</label>
+            <p class="notes">Select all player characters who will participate in the skill draft. Use Ctrl/Cmd + Click
+                to
+                select multiple individually, or click one entry and shift click another to select all between them
+                inclusively.</p>
+            <select name="participants" multiple size="{{playerActors.length}}">
+                {{#each playerActors as |actor|}}
+                <option value="{{actor.id}}">{{actor.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <button type="button" class="start-draft"><i class="fas fa-play"></i> Start Draft</button>
+
+        {{else if (eq state.status "active")}}
+        <h2>Draft in Progress</h2>
+        <p><strong>Round:</strong> +{{state.round}} / -{{state.round}}</p>
+        <p><strong>Current Turn:</strong> {{currentPlayerName}}</p>
+
+        <h3>Current Assignments</h3>
+        <div class="assignments-grid"
+            style="display: grid; grid-auto-flow: column; grid-template-rows: repeat(3, auto); gap: 0.75em; text-align: left;">
+            {{#each state.participants as |participant|}}
+            <div class="participant-tile"
+                style="border: 1px solid #7a7971; border-radius: 3px; padding: 0.5em; display: flex; flex-direction: column; gap: 0.5em;">
+                <h4>{{#with (lookup @root.state.playerNamesByActorId participant) as |name|}}{{name}}{{/with}}</h4>
+                <div>
+                    <strong>Strengths:</strong>
+                    <span class="skill-tags strengths">
+                        {{#each (lookup @root.state.assignments participant) as |skillValue skillName|}}
+                        {{#if (gt skillValue 0)}}
+                        <span class="skill-tag {{skillName}}">{{formatSkillName skillName}}: +{{skillValue}}</span>
+                        {{/if}}
+                        {{/each}}
+                    </span>
+                </div>
+                <div>
+                    <strong>Weaknesses:</strong>
+                    <span class="skill-tags weaknesses">
+                        {{#each (lookup @root.state.assignments participant) as |skillValue skillName|}}
+                        {{#if (lt skillValue 0)}}
+                        <span class="skill-tag {{skillName}}">{{formatSkillName skillName}}: {{skillValue}}</span>
+                        {{/if}}
+                        {{/each}}
+                    </span>
+                </div>
+            </div>
             {{/each}}
-        </select>
-    </div>
-    <button type="button" class="start-draft"><i class="fas fa-play"></i> Start Draft</button>
-
-    {{else if (eq state.status "active")}}
-    <h2>Draft in Progress</h2>
-    <p><strong>Round:</strong> +{{state.round}} / -{{state.round}}</p>
-    <p><strong>Current Turn:</strong> {{currentPlayerName}}</p>
-
-    <h3>Current Assignments</h3>
-    <ol>
-        {{#each state.participants}}
-        <li>
-            <strong>{{#with (lookup @root.actors this)}}{{this.name}}{{/with}}:</strong>
-            <span class="skill-tags">
-                {{#each (lookup @root.state.assignments this)}}<span class="skill-tag {{@key}}">{{formatSkillName @key}}: {{#if (gt this 0)}}+{{/if}}{{this}} </span>{{/each}}
-            </span>
-        </li>
-        {{/each}}
-    </ol>
-    {{else}}
-    <p>Draft is complete! All skills have been applied.</p>
-    {{/if}}
-</form>
+        </div>
+        {{else}}
+        <p>Draft is complete! All skills have been applied.</p>
+        {{/if}}
+    </form>
+</div>

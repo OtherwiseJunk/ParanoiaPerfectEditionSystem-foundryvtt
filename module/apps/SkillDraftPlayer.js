@@ -1,5 +1,6 @@
 import { getMergeObjectFunction } from "../utils/compatibility.mjs";
-import { SkillDraftEvent } from "../apps/SkillDraftController.js";
+import { socketEventChannel } from "../paranoia.mjs";
+import { SkillDraftEvent } from "./SkillDraftController.js";
 
 /**
  * A player-facing application for participating in the skill draft.
@@ -18,10 +19,23 @@ export class SkillDraftPlayer extends Application {
             id: "paranoia-skill-draft-player",
             title: "Skill Draft",
             template: "systems/paranoia/templates/apps/skill-draft-player.hbs",
-            width: 400,
+            width: 720,
             height: "auto",
+            resizable: true,
             classes: ["paranoia"]
         });
+    }
+
+    /** @override */
+    _getHeaderButtons() {
+        let buttons = super._getHeaderButtons();
+        buttons.unshift({
+            label: "Refresh",
+            class: "refresh-draft",
+            icon: "fas fa-sync",
+            onclick: ev => this._onRefresh(ev)
+        });
+        return buttons;
     }
 
     /**
@@ -51,13 +65,7 @@ export class SkillDraftPlayer extends Application {
 
         return {
             state: this.state,
-            actors: game.actors,
             isMyTurn,
-            myActorId,
-            playerNamesByActorId,
-            currentPlayerName,
-            nextPlayerName,
-            availableSkills: this.state.availableSkills || []
         };
     }
 
@@ -65,6 +73,23 @@ export class SkillDraftPlayer extends Application {
     activateListeners(html) {
         super.activateListeners(html);
         html.find('.skill-button').click(this._onSkillSelect.bind(this));
+    }
+
+    /**
+     * Handles the click on the refresh button in the header.
+     * Emits a socket event to the GM to request the latest state.
+     * @param {Event} event The triggering click event.
+     * @private
+     */
+    _onRefresh(event) {
+        event.preventDefault();
+        ui.notifications.info("Requesting latest draft state from GM...");
+        const payload = {
+            event: SkillDraftEvent.REQUEST_STATE,
+            clientId: game.user.id
+        };
+        // Send the request to the GM
+        game.socket.emit(socketEventChannel, payload);
     }
 
     /**
@@ -90,7 +115,7 @@ export class SkillDraftPlayer extends Application {
         };
 
         // Send the choice to the GM
-        game.socket.emit("system.paranoia", payload);
+        game.socket.emit(socketEventChannel, payload);
 
         // Disable the UI to prevent double-submission
         this.element.find('.skill-button').prop('disabled', true);

@@ -1,14 +1,15 @@
 <div class="skill-draft-player paranoia">
     <h2>Draft in Progress</h2>
     <p><strong>Round:</strong> +{{state.round}} / -{{state.round}}</p>
-    <p><strong>Current Turn:</strong> {{currentPlayerName}}</p>
-    <p><strong>Next Player:</strong> {{nextPlayerName}}</p>
+    <p><strong>Current Turn:</strong> {{state.currentPlayerName}}</p>
+    <p><strong>Next Player:</strong> {{state.nextPlayerName}}</p>
 
     <hr>
 
     {{#if isMyTurn}}
     <h3>Your Turn!</h3>
-    <p>Select a skill to gain a +{{state.round}} bonus. The next player in line will receive a -{{state.round}} penalty to that same skill.</p>
+    <p>Select a skill to gain a +{{state.round}} bonus. The next player in line will receive a -{{state.round}} penalty
+        to that same skill.</p>
     <div class="skill-list">
         {{#each state.availableSkills}}
         <button type="button" class="skill-button" data-skill="{{this}}">{{formatSkillName this}}</button>
@@ -16,18 +17,39 @@
     </div>
     {{else}}
     <h3>Waiting for your turn...</h3>
-    <p>It is currently {{currentPlayerName}}'s turn to pick a skill.</p>
+    <p>It is currently {{state.currentPlayerName}}'s turn to pick a skill.</p>
     {{/if}}
 
     <hr>
 
     <h3>Current Assignments</h3>
-    <ol class="assignments-list">
+    <div class="assignments-grid"
+        style="display: grid; grid-auto-flow: column; grid-template-rows: repeat(3, auto); gap: 0.75em; text-align: left;">
         {{#each state.participants as |participant|}}
-        <li>
-             <strong>{{lookup @root.playerNamesByActorId participant}}:</strong>
-            <span class="skill-tags">{{#each (lookup @root.state.assignments participant)}}<span class="skill-tag {{@key}}">{{formatSkillName @key}}: {{#if (gt this 0)}}+{{/if}}{{this}}</span>{{/each}}</span>
-        </li>
+        <div class="participant-tile"
+            style="border: 1px solid #7a7971; border-radius: 3px; padding: 0.5em; display: flex; flex-direction: column; gap: 0.5em;">
+            <h4>{{#with (lookup @root.state.playerNamesByActorId participant) as |name|}}{{name}}{{/with}}</h4>
+            <div>
+                <strong>Strengths:</strong>
+                <span class="skill-tags strengths">
+                    {{#each (lookup @root.state.assignments participant) as |skillValue skillName|}}
+                    {{#if (gt skillValue 0)}}
+                    <span class="skill-tag {{skillName}}">{{formatSkillName skillName}}: +{{skillValue}}</span>
+                    {{/if}}
+                    {{/each}}
+                </span>
+            </div>
+            <div>
+                <strong>Weaknesses:</strong>
+                <span class="skill-tags weaknesses">
+                    {{#each (lookup @root.state.assignments participant) as |skillValue skillName|}}
+                    {{#if (lt skillValue 0)}}
+                    <span class="skill-tag {{skillName}}">{{formatSkillName skillName}}: {{skillValue}}</span>
+                    {{/if}}
+                    {{/each}}
+                </span>
+            </div>
+        </div>
         {{/each}}
-    </ol>
+    </div>
 </div>

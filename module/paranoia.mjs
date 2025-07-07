@@ -37,12 +37,12 @@ Hooks.once('init', async function () {
   * @param {string} skillName - The machine-readable skill name.
   * @returns {string} The formatted, human-readable skill name.
   */
-  Handlebars.registerHelper('formatSkillName', function(skillName) {
-      if (skillName === 'alphaComplex') return 'Alpha Complex';
-      if (typeof skillName !== 'string' || skillName.length === 0) return '';
-      return skillName.charAt(0).toUpperCase() + skillName.slice(1);
+  Handlebars.registerHelper('formatSkillName', function (skillName) {
+    if (skillName === 'alphaComplex') return 'Alpha Complex';
+    if (typeof skillName !== 'string' || skillName.length === 0) return '';
+    return skillName.charAt(0).toUpperCase() + skillName.slice(1);
   });
-  game.socket.on(socketEventChannel, async (data) =>{
+  game.socket.on(socketEventChannel, async (data) => {
     const myActorId = game.user.character?.id;
     if (game.user.isGM) return;
     const event = data.event;
@@ -50,13 +50,15 @@ Hooks.once('init', async function () {
 
     switch (event) {
       case SkillDraftEvent.START_DRAFT:
-        if(!state.participants.includes(myActorId)) return;
+        if (!state.participants.includes(myActorId)) return;
 
         skillDraftApp = new SkillDraftPlayer(state);
         skillDraftApp.render(true);
         break;
       case SkillDraftEvent.UPDATE_DRAFT_STATE:
-        if(skillDraftApp){
+        if (data.clientId != undefined && data.clientId != game.user.id) return;
+
+        if (skillDraftApp) {
           skillDraftApp.updateState(state);
         } else if (state.participants.includes(myActorId)) {
           skillDraftApp = new SkillDraftPlayer(state);
@@ -64,13 +66,13 @@ Hooks.once('init', async function () {
         }
         break;
       case SkillDraftEvent.CLOSE_DRAFT:
-        if(!skillDraftApp) return;
+        if (!skillDraftApp) return;
         skillDraftApp.close();
         const myActor = game.actors.get(myActorId);
         if (myActor) {
           myActor.sheet.render(true);
         }
-        skillDraftApp = null;    
+        skillDraftApp = null;
         break;
     }
   });
