@@ -157,26 +157,33 @@ Handlebars.registerHelper('toLowerCase', function (str) {
 Hooks.once("ready", async function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
 
-  //Friend Computer Eye Tracking
+  // Friend Computer Eye Tracking
   document.addEventListener('mousemove', (event) => {
     const eyes = document.querySelectorAll('.paranoia-eye');
+    // If there are no eyes on the page at all, do nothing. This is a very fast check.
+    if (eyes.length === 0) return;
+
     const screens = document.querySelectorAll('.paranoia-screen');
     eyes.forEach((eye, index) => {
       const screen = screens[index];
+      if (!screen) return;
+
       const rect = screen.getBoundingClientRect();
+
+      // Optimization: If the screen is not in the viewport, do not perform calculations.
+      if (rect.bottom < 0 || rect.top > window.innerHeight || rect.right < 0 || rect.left > window.innerWidth) {
+        return;
+      }
+
       const screenCenterX = rect.left + rect.width / 2;
       const screenCenterY = rect.top + rect.height / 2;
-
       const dx = event.clientX - screenCenterX;
       const dy = event.clientY - screenCenterY;
-
       const maxMovement = rect.width * 0.1;
       const distance = Math.min(maxMovement, Math.sqrt(dx * dx + dy * dy));
       const angle = Math.atan2(dy, dx);
-
       const offsetX = Math.cos(angle) * distance;
       const offsetY = Math.sin(angle) * distance;
-
       eye.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
     });
   });

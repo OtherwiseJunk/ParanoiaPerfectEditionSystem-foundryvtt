@@ -142,7 +142,10 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   activateListeners(html) {
     super.activateListeners(html);
 
-    // --- Dynamic Sheet Height ---
+    // -------------------------------------------------------------
+    // Everything below here is only needed if the sheet is editable
+    if (!this.isEditable) return;
+
     const tabs = html.find('.sheet-tabs .item');
     tabs.on('click', (event) => {
       this._setSheetHeight($(event.currentTarget).data('tab'));
@@ -150,9 +153,6 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     // Set initial height based on the active tab.
     this._setSheetHeight(tabs.filter('.active').data('tab'));
 
-    // -------------------------------------------------------------
-    // Everything below here is only needed if the sheet is editable
-    if (!this.isEditable) return;
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
 
@@ -180,28 +180,49 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     html.on('click', '.gear-edit', this._onItemEdit.bind(this));
     html.on('click', '.gear-delete', this._onItemDelete.bind(this));
 
-    // --- Drag-and-Drop Hover Feedback for all gear lists ---
+    // --- Drag-and-Drop Hover Feedback ---
     const dropZones = html.find('.gear-list-container[data-drop-type]');
 
     dropZones.on('dragenter', (event) => {
+      // Prevent the event from bubbling up and causing other handlers to fire.
       event.stopPropagation();
       $(event.currentTarget).addClass('paranoia-drop-hover');
     });
+
     dropZones.on('dragleave', (event) => {
+      // This check prevents the style from flickering when moving over child elements.
       if (!event.currentTarget.contains(event.relatedTarget)) {
         $(event.currentTarget).removeClass('paranoia-drop-hover');
       }
     });
+
+    // Also remove the class when an item is dropped, as dragleave doesn't always fire.
     dropZones.on('drop', (event) => {
       $(event.currentTarget).removeClass('paranoia-drop-hover');
     });
   }
 
+  async _onCreateGear(event) {
+    event.preventDefault();
+    const header = event.currentTarget;
+    // Prepare the data for the new item using the modern data model.
+    const itemData = {
+      name: "New Gear",
+      type: "equipment",
+      system: {
+        type: header.dataset.type // This will be 'publicGear' or 'treasonousGear'
+      }
+    };
+
+    // Create the item directly on the actor.
+    return Item.create(itemData, { parent: this.actor });
+  }
+
   /**
-   * Adjusts the sheet height based on the selected tab.
-   * @param {string} tabName The 'data-tab' attribute of the selected tab.
-   * @private
-   */
+  * Adjusts the sheet height based on the selected tab.
+  * @param {string} tabName The 'data-tab' attribute of the selected tab.
+  * @private
+  */
   _setSheetHeight(tabName) {
     const defaultHeight = this.constructor.defaultOptions.height;
     const naughtyHeight = 900;
@@ -219,19 +240,6 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
       }
     }
   }
-  async _onCreateGear(event) {
-    event.preventDefault();
-    const header = event.currentTarget;
-    const itemData = {
-      name: "New Gear",
-      type: "equipment",
-      system: {
-        type: header.dataset.type
-      }
-    };
-
-    return await Item.create(itemData, { parent: this.actor });
-  }
 
   /**
  * Handle dropping an Item data object onto the Actor Sheet.
@@ -243,24 +251,29 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   async _onDropItem(event, data) {
     if (!this.isEditable) return false;
 
+    // Find the drop container to determine what kind of gear is being added.
     const dropContainer = event.target.closest("[data-drop-type]");
     if (!dropContainer) return false;
 
     const dropType = dropContainer.dataset.dropType;
 
+    // Validate that the drop type is one we handle.
     if (!["publicGear", "treasonousGear"].includes(dropType)) return false;
 
     const item = await Item.fromDropData(data);
     if (!item) return false;
 
+    // Validate that the dropped document is an 'equipment' item.
     if (item.type !== "equipment") {
       ui.notifications.warn("Only Equipment items can be added to this sheet.");
       return false;
     }
 
+    // Prepare the item data, setting the subtype based on the drop location.
     const itemData = item.toObject();
     itemData.system.type = dropType;
 
+    // Create the new item on the actor.
     return this.actor.createEmbeddedDocuments("Item", [itemData]);
   }
 
@@ -271,11 +284,22 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     item.sheet.render(true);
   }
 
-  _onItemDelete(event) {
+  async _onItemDelete(event) {
     event.preventDefault();
     const itemId = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.items.get(itemId);
-    item.delete();
+    if (!item) return;
+
+    // Display a confirmation dialog for better UX.
+    const confirmed = await Dialog.confirm({
+      title: game.i18n.format("PARANOIA.DeleteConfirmTitle", { name: item.name }),
+      content: `<p>${game.i18n.format("PARANOIA.DeleteConfirmContent", { name: item.name })}</p>`,
+      options: { classes: ["paranoia", "dialog", "paranoia-red-theme"] }
+    });
+
+    if (confirmed) {
+      return item.delete();
+    }
   }
 
   /** @inheritDoc */
