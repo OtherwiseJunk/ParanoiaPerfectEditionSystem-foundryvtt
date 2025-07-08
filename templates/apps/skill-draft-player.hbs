@@ -1,26 +1,34 @@
-<div class="skill-draft-player paranoia">
-    <h2>Draft in Progress</h2>
-    <p><strong>Round:</strong> +{{state.round}} / -{{state.round}}</p>
-    <p><strong>Current Turn:</strong> {{state.currentPlayerName}}</p>
-    <p><strong>Next Player:</strong> {{state.nextPlayerName}}</p>
+<div class="sheet paranoia skill-draft-player">
+    <section class="sheet-body">
+        {{#if (eq state.status "active")}}
+            {{> "skill-draft-turn-info"}}
 
-    <hr>
+            {{#if isMyTurn}}
+            <div class="paranoia-container">
+                <h3 class="paranoia-header">Your Turn!</h3>
+                <div class="selection-prompt">
+                    <p>Select a skill to gain <strong>+{{state.round}}</strong>. {{state.nextPlayerName}} will receive <strong>-{{state.round}}</strong> in that skill.</p>
+                </div>
+                <div class="available-skills-grid">
+                    {{#each state.availableSkills}}
+                    <button type="button" class="skill-button" data-skill="{{this}}">{{formatSkillName this}}</button>
+                    {{/each}}
+                </div>
+            </div>
+            {{else}}
+            <div class="paranoia-container">
+                <h3 class="paranoia-header">Waiting...</h3>
+                <div class="waiting-message">
+                    <p>It is currently <strong>{{state.currentPlayerName}}'s</strong> turn to pick.</p>
+                    <p>Please stand by, Troubleshooter.</p>
+                </div>
+            </div>
+            {{/if}}
 
-    {{#if isMyTurn}}
-    <h3>Your Turn!</h3>
-    <p>Select a skill to gain a +{{state.round}} bonus. The next player in line will receive a -{{state.round}} penalty
-        to that same skill.</p>
-    <div class="skill-list">
-        {{#each state.availableSkills}}
-        <button type="button" class="skill-button" data-skill="{{this}}">{{formatSkillName this}}</button>
-        {{/each}}
-    </div>
-    {{else}}
-    <h3>Waiting for your turn...</h3>
-    <p>It is currently {{state.currentPlayerName}}'s turn to pick a skill.</p>
-    {{/if}}
-
-    <hr>
-
-    {{> "skill-draft-assignments"}}
+            {{> "skill-draft-assignments"}}
+        {{else if (eq state.status "complete")}}
+            {{> "skill-draft-complete"}}
+            {{> "skill-draft-assignments"}}
+        {{/if}}
+    </section>
 </div>

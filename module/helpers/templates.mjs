@@ -15,6 +15,8 @@
 
     // App partials.
     "skill-draft-assignments": "systems/paranoia/templates/partials/skill-draft-assignments.hbs",
+    "skill-draft-turn-info": "systems/paranoia/templates/partials/skill-draft-turn-info.hbs",
+    "skill-draft-complete": "systems/paranoia/templates/partials/skill-draft-complete.hbs",
   };
 
   if( foundry.utils.isNewerVersion(game.version, "13")) {

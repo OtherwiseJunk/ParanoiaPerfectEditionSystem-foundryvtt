@@ -56,7 +56,7 @@ export class SkillDraftController extends FormApplication {
             id: "paranoia-skill-draft-controller",
             title: "Skill Draft Controller",
             template: "systems/paranoia/templates/apps/skill-draft-controller.hbs",
-            width: 720,
+            width: 640,
             height: "auto",
             resizable: true,
             classes: ["paranoia"]

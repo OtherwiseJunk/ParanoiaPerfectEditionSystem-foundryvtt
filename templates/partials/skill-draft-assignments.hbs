@@ -1,28 +1,33 @@
-<h3>Current Assignments</h3>
-<div class="assignments-grid">
-    {{#each state.participants as |participant|}}
-    <div class="participant-tile"
-        style="border: 1px solid #7a7971; border-radius: 3px; padding: 0.5em; display: flex; flex-direction: column; gap: 0.5em;">
-        <h4>{{#with (lookup @root.state.playerNamesByActorId participant) as |name|}}{{name}}{{/with}}</h4>
-        <div>
-            <strong>Strengths:</strong>
-            <span class="skill-tags strengths">
-                {{#each (lookup @root.state.assignments participant) as |skillValue skillName|}}
-                {{#if (gt skillValue 0)}}
-                <span class="skill-tag {{skillName}}">{{formatSkillName skillName}}: +{{skillValue}}</span>
-                {{/if}}
+<h3 class="paranoia-header">Skill Assignments</h3>
+<div class="paranoia-assignments-grid">
+    {{#each state.participants as |participantId|}}
+    <div class="participant-tile">
+        <h4>{{lookup @root.state.playerNamesByActorId participantId}}</h4>
+        <div class="skill-category">
+            <strong>Strengths</strong>
+            <ul class="skill-assignment-list">
+                {{#each (lookup @root.state.assignments participantId) as |value skill|}}
+                    {{#if (gt value 0)}}
+                    <li>
+                        <span class="skill-name">{{formatSkillName skill}}</span>
+                        <span class="skill-value positive">+{{value}}</span>
+                    </li>
+                    {{/if}}
                 {{/each}}
-            </span>
+            </ul>
         </div>
-        <div>
-            <strong>Weaknesses:</strong>
-            <span class="skill-tags weaknesses">
-                {{#each (lookup @root.state.assignments participant) as |skillValue skillName|}}
-                {{#if (lt skillValue 0)}}
-                <span class="skill-tag {{skillName}}">{{formatSkillName skillName}}: {{skillValue}}</span>
-                {{/if}}
+        <div class="skill-category">
+            <strong>Weaknesses</strong>
+            <ul class="skill-assignment-list">
+                {{#each (lookup @root.state.assignments participantId) as |value skill|}}
+                    {{#if (lt value 0)}}
+                    <li>
+                        <span class="skill-name">{{formatSkillName skill}}</span>
+                        <span class="skill-value negative">{{value}}</span>
+                    </li>
+                    {{/if}}
                 {{/each}}
-            </span>
+            </ul>
         </div>
     </div>
     {{/each}}
