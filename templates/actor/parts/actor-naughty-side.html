@@ -6,10 +6,10 @@
                     <label>Aliases</label>
                 </div>
                 <div class="paranoia-editor-container">
-                    {{editor 
+                    {{editor
                     enrichedAliases
-                    target="system.secrets.aliases" 
-                    button=true 
+                    target="system.secrets.aliases"
+                    button=true
                     engine="prosemirror"
                     editable=editable
                     collaborate=true}}
@@ -20,7 +20,7 @@
                     <label>Secret Society</label>
                 </div>
                 <div class="paranoia-editor-container">
-                    {{editor 
+                    {{editor
                     enrichedSecretSocieties
                     target="system.secrets.secretSociety"
                     button=true
@@ -34,7 +34,7 @@
                     <label>Secret Society Favours</label>
                 </div>
                 <div class="paranoia-editor-container">
-                    {{editor 
+                    {{editor
                     enrichedSecretSocietyFavors
                     target="system.secrets.secretSocietyFavors"
                     button=true
@@ -64,10 +64,10 @@
                     <label>Mutant Power</label>
                 </div>
                 <div class="paranoia-editor-container">
-                    {{editor 
-                    enrichedMutantPowers 
-                    target="system.secrets.mutantPower" 
-                    button=true 
+                    {{editor
+                    enrichedMutantPowers
+                    target="system.secrets.mutantPower"
+                    button=true
                     engine="prosemirror"
                     editable=editable
                     collaborate=false}}
@@ -78,26 +78,15 @@
                     <label>Service Group Favours</label>
                 </div>
                 <div class="paranoia-editor-container">
-                    {{editor 
-                    enrichedServiceGroupFavors 
-                    target="system.secrets.serviceGroupFavors" 
+                    {{editor
+                    enrichedServiceGroupFavors
+                    target="system.secrets.serviceGroupFavors"
                     button=true
-                    engine="prosemirror" 
+                    engine="prosemirror"
                     editable=editable
                     collaborate=false}}
                 </div>
             </div>
-        </div>
-    </div>
-    <div>
-        <div class="paranoia-header">
-            <label>Treasonous Gear (DO NOT USE OPENLY!)</label>
-        </div>
-        <div class="paranoia-editor-container">
-            {{editor enrichedTreasonousGear target="system.secrets.treasonousGear" button=true engine="prosemirror"
-            editable=editable
-
-            collaborate=false}}
         </div>
     </div>
     <div>
@@ -118,6 +107,15 @@
             {{editor enrichedSecretNotes target="system.secrets.notes" button=true engine="prosemirror"
             editable=editable
             collaborate=false}}
+        </div>
+    </div>
+    <div>
+        <div class="paranoia-header">
+            <label>Treasonous Gear (DO NOT USE OPENLY!)</label>
+        </div>
+        <div class="gear-list-container" data-drop-type="treasonousGear">
+            {{> "actor-gear-list" gearList=treasonousGear gearType="treasonousGear"
+            createTitle="Create Treasonous Gear"}}
         </div>
     </div>
 </section>

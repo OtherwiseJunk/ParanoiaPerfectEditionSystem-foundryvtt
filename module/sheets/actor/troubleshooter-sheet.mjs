@@ -71,13 +71,13 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
 
     // Prepare character data and items.
     if (actorData.type == 'troubleshooter') {
-      this._prepareItems(context);
+      await this._prepareItems(context);
       // this._prepareCharacterData(context);
     }
 
     // Prepare NPC data and items.
     if (actorData.type == 'npc') {
-      this._prepareItems(context);
+      await this._prepareItems(context);
     }
 
     // Add roll data for TinyMCE editors.
@@ -142,6 +142,14 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   activateListeners(html) {
     super.activateListeners(html);
 
+    // --- Dynamic Sheet Height ---
+    const tabs = html.find('.sheet-tabs .item');
+    tabs.on('click', (event) => {
+      this._setSheetHeight($(event.currentTarget).data('tab'));
+    });
+    // Set initial height based on the active tab.
+    this._setSheetHeight(tabs.filter('.active').data('tab'));
+
     // -------------------------------------------------------------
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
@@ -171,23 +179,89 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     html.on('click', '.gear-create', this._onCreateGear.bind(this));
     html.on('click', '.gear-edit', this._onItemEdit.bind(this));
     html.on('click', '.gear-delete', this._onItemDelete.bind(this));
+
+    // --- Drag-and-Drop Hover Feedback for all gear lists ---
+    const dropZones = html.find('.gear-list-container[data-drop-type]');
+
+    dropZones.on('dragenter', (event) => {
+      event.stopPropagation();
+      $(event.currentTarget).addClass('paranoia-drop-hover');
+    });
+    dropZones.on('dragleave', (event) => {
+      if (!event.currentTarget.contains(event.relatedTarget)) {
+        $(event.currentTarget).removeClass('paranoia-drop-hover');
+      }
+    });
+    dropZones.on('drop', (event) => {
+      $(event.currentTarget).removeClass('paranoia-drop-hover');
+    });
   }
 
+  /**
+   * Adjusts the sheet height based on the selected tab.
+   * @param {string} tabName The 'data-tab' attribute of the selected tab.
+   * @private
+   */
+  _setSheetHeight(tabName) {
+    const defaultHeight = this.constructor.defaultOptions.height;
+    const naughtyHeight = 900;
+    const currentHeight = this.position.height;
+
+    if (tabName === 'naughty') {
+      // If the sheet isn't already the naughty height, resize it.
+      if (currentHeight !== naughtyHeight) {
+        this.setPosition({ height: naughtyHeight });
+      }
+    } else {
+      // If the sheet isn't already the default height, resize it.
+      if (currentHeight !== defaultHeight) {
+        this.setPosition({ height: defaultHeight });
+      }
+    }
+  }
   async _onCreateGear(event) {
     event.preventDefault();
     const header = event.currentTarget;
     const itemData = {
       name: "New Gear",
       type: "equipment",
-      data: foundry.utils.duplicate(header.dataset),
       system: {
         type: header.dataset.type
       }
     };
-    delete itemData.data["type"];
 
-    var item = await Item.create(itemData, { parent: this.actor });
-    return item;
+    return await Item.create(itemData, { parent: this.actor });
+  }
+
+  /**
+ * Handle dropping an Item data object onto the Actor Sheet.
+ * @param {DragEvent} event   The concluding DragEvent which contains drop data
+ * @param {object} data       The data object extracted from the event
+ * @returns {Promise<Item[]|boolean>}
+ * @override
+ */
+  async _onDropItem(event, data) {
+    if (!this.isEditable) return false;
+
+    const dropContainer = event.target.closest("[data-drop-type]");
+    if (!dropContainer) return false;
+
+    const dropType = dropContainer.dataset.dropType;
+
+    if (!["publicGear", "treasonousGear"].includes(dropType)) return false;
+
+    const item = await Item.fromDropData(data);
+    if (!item) return false;
+
+    if (item.type !== "equipment") {
+      ui.notifications.warn("Only Equipment items can be added to this sheet.");
+      return false;
+    }
+
+    const itemData = item.toObject();
+    itemData.system.type = dropType;
+
+    return this.actor.createEmbeddedDocuments("Item", [itemData]);
   }
 
   _onItemEdit(event) {

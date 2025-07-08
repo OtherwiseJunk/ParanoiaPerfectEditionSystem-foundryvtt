@@ -124,7 +124,6 @@ Hooks.once('init', async function () {
 
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
-  console.log(Config);
   console.log("Paranoia | Paranoia system initialized");
 });
 
@@ -180,6 +179,41 @@ Hooks.once("ready", async function () {
 
       eye.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
     });
+  });
+
+  // Style items when dragging from the sidebar.
+  let draggedElement = null;
+  let clickTimeout = null;
+
+  document.body.addEventListener('mousedown', (event) => {
+    if (draggedElement) draggedElement.classList.remove('paranoia-dragging-item');
+    clearTimeout(clickTimeout);
+
+    const itemElement = event.target.closest('li.directory-item.item');
+    if (itemElement) {
+      draggedElement = itemElement;
+      draggedElement.classList.add('paranoia-dragging-item');
+
+      // Set a timeout. If mouseup happens before this, it's a click.
+      clickTimeout = setTimeout(() => {
+        clickTimeout = null;
+      }, 200);
+    }
+  });
+
+  document.body.addEventListener('mouseup', () => {
+    if (clickTimeout) {
+      clearTimeout(clickTimeout);
+      if (draggedElement) draggedElement.classList.remove('paranoia-dragging-item');
+      draggedElement = null;
+    }
+  });
+
+  document.body.addEventListener('dragend', () => {
+    if (draggedElement) {
+      draggedElement.classList.remove('paranoia-dragging-item');
+      draggedElement = null;
+    }
   });
 });
 

@@ -1,0 +1,16 @@
+/**
+ * General UI overrides and enhancements for the Paranoia system.
+ */
+
+// Style the item being dragged from a directory list.
+// This class is added via JavaScript on dragstart and removed on dragend.
+li.directory-item.item.paranoia-dragging-item {
+    background-color: rgba(139, 0, 0, 0.85); // darkred with transparency
+    outline: 2px solid darkred;
+    border-radius: 3px;
+
+    // Make the text inside white for better contrast
+    * {
+        color: white !important;
+    }
+}
