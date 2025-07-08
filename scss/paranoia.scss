@@ -111,54 +111,6 @@
   padding: 1%;
 }
 
-/*
- * Styles for the Treason Circle Architect application.
- */
-
-/* Make the form fill the entire application window content area */
-.treason-circle form.flexcol {
-  height: 100%;
-}
-
-/* Make the header and footer have fixed heights */
-.treason-circle .sheet-header,
-.treason-circle .sheet-footer {
-  flex: 0 0 auto;
-  /* Don't grow, don't shrink, use auto height */
-}
-
-/* Make the body section grow and become scrollable */
-.treason-circle .sheet-body {
-  flex: 1;
-  /* This is the key. It makes this div grow to fill available space. */
-  overflow-y: auto;
-  /* Add a scrollbar if content overflows. */
-  padding: 5px;
-  border-top: 1px solid #7a7971;
-  border-bottom: 1px solid #7a7971;
-}
-
-/* Style each individual row in the list to be a horizontal flex container */
-.treason-circle .treason-entry {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 5px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-/* Make the form groups within each row take up appropriate space */
-.treason-circle .treason-entry .form-group {
-  margin-bottom: 0;
-  flex: 1;
-}
-
-/* Tweak footer layout */
-.treason-circle .sheet-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 10px;
-}
-
 @import 'components/skill-draft';
+@import 'components/treason-circle';
+@import 'components/chat';

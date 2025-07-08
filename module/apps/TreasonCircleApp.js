@@ -23,7 +23,7 @@ export class TreasonCircleApp extends FormApplication {
             id: "paranoia-treason-circle-architect",
             title: "Treason Circle Architect",
             template: "systems/paranoia/templates/apps/treason-circle-sheet.hbs",
-            width: 720,
+            width: 960,
             height: 720,
             resizable: true,
             submitOnChange: false,
@@ -70,12 +70,58 @@ export class TreasonCircleApp extends FormApplication {
         this.allPlayerCharacters = game.actors.filter(a => a.hasPlayerOwner);
     }
 
+    /**
+     * Dynamically calculates and applies the optimal width for dropdown columns.
+     * This makes the layout more efficient by not overallocating space to dropdowns.
+     * @private
+     */
+    _updateColumnWidths() {
+        if (!this.allPlayerCharacters || this.allPlayerCharacters.length === 0) return;
+
+        // Find the longest character name to use as a measuring stick.
+        const longestName = this.allPlayerCharacters.reduce((long, char) => {
+            return char.name.length > long.length ? char.name : long;
+        }, "");
+
+        if (!longestName) return;
+
+        const ruler = document.createElement("span");
+        ruler.style.font = "var(--font-size-12, 12px) var(--font-family-sans-serif)";
+        ruler.style.visibility = "hidden";
+        ruler.style.position = "absolute";
+        ruler.style.whiteSpace = "nowrap";
+        ruler.innerHTML = longestName;
+        document.body.appendChild(ruler);
+
+        const textWidth = ruler.offsetWidth;
+        document.body.removeChild(ruler);
+
+        const selectWidth = textWidth + 40;
+
+        const styleId = `treason-circle-style-${this.appId}`;
+        let styleEl = document.getElementById(styleId);
+        if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = styleId;
+            document.head.appendChild(styleEl);
+        }
+
+        const cssRule = `
+      .app[data-appid="${this.appId}"] .treason-entry {
+        grid-template-columns: ${selectWidth}px 1.5fr ${selectWidth}px 2fr auto;
+      }
+    `;
+        styleEl.innerHTML = cssRule;
+    }
+
     activateListeners(html) {
         super.activateListeners(html);
 
         html.find('.add-row-button').click(this._onAddRow.bind(this));
 
         html.on('click', '.remove-row-button', this._onRemoveRow.bind(this));
+
+        this._updateColumnWidths();
 
         if (this.element.find('.treason-entry').length === 0) {
             this._onAddRow();
@@ -92,11 +138,11 @@ export class TreasonCircleApp extends FormApplication {
 
         const newRowHtml = `
       <div class="treason-entry" data-row-id="${newRowId}">
-          <div class="form-group"><label>Character</label><select name="character-${newRowId}">${this.allPlayerCharacters.map(char => `<option value="${char.id}">${char.name}</option>`).join('')}</select></div>
-          <div class="form-group"><label>Culpable Act</label><textarea name="culpable-act-${newRowId}" rows="2" placeholder="e.g., Screwed up the navigation data..."></textarea></div>
-          <div class="form-group"><label>Suspects</label><select name="suspect-${newRowId}">${this.allPlayerCharacters.map(char => `<option value="${char.id}">${char.name}</option>`).join('')}</select></div>
-          <div class="form-group"><label>How They Know</label><textarea name="how-they-know-${newRowId}" rows="2" placeholder="e.g., 'You think they saw you do it', or 'They saw the device was working before you had it'. "></textarea></div>
-          <button type="button" class="remove-row-button"><i class="fas fa-trash"></i> Remove</button>
+          <div class="form-group"><select name="character-${newRowId}">${this.allPlayerCharacters.map(char => `<option value="${char.id}">${char.name}</option>`).join('')}</select></div>
+          <div class="form-group"><textarea name="culpable-act-${newRowId}" rows="1" placeholder="e.g., Screwed up the navigation data..."></textarea></div>
+          <div class="form-group"><select name="suspect-${newRowId}">${this.allPlayerCharacters.map(char => `<option value="${char.id}">${char.name}</option>`).join('')}</select></div>
+          <div class="form-group"><textarea name="how-they-know-${newRowId}" rows="1" placeholder="e.g., 'You think they saw you do it'..."></textarea></div>
+          <button type="button" class="remove-row-button" title="Remove Entry"><i class="fas fa-trash"></i></button>
       </div>
     `;
         rowContainer.append(newRowHtml);
@@ -154,24 +200,29 @@ export class TreasonCircleApp extends FormApplication {
                 continue;
             }
 
+            const howTheyKnowText = howTheyKnow ? `<br><em>${howTheyKnow}</em>` : "";
             const whisperContent = `
-        <div class="paranoia-whisper">
-          <h2><i class="fas fa-user-secret"></i> TREASON ALERT</h2>
-          <p><strong>You were a party to Treason!</strong></p>
-          <hr>
-          <h3>Primary Treasonous Act</h3>
-          <p><em>${big_treason}</em></p>
-          <h3>Your Culpable Action (Level: TREASON)</h3>
-          <p>${entry.culpableAct}</p>
-          <h3>Who you suspect is aware: </h3>
-          <p>
-            You have reason to believe <strong>${suspect.name}</strong> knows about your involvement.
-            ${howTheyKnow}
-          </p>
-          <hr>
-          <p><em>Stay alert. Trust no one. Keep your laser handy.</em></p>
-        </div>
-      `;
+                <div class="paranoia">
+                    <div class="paranoia-container">
+                        <h3 class="paranoia-header"><i class="fas fa-user-secret"></i> TREASON ALERT</h3>
+                        <p><strong>You were a party to Treason!</strong> The following information is for your eyes only, Troubleshooter. Do not discuss it with anyone. Failure to comply is treason.</p>
+                    </div>
+                    <div class="paranoia-container">
+                        <h3 class="paranoia-header">Primary Treasonous Act</h3>
+                        <p><em>${big_treason}</em></p>
+                    </div>
+                    <div class="paranoia-container">
+                        <h3 class="paranoia-header">Your Culpable Action (Level: TREASON)</h3>
+                        <p>${entry.culpableAct}</p>
+                    </div>
+                    <div class="paranoia-container">
+                        <h3 class="paranoia-header">Counter-Treason Intelligence</h3>
+                        <p>You have reason to believe <strong>${suspect.name}</strong> knows about your involvement.${howTheyKnowText}</p>
+                    </div>
+                    <div class="paranoia-container">
+                        <p><em>Stay alert. Trust no one. Keep your laser handy.</em></p>
+                    </div>
+                </div>`;
 
             ChatMessage.create({
                 user: game.user.id,
@@ -197,5 +248,14 @@ export class TreasonCircleApp extends FormApplication {
     _onRemoveRow(event) {
         const row = $(event.currentTarget).closest('.treason-entry');
         row.remove();
+    }
+
+    /** @override */
+    async close(options) {
+        const styleEl = document.getElementById(`treason-circle-style-${this.appId}`);
+        if (styleEl) {
+            styleEl.remove();
+        }
+        return super.close(options);
     }
 }

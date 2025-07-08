@@ -1,0 +1,93 @@
+/**
+ * Styles for the Treason Circle Architect application.
+ */
+.treason-circle {
+    form.flexcol {
+        height: 100%;
+    }
+
+    .sheet-body {
+        flex: 1; // Make the body section grow
+        overflow-y: auto;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+    }
+
+    // Add padding to the main containers, but only within the Treason Circle app.
+    .paranoia-container {
+        padding: 0.5em;
+
+        // Use negative margins to make the header span the full width of the padded container,
+        // preserving the full-bleed banner look.
+        // We use calc() for width to robustly handle scrollbars.
+        .paranoia-header {
+            width: calc(100% + 1em);
+            margin: -0.5em 0 0.5em -0.5em;
+        }
+    }
+
+    .treason-entries-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+    }
+
+    /* Style each individual treason entry as a "tile" */
+    .treason-entry {
+        display: grid;
+        align-items: center;
+        gap: 10px;
+        padding: 0.5em;
+        border: 1px solid var(--color-border-light-2);
+        border-radius: 3px;
+
+        &.treason-entry-header {
+            border: none;
+            padding-bottom: 0;
+            /* Align header text centrally instead of at the bottom */
+            align-items: center;
+
+            // Center the text within the header's columns
+            .form-group {
+                text-align: center;
+            }
+        }
+
+        .add-row-button {
+            padding: 0.5em;
+            line-height: 1;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+
+            // Force form elements to fill their grid cell
+            select,
+            textarea {
+                width: 100%;
+                box-sizing: border-box; // Ensures padding doesn't break the layout
+                font-size: var(--font-size-12, 12px);
+            }
+        }
+
+        .remove-row-button {
+            padding: 0.5em;
+            line-height: 1;
+        }
+    }
+
+    .sheet-footer {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding: 10px;
+        border-top: 1px solid var(--color-border-light-1);
+
+        .form-group {
+            margin-bottom: 0;
+        }
+    }
+}
