@@ -123,8 +123,8 @@ Hooks.once('init', async function () {
   items.registerSheet("paranoia", ParanoiaEquipmentSheet, { types: ["equipment"], makeDefault: true });
 
   // Preload Handlebars templates.
-  return preloadHandlebarsTemplates();
   console.log("Paranoia | Paranoia system initialized");
+  return preloadHandlebarsTemplates();
 });
 
 /* -------------------------------------------- */
