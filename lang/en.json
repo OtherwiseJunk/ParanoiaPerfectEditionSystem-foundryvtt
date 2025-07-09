@@ -3,5 +3,7 @@
   "TYPES.Actor.nobody": "Nobody",
   "TYPES.Actor.troubleshooter": "Troubleshooter",
   "TYPES.Actor.accomplice": "Accomplice",
-  "TYPES.Item.equipment": "Equipment"
+  "TYPES.Item.equipment": "Equipment",
+  "PARANOIA.DeleteConfirmTitle": "Delete {name}",
+  "PARANOIA.DeleteConfirmContent": "Are you sure you want to delete <strong>{name}</strong>? This cannot be undone."
 }

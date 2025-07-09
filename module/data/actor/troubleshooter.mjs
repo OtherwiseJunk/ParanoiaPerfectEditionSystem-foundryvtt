@@ -1,13 +1,16 @@
 import { resourceField, skillField } from "../index.mjs";
+import { SystemSettingsKeys } from "../../settings/settings.mjs";
 
 export class ParanoiaTroubleshooterData extends foundry.abstract.TypeDataModel {
     static defineSchema() {
         const { SchemaField, NumberField, StringField } = foundry.data.fields;
+        const maximumMoxie = game.settings.get(SystemSettingsKeys.SYSTEM, SystemSettingsKeys.MAXIMUM_MOXIE);
+        const startingXP = game.settings.get(SystemSettingsKeys.SYSTEM, SystemSettingsKeys.STARTING_XP);
 
         return {
             health: resourceField(4, 4),
             flag: resourceField(0, 4),
-            moxie: resourceField(8, 99),
+            moxie: resourceField(8, maximumMoxie),
             team: new StringField(),
             mbd: new StringField(),
             serviceGroup: new StringField(),
@@ -55,7 +58,7 @@ export class ParanoiaTroubleshooterData extends foundry.abstract.TypeDataModel {
                     })
                 })
             }),
-            xp: new StringField(),
+            xp: new NumberField({ initial: startingXP }),
             missionObjectives: new StringField({ initial: "When you are given your assignment you can keep track of the objective here, that way you don't forget anything important, Citizen!" }),
             assignedGear: new StringField({ initial: "List any of the gear you're responsible for here. Be sure to keep it in tip-top shape!" }),
             secrets: new SchemaField({
@@ -70,5 +73,16 @@ export class ParanoiaTroubleshooterData extends foundry.abstract.TypeDataModel {
                 notes: new StringField({ initial: "Keep track of any other interesting, potentially-treasonous details. A well-documented traitor is a well-prepared traitor!" })
             })
         }
+    }
+
+    static migrateData(source) {
+        const maximumMoxie = game.settings.get(SystemSettingsKeys.SYSTEM, SystemSettingsKeys.MAXIMUM_MOXIE);
+        if (source.moxie.value > maximumMoxie) {
+            source.moxie.max = maximumMoxie;
+        }
+        if (source.moxie.value > source.moxie.max) {
+            source.moxie.value = source.moxie.max;
+        }
+        return super.migrateData(source);
     }
 }

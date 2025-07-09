@@ -10,6 +10,7 @@ export class ParanoiaEquipmentData extends foundry.abstract.TypeDataModel {
             success: new StringField(),
             treason: new StringField(),
             assigned: new BooleanField({ initial: false }),
+            type: new StringField()
         }
     }
 }

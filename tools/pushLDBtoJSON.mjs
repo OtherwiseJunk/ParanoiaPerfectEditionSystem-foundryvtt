@@ -34,7 +34,7 @@ function transformName(doc) {
   console.log(doc);
   const safeFileName = doc.name.replace(/[^a-zA-Z0-9А-я]/g, "_");
   const type = doc._key.split("!")[1];
-  const prefix = ["actors", "items"].includes(type) ? doc.type : type;
+  const prefix = ["actors", "items", "macros"].includes(type) ? doc.type : type;
 
   return `${doc.name ? `${prefix}_${safeFileName}_${doc._id}` : doc._id}.${
     yaml ? "yml" : "json"

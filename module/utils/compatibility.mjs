@@ -16,3 +16,7 @@ export function getCompatibleActorSheet(){
 export function getCompatibleItemSheet(){
     return foundry.appv1?.sheets?.ItemSheet ?? ItemSheet;
 }
+
+export function getMergeObjectFunction(){
+    return foundry.utils?.mergeObject ?? globalThis.mergeObject;
+}

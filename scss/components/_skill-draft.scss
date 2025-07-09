@@ -1,0 +1,174 @@
+/*
+ * Styles for the skill draft assignment grid display.
+ */
+
+.paranoia-assignments-grid {
+  /*
+    Default to a single column layout. This is best for narrow viewports or
+    when the application window is small.
+  */
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+/* At 500px or wider, switch to a 2-column layout. */
+@media (min-width: 500px) {
+  .paranoia-assignments-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* At 750px or wider, switch to a 3-column layout, our maximum. */
+@media (min-width: 750px) {
+  .paranoia-assignments-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.participant-tile {
+  // Mimic the style of .paranoia-container and .items-header border
+  border: 2px groove #eeede0;
+  background: #fff;
+  padding: 0; // Reset padding to allow header to span full width
+
+  h4 {
+    // Mimic .paranoia-header
+    background-color: darkred;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+}
+
+.skill-category {
+  padding: 0.5em 1em; // Add some horizontal padding
+
+  strong {
+    // Style for "Strengths" and "Weaknesses" labels
+    display: block;
+    margin-bottom: 0.5em;
+    border-bottom: 1px solid #c9c7b8;
+    padding-bottom: 0.25em;
+  }
+}
+
+.skill-assignment-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    font-size: 0.9em;
+  }
+}
+
+.skill-value {
+  font-weight: bold;
+  &.positive {
+    color: #006400; // DarkGreen
+  }
+  &.negative {
+    color: #8b0000; // DarkRed
+  }
+}
+
+/*
+ * Styles for the Skill Draft Controller App
+ */
+
+.skill-draft-controller {
+  .form-group {
+    // Stack the label on top of the form fields for a more balanced layout.
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em 1em;
+    gap: 0.5em;
+  }
+
+  // Target the label within our specific setup group to center it.
+  .participant-select-group > label {
+    text-align: center;
+  }
+
+  .header-fields {
+    width: 100%;
+    padding: 0.5em;
+  }
+
+  .draft-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    text-align: center;
+    padding: 0.5rem;
+    border: 2px groove #eeede0;
+    background: #f0f0e0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    span {
+      padding: 5px;
+      background: #fff;
+      border: 1px solid #c9c7b8;
+    }
+  }
+
+  // Center the start button
+  .start-draft-container {
+    align-items: center;
+  }
+
+  .completion-message {
+    padding: 1em;
+    text-align: center;
+    font-size: 1.1em;
+  }
+}
+
+/*
+ * Styles for the Skill Draft Player App
+ */
+
+.skill-draft-player {
+  .selection-prompt {
+    padding: 0.5em 1em;
+    text-align: center;
+    background: #f0f0e0;
+    border-bottom: 2px groove #eeede0;
+  }
+
+  .available-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .waiting-message {
+    padding: 1em;
+    text-align: center;
+    font-size: 1.1em;
+  }
+}
+
+.skill-button {
+  background: #fff;
+  border: 1px solid #7a7971;
+  border-radius: 3px;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    border-color: darkred;
+    box-shadow: 0 0 5px red;
+  }
+}

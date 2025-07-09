@@ -70,14 +70,14 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     context.enrichedMissionObjectives = await textEditor.enrichHTML(context.system.missionObjectives)
 
     // Prepare character data and items.
-    if (actorData.type == 'character') {
-      this._prepareItems(context);
-      this._prepareCharacterData(context);
+    if (actorData.type == 'troubleshooter') {
+      await this._prepareItems(context);
+      // this._prepareCharacterData(context);
     }
 
     // Prepare NPC data and items.
     if (actorData.type == 'npc') {
-      this._prepareItems(context);
+      await this._prepareItems(context);
     }
 
     // Add roll data for TinyMCE editors.
@@ -110,46 +110,30 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
    *
    * @return {undefined}
    */
-  _prepareItems(context) {
+  async _prepareItems(context) {
     // Initialize containers.
-    const gear = [];
-    const features = [];
-    const spells = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      9: []
-    };
+    const publicGear = [];
+    const treasonousGear = [];
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
+      if (i.type !== 'equipment') continue;
+      if (i.system.type == undefined) continue;
       i.img = i.img || DEFAULT_TOKEN;
+      i.enrichedDescription = await TextEditor.enrichHTML(i.system.description);
       // Append to gear.
-      if (i.type === 'item') {
-        gear.push(i);
+      if (i.system.type === 'publicGear') {
+        publicGear.push(i);
       }
       // Append to features.
-      else if (i.type === 'feature') {
-        features.push(i);
-      }
-      // Append to spells.
-      else if (i.type === 'spell') {
-        if (i.system.spellLevel != undefined) {
-          spells[i.system.spellLevel].push(i);
-        }
+      else if (i.system.type === 'treasonousGear') {
+        treasonousGear.push(i);
       }
     }
 
     // Assign and return
-    context.gear = gear;
-    context.features = features;
-    context.spells = spells;
+    context.publicGear = publicGear;
+    context.treasonousGear = treasonousGear;
   }
 
   /* -------------------------------------------- */
@@ -161,6 +145,14 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     // -------------------------------------------------------------
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
+
+    const tabs = html.find('.sheet-tabs .item');
+    tabs.on('click', (event) => {
+      this._setSheetHeight($(event.currentTarget).data('tab'));
+    });
+    // Set initial height based on the active tab.
+    this._setSheetHeight(tabs.filter('.active').data('tab'));
+
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
 
@@ -179,6 +171,135 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
       const actorFlag = this.actor.system.flag;
       this.validateWellnessChange(eventValue, event.target, actorFlag);
     });
+    html.find('.paranoia-moxie').change((event) => {
+      const eventValue = parseInt(event.target.value);
+      const actorMoxie = this.actor.system.moxie;
+      this.validateWellnessChange(eventValue, event.target, actorMoxie);
+    });
+    html.on('click', '.gear-create', this._onCreateGear.bind(this));
+    html.on('click', '.gear-edit', this._onItemEdit.bind(this));
+    html.on('click', '.gear-delete', this._onItemDelete.bind(this));
+
+    // --- Drag-and-Drop Hover Feedback ---
+    const dropZones = html.find('.gear-list-container[data-drop-type]');
+
+    dropZones.on('dragenter', (event) => {
+      // Prevent the event from bubbling up and causing other handlers to fire.
+      event.stopPropagation();
+      $(event.currentTarget).addClass('paranoia-drop-hover');
+    });
+
+    dropZones.on('dragleave', (event) => {
+      // This check prevents the style from flickering when moving over child elements.
+      if (!event.currentTarget.contains(event.relatedTarget)) {
+        $(event.currentTarget).removeClass('paranoia-drop-hover');
+      }
+    });
+
+    // Also remove the class when an item is dropped, as dragleave doesn't always fire.
+    dropZones.on('drop', (event) => {
+      $(event.currentTarget).removeClass('paranoia-drop-hover');
+    });
+  }
+
+  async _onCreateGear(event) {
+    event.preventDefault();
+    const header = event.currentTarget;
+    // Prepare the data for the new item using the modern data model.
+    const itemData = {
+      name: "New Gear",
+      type: "equipment",
+      system: {
+        type: header.dataset.type // This will be 'publicGear' or 'treasonousGear'
+      }
+    };
+
+    // Create the item directly on the actor.
+    return Item.create(itemData, { parent: this.actor });
+  }
+
+  /**
+  * Adjusts the sheet height based on the selected tab.
+  * @param {string} tabName The 'data-tab' attribute of the selected tab.
+  * @private
+  */
+  _setSheetHeight(tabName) {
+    const defaultHeight = this.constructor.defaultOptions.height;
+    const naughtyHeight = 900;
+    const currentHeight = this.position.height;
+
+    if (tabName === 'naughty') {
+      // If the sheet isn't already the naughty height, resize it.
+      if (currentHeight !== naughtyHeight) {
+        this.setPosition({ height: naughtyHeight });
+      }
+    } else {
+      // If the sheet isn't already the default height, resize it.
+      if (currentHeight !== defaultHeight) {
+        this.setPosition({ height: defaultHeight });
+      }
+    }
+  }
+
+  /**
+ * Handle dropping an Item data object onto the Actor Sheet.
+ * @param {DragEvent} event   The concluding DragEvent which contains drop data
+ * @param {object} data       The data object extracted from the event
+ * @returns {Promise<Item[]|boolean>}
+ * @override
+ */
+  async _onDropItem(event, data) {
+    if (!this.isEditable) return false;
+
+    // Find the drop container to determine what kind of gear is being added.
+    const dropContainer = event.target.closest("[data-drop-type]");
+    if (!dropContainer) return false;
+
+    const dropType = dropContainer.dataset.dropType;
+
+    // Validate that the drop type is one we handle.
+    if (!["publicGear", "treasonousGear"].includes(dropType)) return false;
+
+    const item = await Item.fromDropData(data);
+    if (!item) return false;
+
+    // Validate that the dropped document is an 'equipment' item.
+    if (item.type !== "equipment") {
+      ui.notifications.warn("Only Equipment items can be added to this sheet.");
+      return false;
+    }
+
+    // Prepare the item data, setting the subtype based on the drop location.
+    const itemData = item.toObject();
+    itemData.system.type = dropType;
+
+    // Create the new item on the actor.
+    return this.actor.createEmbeddedDocuments("Item", [itemData]);
+  }
+
+  _onItemEdit(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    item.sheet.render(true);
+  }
+
+  async _onItemDelete(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    if (!item) return;
+
+    // Display a confirmation dialog for better UX.
+    const confirmed = await Dialog.confirm({
+      title: game.i18n.format("PARANOIA.DeleteConfirmTitle", { name: item.name }),
+      content: `<p>${game.i18n.format("PARANOIA.DeleteConfirmContent", { name: item.name })}</p>`,
+      options: { classes: ["paranoia", "dialog", "paranoia-red-theme"] }
+    });
+
+    if (confirmed) {
+      return item.delete();
+    }
   }
 
   /** @inheritDoc */
@@ -217,7 +338,7 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
 
         let roll = await new Roll(rollString).evaluate();
         // Simplified the displayed formula to reduce confusion. 2 * (Xd6cs>=5) - X is weird.
-        if(NODE < 0) {
+        if (NODE < 0) {
           roll._formula = `${Math.abs(NODE)}d6cs>=5`;
         }
 
@@ -237,7 +358,7 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   }
 
   generateRollString(NODE) {
-    if(NODE > 0) return `${Math.abs(NODE)}d6cs>=5`;
+    if (NODE > 0) return `${Math.abs(NODE)}d6cs>=5`;
 
     let positiveNode = Math.abs(NODE);
     return `2 * (${positiveNode}d6cs>=5) - ${positiveNode}`;
@@ -245,10 +366,10 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
 
   async sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention) {
     let flavor = '';
-    if(NODE === 1){
+    if (NODE === 1) {
       flavor += `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`
     }
-    if(NODE < 0) {
+    if (NODE < 0) {
       flavor += 'Rolled with negative node. Non-Successes subtract from your success count! Good luck, citizen.<br>';
     }
     flavor += `Rolled with a level ${equipmentModifier} equipment.`
@@ -273,8 +394,8 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     NODE += equipmentModifier;
     NODE -= initiativeModifier;
     NODE -= hurtLevel;
-    
-    if(NODE < 0){
+
+    if (NODE < 0) {
       return NODE - 1; // "add" Computer Dice
     }
 
@@ -322,9 +443,9 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   async sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
     let flavor = `You manage to avoid Friend Computer\'s notice... this time.`;
     if (attractedComputersAttention) {
-      flavor = `Friend Computer turns its eye on your troubleshooter... (Citizen is a ${this.flagLevelToDescription(flagLevel)} and rolled a ${computerDiceResult}).`;      
+      flavor = `Friend Computer turns its eye on your troubleshooter... (Citizen is a ${this.flagLevelToDescription(flagLevel)} and rolled a ${computerDiceResult}).`;
     }
-    
+
     let content = this.GenerateFriendComputerMessage(flavor, attractedComputersAttention);
     ChatMessage.create({
       speaker: { alias: 'Friend Computer' },
@@ -333,10 +454,10 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     });
   }
 
-  GenerateFriendComputerMessage(message, isAngry){
+  GenerateFriendComputerMessage(message, isAngry) {
     let theme = isAngry ? 'paranoia-red-theme' : 'paranoia-blue-theme';
 
-    return`<div class="paranoia-friend-computer-container ${theme}">
+    return `<div class="paranoia-friend-computer-container ${theme}">
     <div class="paranoia-screen">
       <div class="paranoia-eye">
         <div class="paranoia-pupil"></div>

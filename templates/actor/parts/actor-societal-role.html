@@ -1,10 +1,10 @@
-<section class="grid grid-2col">
+<section>
     <div>
         <div class="paranoia-header">
             <label for="paranoia-mission-objectives">Mission Objectives</label>
         </div>
         <div class="paranoia-editor-container paranoia-societal">
-            {{editor 
+            {{editor
             enrichedMissionObjectives
             target="system.missionObjectives"
             button=true
@@ -13,18 +13,11 @@
             collaborate=false }}
         </div>
     </div>
-    <div>
-        <div class="paranoia-header">
-            <label for="paranoia-gear">Assigned Gear</label>
-        </div>
-        <div class="paranoia-editor-container paranoia-societal">
-            {{editor 
-            enrichedGear
-            target="system.assignedGear"
-            button=true
-            engine="prosemirror"
-            editable=editable
-            collaborate=false }}
-        </div>
+    <div class="paranoia-header">
+        <label for="paranoia-gear">Assigned Gear</label>
+    </div>
+    <div class="gear-list-container" data-drop-type="publicGear">
+        {{> "actor-gear-list" gearList=publicGear gearType="publicGear"
+        createTitle="Create Gear"}}
     </div>
 </section>

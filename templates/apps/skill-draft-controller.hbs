@@ -1,0 +1,27 @@
+<form class="skill-draft-controller sheet paranoia">
+    <section class="sheet-body">
+        {{#if (eq state.status "pending")}}
+        <div class="paranoia-container">
+            <h3 class="paranoia-header">Setup Skill Draft</h3>
+            <div class="form-group participant-select-group">
+                <label>Select Participants</label>
+                <p class="notes">Select all player characters who will participate in the skill draft. Use Ctrl/Cmd + Click to select multiple individually, or click one entry and shift-click another to select all between them.</p>
+                <select name="participants" multiple size="{{playerActors.length}}">
+                    {{#each playerActors as |actor|}}
+                    <option value="{{actor.id}}">{{actor.name}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="form-group start-draft-container">
+                <button type="button" class="start-draft"><i class="fas fa-play"></i> Start Draft</button>
+            </div>
+        </div>
+
+        {{else if (eq state.status "active")}}
+        {{> "skill-draft-turn-info"}}
+        {{> "skill-draft-assignments"}}
+        {{else}}
+        {{> "skill-draft-complete"}}
+        {{/if}}
+    </section>
+</form>
