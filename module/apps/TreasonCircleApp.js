@@ -1,3 +1,5 @@
+import { getAllPlayerCharacters } from "../utils/foundryUtils.mjs";
+
 /**
  * A GM-only application for creating and distributing a Paranoia Treason Circle.
  * @extends {FormApplication}
@@ -67,7 +69,10 @@ export class TreasonCircleApp extends FormApplication {
      * @override
      */
     async getData() {
-        this.allPlayerCharacters = game.actors.filter(a => a.hasPlayerOwner);
+        this.allPlayerCharacters = getAllPlayerCharacters();
+        console.log("Paranoia Comparison | All Player Characters:", this.allPlayerCharacters);
+        console.log(getAllPlayerCharacters());
+        console.log(game.actors.filter(a => a.hasPlayerOwner));
     }
 
     /**

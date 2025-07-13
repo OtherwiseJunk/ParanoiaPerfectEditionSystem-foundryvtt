@@ -7,6 +7,7 @@ export const SkillDraftEvent = {
     CLOSE_DRAFT: `draftClosed`,
     REQUEST_STATE: 'playerRequestState'
 }
+import { getAllPlayerCharacters } from "../utils/foundryUtils.mjs";
 
 /**
  * A GM-only application for managing the collaborative skill draft for character creation.
@@ -65,7 +66,7 @@ export class SkillDraftController extends FormApplication {
 
     /** @override */
     async getData() {
-        const playerActors = game.actors.filter(a => a.hasPlayerOwner);
+        const playerActors = getAllPlayerCharacters();
         return {
             playerActors,
             state: this.state,

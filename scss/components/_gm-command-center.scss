@@ -1,0 +1,161 @@
+/**
+ * Styles for the GM Command Center application.
+ */
+.paranoia-gm-command-center {
+    .button-group {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        padding: 5px 0;
+    }
+
+    .player-character-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        padding: 0;
+        margin-top: 0.5em;
+    }
+
+    .player-character-header,
+    .player-character-entry {
+        display: grid;
+        align-items: center;
+        gap: 10px;
+        grid-template-columns: max-content 80px 80px 50px 2fr 1.5fr 1fr;
+    }
+
+    .player-character-header {
+        font-weight: bold;
+        text-align: center;
+        border-bottom: 2px groove var(--color-border-light-1);
+        padding-bottom: 0.5em;
+    }
+
+    .player-character-entry {
+        padding: 0.5em;
+        border: 1px solid var(--color-border-light-2);
+        border-radius: 3px;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .vital-info,
+    .button-info {
+        width: fit-content;
+        margin: 0 auto;
+        text-align: left;
+        line-height: 1.4;
+
+        > div {
+            // Use flexbox to keep the label and value on one line and centered.
+            display: flex;
+            justify-content: flex-start;
+            align-items: center; // Vertically center flex items.
+            gap: 0.25em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            // Target any paragraph tags that might be added by enrichHTML
+            // and remove their default margins to prevent alignment issues.
+            p {
+                margin: 0;
+            }
+        }
+    }
+
+    .stat-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        justify-content: center;
+    }
+
+    .health-bar-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .health-bar {
+        display: flex;
+        width: 90%;
+        height: 16px;
+        border: 1px solid var(--color-border-dark-1, #444);
+        border-radius: 4px;
+        padding: 1px;
+        background-color: var(--color-border-light-tertiary, #e0e0e0);
+        gap: 1px;
+
+        .health-segment {
+            flex-grow: 1;
+            border-radius: 1px;
+        }
+
+        // Color the filled segments based on the health description class
+        &.fine .health-segment.filled { background-color: #2e8b57; }
+        &.hurt .health-segment.filled { background-color: #daa520; }
+        &.injured .health-segment.filled { background-color: #ff8c00; }
+        &.maimed .health-segment.filled { background-color: #b22222; }
+    }
+
+    .health-bar-terminal {
+        width: 4px;
+        height: 8px;
+        background-color: var(--color-border-dark-1, #444);
+        border-radius: 0 2px 2px 0;
+        margin-left: -1px; // Overlap slightly for a connected look
+    }
+
+    .treason-bar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2px;
+
+        .fa-star.filled {
+            color: darkred;
+        }
+
+        .fa-star.empty {
+            color: var(--color-border-light-tertiary, #e0e0e0);
+        }
+    }
+
+    .moxie-bar-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .moxie-bar {
+        display: flex;
+        width: 90%;
+        height: 10px;
+        border: 1px solid var(--color-border-dark-1, #444);
+        border-radius: 4px;
+        padding: 1px;
+        background-color: var(--color-border-light-tertiary, #e0e0e0);
+        gap: 1px;
+
+        .moxie-segment {
+            flex-grow: 1;
+            border-radius: 1px;
+        }
+
+        .moxie-segment.filled {
+            background-color: #008cff; // A nice, clear blue
+        }
+    }
+
+    .moxie-bar-terminal {
+        width: 4px;
+        height: 6px;
+        background-color: var(--color-border-dark-1, #444);
+        border-radius: 0 2px 2px 0;
+        margin-left: -1px; // Overlap slightly for a connected look
+    }
+}
