@@ -9,6 +9,10 @@ export class SystemSettingsKeys {
     static get STARTING_XP() {
         return "startingXP";
     }
+
+    static get ALLOW_NEGATIVE_XP() {
+        return "allowNegativeXP";
+    }
 }
 
 export function registerGameSettings() {
@@ -29,6 +33,16 @@ export function registerGameSettings() {
         config: true,
         default: 200,
         type: Number,
+        requiresReload: true
+    });
+
+    game.settings.register(SystemSettingsKeys.SYSTEM, SystemSettingsKeys.ALLOW_NEGATIVE_XP, {
+        name: "Allow Negative XP",
+        hint: "If enabled, characters can have negative XP.",
+        scope: "world",
+        config: true,
+        default: false,
+        type: Boolean,
         requiresReload: true
     });
 }
