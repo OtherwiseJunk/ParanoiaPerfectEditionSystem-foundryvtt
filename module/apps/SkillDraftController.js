@@ -60,7 +60,7 @@ export class SkillDraftController extends FormApplication {
             width: 640,
             height: "auto",
             resizable: true,
-            classes: ["paranoia"]
+            classes: ["paranoia-app", "skill-draft-controller"]
         });
     }
 

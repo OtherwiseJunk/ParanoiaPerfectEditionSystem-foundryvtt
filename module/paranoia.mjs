@@ -303,21 +303,3 @@ Hooks.on('getSceneControlButtons', controls => {
     controls.paranoia = paranoiaControl;
   }
 });
-
-Hooks.on("updateActor", (actor, data) => {
-  // Find an open GM Command Center window.
-  const commandCenter = Object.values(ui.windows).find(app => app instanceof GMCommandCenter);
-  if (!commandCenter) return;
-
-  // Only update if the actor is a player character and a relevant property has changed.
-  const isPlayerCharacter = actor.hasPlayerOwner;
-  const hasRelevantChange = foundry.utils.hasProperty(data, "system.health") || foundry.utils.hasProperty(data, "system.flag") || foundry.utils.hasProperty(data, "system.moxie");
-
-  if (isPlayerCharacter && hasRelevantChange) {
-    commandCenter.render(false);
-  }
-});
-
-/* -------------------------------------------- */
-/*  Hotbar Macros                               */
-/* -------------------------------------------- */

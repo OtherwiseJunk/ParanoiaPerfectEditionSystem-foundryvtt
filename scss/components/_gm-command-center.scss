@@ -22,7 +22,12 @@
         display: grid;
         align-items: center;
         gap: 10px;
-        grid-template-columns: max-content 80px 80px 50px 2fr 1.5fr 1fr;
+        /*
+         * Column widths are defined here with a CSS variable for the character name column.
+         * The JS calculates the optimal width for --character-column-width and sets it.
+         * A fallback value is provided for initial render.
+         */
+        grid-template-columns: 50px var(--character-column-width, 150px) 80px 80px 70px 1.5fr 110px;
     }
 
     .player-character-header {
@@ -157,5 +162,24 @@
         background-color: var(--color-border-dark-1, #444);
         border-radius: 0 2px 2px 0;
         margin-left: -1px; // Overlap slightly for a connected look
+    }
+
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        align-items: center;
+        justify-items: center;
+    }
+
+    .action-button {
+        line-height: 1.2;
+        padding: 4px;
+        font-size: 14px;
+    }
+    .character-mbd-icon{
+        i {
+            font-size: 1.6em;
+        }
     }
 }

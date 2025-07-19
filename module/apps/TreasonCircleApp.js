@@ -30,7 +30,7 @@ export class TreasonCircleApp extends FormApplication {
             resizable: true,
             submitOnChange: false,
             submitOnClose: false,
-            classes: ["paranoia", "treason-circle"]
+            classes: ["paranoia-app", "treason-circle"]
         });
     }
 

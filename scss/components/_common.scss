@@ -1,0 +1,46 @@
+/**
+ * Common component styles shared across different Paranoia applications,
+ * including actor sheets and custom apps.
+ */
+
+.paranoia-header {
+    background-color: darkred;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    margin: 0 0 0.5em 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+}
+
+.paranoia-container {
+    border: 2px groove var(--color-border-light-1, #eeede0);
+    padding: 0.5em;
+    margin-bottom: 1em;
+
+    // By default, headers inside a container should be full-bleed.
+    // This creates a nice banner effect.
+    > .paranoia-header {
+        width: calc(100% + 1em); // 0.5em padding on each side
+        margin: -0.5em -0.5em 0.5em -0.5em;
+    }
+}
+
+/**
+ * Styles for custom-themed dialogs.
+ * This ensures that dialogs using the .paranoia-app class have a consistent look.
+ */
+.dialog.paranoia-app {
+    .form-group {
+        // Stack label and select vertically for clarity
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+    }
+
+    select {
+        text-align: center;
+        text-align-last: center; // For Firefox
+    }
+}

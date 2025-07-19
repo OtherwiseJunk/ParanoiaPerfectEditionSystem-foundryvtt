@@ -1,9 +1,5 @@
-<form class="paranoia-gm-command-center paranoia flexcol">
+<form class="paranoia-gm-command-center flexcol">
     <section class="sheet-body">
-        <div class="paranoia-container">
-            <p class="notes">Welcome, Gamemaster. This is your central hub for launching various game management tools.</p>
-        </div>
-
         <div class="paranoia-container">
             <h3 class="paranoia-header">GM Tools</h3>
             <div class="gm-tools button-group">
@@ -15,32 +11,48 @@
         <div class="paranoia-container">
             <h3 class="paranoia-header">Active Player Characters</h3>
             <div class="player-character-header">
+                <div> MBD</div>
                 <div>Character</div>
                 <div>Health</div>
                 <div>Treason Level</div>
-                <div>Vital Information</div>
+                <div>XP</div>
                 <div>Buttons</div>
-                <div>Actions</div>
+                <div class="actions-header">Actions</div>
             </div>
             <div class="player-character-list">
                 {{#each playerActors as |actor|}}
                 <div class="player-character-entry" data-actor-id="{{actor.id}}">
-                    <div class="character-name rollable"><i class="fas fa-user"></i> {{actor.name}}</div>
+                    <div class="character-mbd-icon" title="{{actor.mbd}}"><i class="{{actor.mbdIcon}}"></i></div>
+                    <div>
+                        <div class="character-name rollable">{{actor.name}}</div>
+                        {{#if (ne actor.secretSociety "None")}}
+                        <em class="character-secret-society">{{{actor.secretSociety}}}</em>
+                        {{/if}}
+                        {{#if actor.mutantPower}}
+                        <div class="character-mutant-power">{{{actor.mutantPower}}}</div>
+                        {{/if}}
+                    </div>
                     <div class="stat-bars">
                         {{{healthBar actor.health actor.healthDescription}}}
                         {{{moxieBar actor.moxie actor.moxieMax}}}
                     </div>
                     <div>{{{treasonBar actor.treasonFlags actor.treasonDescription}}}</div>
-                    <div class="vital-info">
-                        <div><strong>MP:</strong> {{{actor.mutantPower}}}</div>
-                        <div><strong>SS:</strong> {{{actor.secretSociety}}}</div>
-                        <div><strong>MBD:</strong> {{actor.mandatoryBonusDuty}}</div>
-                    </div>
+                    <div>{{actor.xp}}</div>
                     <div class="button-info">
                         <div><strong>Violence:</strong> {{{actor.violenceButton}}}</div>
                         <div><strong>Treason:</strong> {{{actor.treasonButton}}}</div>
                     </div>
-                    <div class="actions"><!-- Action buttons could go here --></div>
+                    <div class="actions">
+                        <div class="action-grid">
+                            <button type="button" class="action-button" data-action="inflict-harm" title="Inflict Harm"><i class="fas fa-heart-broken"></i></button>
+                            <button type="button" class="action-button" data-action="increase-treason" title="Increase Treason"><i class="fas fa-gavel"></i></button>
+                            <button type="button" class="action-button" data-action="kill-player" title="Kill Player"><i class="fas fa-skull-crossbones"></i></button>
+                            <button type="button" class="action-button" data-action="give-xp" title="Give XP"><i class="fas fa-plus-circle"></i></button>
+                            <button type="button" class="action-button" data-action="deduct-xp" title="Deduct XP"><i class="fas fa-minus-circle"></i></button>
+                            <button type="button" class="action-button" data-action="give-moxie" title="Give Moxie"><i class="fas fa-plus-square"></i></button>
+                            <button type="button" class="action-button" data-action="deduct-moxie" title="Deduct Moxie"><i class="fas fa-minus-square"></i></button>
+                        </div>
+                    </div>
                 </div>
                 {{/each}}
             </div>

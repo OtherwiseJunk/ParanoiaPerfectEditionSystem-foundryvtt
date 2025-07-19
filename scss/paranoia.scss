@@ -12,12 +12,36 @@
 @import 'global/grid';
 @import 'global/flex';
 
-/* Styles limited to paranoia sheets */
-.paranoia {
+/* Common component styles used across all apps */
+@import 'components/common';
+
+/* Styles limited to paranoia actor sheets */
+.paranoia.sheet.actor {
   @import 'components/forms';
   @import 'components/resource';
   @import 'components/items';
   @import 'components/effects';
+}
+
+/* Base styles for all custom Paranoia applications (non-sheets) */
+/*
+ * We use a more specific selector here to ensure our background override wins
+ * against Foundry's default themed window styles (e.g., .theme-light).
+ * The [id^="paranoia-"] attribute selector targets all of our custom apps,
+ * and adding `.themed` makes it specific enough to override core fonts.
+ */
+.paranoia-app {
+  font-family: "Cutive Mono", monospace;
+
+  .window-content {
+    
+    background: white; /* Override Foundry's default textured background */
+    color: #191813; /* A standard dark text color for readability on white */
+  }
+
+  *:not(.fas, .fa, i) {
+    font-family: inherit;
+  }
 }
 
 .paranoia-blue-theme {

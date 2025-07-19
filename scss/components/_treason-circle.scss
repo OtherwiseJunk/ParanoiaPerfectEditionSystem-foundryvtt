@@ -15,19 +15,6 @@
         gap: 0.5em;
     }
 
-    // Add padding to the main containers, but only within the Treason Circle app.
-    .paranoia-container {
-        padding: 0.5em;
-
-        // Use negative margins to make the header span the full width of the padded container,
-        // preserving the full-bleed banner look.
-        // We use calc() for width to robustly handle scrollbars.
-        .paranoia-header {
-            width: calc(100% + 1em);
-            margin: -0.5em 0 0.5em -0.5em;
-        }
-    }
-
     .treason-entries-container {
         display: flex;
         flex-direction: column;

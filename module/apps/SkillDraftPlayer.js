@@ -22,7 +22,7 @@ export class SkillDraftPlayer extends Application {
             width: 720,
             height: "auto",
             resizable: true,
-            classes: ["paranoia"]
+            classes: ["paranoia-app", "skill-draft-player"]
         });
     }
 
