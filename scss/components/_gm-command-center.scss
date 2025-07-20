@@ -47,20 +47,31 @@
 
     .vital-info,
     .button-info {
+        // This is the core of the fix.
+        // By default, a grid item's minimum width is 'auto', which is based on its content.
+        // This prevents it from shrinking and causes it to push other columns when content is long.
+        // Setting min-width to 0 allows the item to shrink and its content to wrap.
+        min-width: 0;
         width: fit-content;
         margin: 0 auto;
         text-align: left;
         line-height: 1.4;
+        // This property ensures that long, unbreakable words will wrap.
+        word-break: break-word;
 
-        > div {
+        >div {
             // Use flexbox to keep the label and value on one line and centered.
             display: flex;
             justify-content: flex-start;
-            align-items: center; // Vertically center flex items.
+            align-items: flex-start; // Align to top, which looks better with wrapped text.
             gap: 0.25em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+
+            // Target the label (assumed to be the first child, often a <strong> tag)
+            // and prevent it from shrinking. This stops the label itself from wrapping
+            // when the value next to it is very long.
+            >*:first-child {
+                flex-shrink: 0;
+            }
 
             // Target any paragraph tags that might be added by enrichHTML
             // and remove their default margins to prevent alignment issues.
@@ -100,10 +111,21 @@
         }
 
         // Color the filled segments based on the health description class
-        &.fine .health-segment.filled { background-color: #2e8b57; }
-        &.hurt .health-segment.filled { background-color: #daa520; }
-        &.injured .health-segment.filled { background-color: #ff8c00; }
-        &.maimed .health-segment.filled { background-color: #b22222; }
+        &.fine .health-segment.filled {
+            background-color: #2e8b57;
+        }
+
+        &.hurt .health-segment.filled {
+            background-color: #daa520;
+        }
+
+        &.injured .health-segment.filled {
+            background-color: #ff8c00;
+        }
+
+        &.maimed .health-segment.filled {
+            background-color: #b22222;
+        }
     }
 
     .health-bar-terminal {
@@ -177,7 +199,8 @@
         padding: 4px;
         font-size: 14px;
     }
-    .character-mbd-icon{
+
+    .character-mbd-icon {
         i {
             font-size: 1.6em;
         }

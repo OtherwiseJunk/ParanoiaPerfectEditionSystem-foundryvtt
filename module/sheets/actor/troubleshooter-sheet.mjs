@@ -14,7 +14,7 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
       classes: ["paranoia", "sheet", "actor"],
       template: "systems/paranoia/templates/actor/troubleshooter-sheet.html",
       width: 900,
-      height: 675,
+      height: 725,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
     });
   }
@@ -225,7 +225,7 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   */
   _setSheetHeight(tabName) {
     const defaultHeight = this.constructor.defaultOptions.height;
-    const naughtyHeight = 900;
+    const naughtyHeight = 1000;
     const currentHeight = this.position.height;
 
     if (tabName === 'naughty') {

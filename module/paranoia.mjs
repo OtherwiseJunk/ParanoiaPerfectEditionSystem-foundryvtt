@@ -276,30 +276,26 @@ Hooks.once("ready", async function () {
 });
 
 Hooks.on('getSceneControlButtons', controls => {
-  if (!game.user.isGM) return;
-
-  const paranoiaControl = {
-    name: 'paranoia',
-    title: 'Paranoia Applets',
-    icon: 'fas fa-user-secret',
-    visble: true,
-    tools: {
-      'gm-command-center': {
-        name: 'gm-command-center',
-        title: 'GM Command Center',
-        icon: 'fas fa-cogs',
-        button: true,
-        onClick: () => {
-          new GMCommandCenter().render(true);
-        }
-      }
-    }
-  }
+  let tokenControls;
+  const tokenControlName = "tokens";
 
   if (Array.isArray(controls)) {
-    controls.push(paranoiaControl);
+    tokenControls = controls.find(c => c.name === tokenControlName);
+  } else {
+    tokenControls = controls[tokenControlName];
   }
-  else {
-    controls.paranoia = paranoiaControl;
+
+  if (tokenControls) {
+    const newTool = {
+      name: 'gm-command-center',
+      title: 'GM Command Center',
+      icon: 'fas fa-cogs',
+      button: true,
+      visible: game.user.isGM,
+      onClick: () => new GMCommandCenter().render(true)
+    };
+
+    if (Array.isArray(tokenControls.tools)) tokenControls.tools.push(newTool);
+    else tokenControls.tools['gm-command-center'] = newTool;
   }
 });

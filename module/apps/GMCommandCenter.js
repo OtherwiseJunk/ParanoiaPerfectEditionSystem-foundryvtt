@@ -85,7 +85,7 @@ export class GMCommandCenter extends Application {
                 mbd: actor.system.mbd || "None",
                 secretSociety: isInitialOrEmpty(secrets.secretSociety, defaultSecrets.secretSociety) ? "None" : secrets.secretSociety,
                 mbdIcon,
-                mutantPower: secrets.mutantPower || "",
+                mutantPower: isInitialOrEmpty(secrets.mutantPower, defaultData.secrets.mutantPower) ? "" : secrets.mutantPower,
                 violenceButton: isInitialOrEmpty(actor.system.violenceButton, defaultData.violenceButton) ? "None" : actor.system.violenceButton,
                 treasonButton: isInitialOrEmpty(actor.system.treasonButton, defaultData.treasonButton) ? "None" : actor.system.treasonButton,
             };

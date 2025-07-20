@@ -75,6 +75,11 @@
   width: 100%;
   color: white;
   text-align: center;
+  box-sizing: border-box;
+  margin: 0; // Remove any default margin
+  padding: 0.5em 0; // Add vertical padding if needed
+  flex-basis: 100%; // If inside flex
+  grid-column: 1 / -1; // If inside grid
 }
 
 .paranoia-skill-label {
@@ -107,7 +112,7 @@
 }
 
 .paranoia-wellness-input {
-  height: 1.2em;
+  height: 1.4em;
   text-align: center;
   font-size: 48px;
 }

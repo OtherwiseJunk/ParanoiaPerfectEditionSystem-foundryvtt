@@ -3,8 +3,10 @@
         <div class="paranoia-container">
             <h3 class="paranoia-header">GM Tools</h3>
             <div class="gm-tools button-group">
-                <button type="button" id="open-skill-draft"><i class="fas fa-drafting-compass"></i> Open Skill Draft</button>
-                <button type="button" id="open-treason-circle"><i class="fas fa-user-secret"></i> Open Treason Circle</button>
+                <button type="button" id="open-skill-draft"><i class="fas fa-drafting-compass"></i> Open Skill
+                    Draft</button>
+                <button type="button" id="open-treason-circle"><i class="fas fa-user-secret"></i> Open Treason
+                    Circle</button>
             </div>
         </div>
 
@@ -29,7 +31,7 @@
                         <em class="character-secret-society">{{{actor.secretSociety}}}</em>
                         {{/if}}
                         {{#if actor.mutantPower}}
-                        <div class="character-mutant-power">{{{actor.mutantPower}}}</div>
+                        <strong class="character-mutant-power">{{{actor.mutantPower}}}</strong>
                         {{/if}}
                     </div>
                     <div class="stat-bars">
@@ -44,13 +46,20 @@
                     </div>
                     <div class="actions">
                         <div class="action-grid">
-                            <button type="button" class="action-button" data-action="inflict-harm" title="Inflict Harm"><i class="fas fa-heart-broken"></i></button>
-                            <button type="button" class="action-button" data-action="give-treason-star" title="Give Treason Stars"><i class="fas fa-gavel"></i></button>
-                            <button type="button" class="action-button" data-action="kill-player" title="Kill Player"><i class="fas fa-skull-crossbones"></i></button>
-                            <button type="button" class="action-button" data-action="give-xp" title="Give XP"><i class="fas fa-plus-circle"></i></button>
-                            <button type="button" class="action-button" data-action="deduct-xp" title="Deduct XP"><i class="fas fa-minus-circle"></i></button>
-                            <button type="button" class="action-button" data-action="give-moxie" title="Give Moxie"><i class="fas fa-plus-square"></i></button>
-                            <button type="button" class="action-button" data-action="deduct-moxie" title="Deduct Moxie"><i class="fas fa-minus-square"></i></button>
+                            <button type="button" class="action-button" data-action="inflict-harm"
+                                title="Inflict Harm"><i class="fas fa-heart-broken"></i></button>
+                            <button type="button" class="action-button" data-action="give-treason-star"
+                                title="Give Treason Stars"><i class="fas fa-gavel"></i></button>
+                            <button type="button" class="action-button" data-action="kill-player" title="Kill Player"><i
+                                    class="fas fa-skull-crossbones"></i></button>
+                            <button type="button" class="action-button" data-action="give-xp" title="Give XP"><i
+                                    class="fas fa-plus-circle"></i></button>
+                            <button type="button" class="action-button" data-action="deduct-xp" title="Deduct XP"><i
+                                    class="fas fa-minus-circle"></i></button>
+                            <button type="button" class="action-button" data-action="give-moxie" title="Give Moxie"><i
+                                    class="fas fa-plus-square"></i></button>
+                            <button type="button" class="action-button" data-action="deduct-moxie"
+                                title="Deduct Moxie"><i class="fas fa-minus-square"></i></button>
                         </div>
                     </div>
                 </div>
