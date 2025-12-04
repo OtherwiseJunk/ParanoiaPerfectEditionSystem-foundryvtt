@@ -19,7 +19,7 @@ export class GMCommandCenter extends Application {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             id: "paranoia-gm-command-center",
-            title: "GM Command Center",
+            title: game.i18n.localize("PARANOIA.GM.CommandCenter.Title"),
             template: "systems/paranoia/templates/apps/gm-command-center.hbs",
             width: 1000,
             height: "auto",
@@ -34,7 +34,7 @@ export class GMCommandCenter extends Application {
      */
     render(force, options) {
         if (!game.user.isGM) {
-            ui.notifications.error("Only Game Masters can use the GM Command Center.");
+            ui.notifications.error(game.i18n.localize("PARANOIA.GM.CommandCenter.GMOnlyError"));
             return;
         }
         return super.render(force, options);
@@ -74,7 +74,7 @@ export class GMCommandCenter extends Application {
             return {
                 id: actor.id,
                 name: actor.name,
-                playerName: owner ? owner.name : "Unassigned",
+                playerName: owner ? owner.name : game.i18n.localize("PARANOIA.GM.CommandCenter.Unassigned"),
                 health: healthValue,
                 healthDescription: healthDescription,
                 treasonFlags: flagValue,
@@ -83,11 +83,11 @@ export class GMCommandCenter extends Application {
                 moxieMax: game.settings.get(SystemSettingsKeys.SYSTEM, SystemSettingsKeys.MAXIMUM_MOXIE) ?? 8,
                 xp,
                 mbd: actor.system.mbd || "None",
-                secretSociety: isInitialOrEmpty(secrets.secretSociety, defaultSecrets.secretSociety) ? "None" : secrets.secretSociety,
+                secretSociety: isInitialOrEmpty(secrets.secretSociety, defaultSecrets.secretSociety) ? game.i18n.localize("PARANOIA.None") : secrets.secretSociety,
                 mbdIcon,
                 mutantPower: isInitialOrEmpty(secrets.mutantPower, defaultData.secrets.mutantPower) ? "" : secrets.mutantPower,
-                violenceButton: isInitialOrEmpty(actor.system.violenceButton, defaultData.violenceButton) ? "None" : actor.system.violenceButton,
-                treasonButton: isInitialOrEmpty(actor.system.treasonButton, defaultData.treasonButton) ? "None" : actor.system.treasonButton,
+                violenceButton: isInitialOrEmpty(actor.system.violenceButton, defaultData.violenceButton) ? game.i18n.localize("PARANOIA.None") : actor.system.violenceButton,
+                treasonButton: isInitialOrEmpty(actor.system.treasonButton, defaultData.treasonButton) ? game.i18n.localize("PARANOIA.None") : actor.system.treasonButton,
             };
         });
         return context;
@@ -203,7 +203,7 @@ export class GMCommandCenter extends Application {
                 break;
             default:
                 console.log(`Paranoia | Action '${action}' triggered for actor '${actorId}'.`);
-                ui.notifications.info(`Triggered '${action}' for ${actor.name}.`);
+                ui.notifications.info(game.i18n.format("PARANOIA.GM.CommandCenter.ActionTriggered", { action: action, name: actor.name }));
                 break;
         }
     }
@@ -222,13 +222,13 @@ export class GMCommandCenter extends Application {
             <div class="form-group">
                 <label>${label}:</label>
                 <select name="${prefix}-source">
-                    <option value="computer" selected>Friend Computer</option>
+                    <option value="computer" selected>${game.i18n.localize("PARANOIA.FriendComputer")}</option>
                     ${npcs.map(npc => `<option value="${npc.id}">${npc.name}</option>`).join('')}
-                    <option value="other">Other...</option>
+                    <option value="other">${game.i18n.localize("PARANOIA.Other")}</option>
                 </select>
             </div>
             <div class="form-group" id="${prefix}-source-other-group" style="display: none;">
-                <label>Custom Source Name:</label>
+                <label>${game.i18n.localize("PARANOIA.GM.CommandCenter.CustomSourceName")}</label>
                 <input type="text" name="${prefix}-source-other" placeholder="${placeholder}"/>
             </div>
         `;
@@ -265,9 +265,9 @@ export class GMCommandCenter extends Application {
         const customSource = html.find(`[name="${prefix}-source-other"]`).val();
 
         if (source === 'computer') {
-            return ChatMessage.getSpeaker({ alias: "Friend Computer" });
+            return ChatMessage.getSpeaker({ alias: game.i18n.localize("PARANOIA.FriendComputer") });
         } else if (source === 'other') {
-            return ChatMessage.getSpeaker({ alias: customSource || "An unknown entity" });
+            return ChatMessage.getSpeaker({ alias: customSource || game.i18n.localize("PARANOIA.GM.CommandCenter.UnknownEntity") });
         } else {
             const sourceActor = game.actors.get(source);
             return ChatMessage.getSpeaker({ actor: sourceActor });
@@ -303,7 +303,7 @@ export class GMCommandCenter extends Application {
             <div class="form-group">
                 <label>${label}</label>
                 <input type="checkbox" name="${prefix}-private" />
-                <span class="hint">If checked, the message will only be visible to the GM and the affected player.</span>
+                <span class="hint">${game.i18n.localize("PARANOIA.GM.CommandCenter.PrivateHint")}</span>
             </div>
         `;
     }
@@ -369,15 +369,15 @@ export class GMCommandCenter extends Application {
      */
     async _onGiveTreasonStar(actor) {
         const treasonLevels = {
-            greylisted: { label: "Greylisted", value: 1 },
-            restricted: { label: "Restricted", value: 2 },
-            citizenOfInterest: { label: "Citizen-of-Interest", value: 3 },
-            wanted: { label: "Wanted", value: 4 }
+            greylisted: { label: game.i18n.localize("PARANOIA.TreasonLevel.Greylisted"), value: 1 },
+            restricted: { label: game.i18n.localize("PARANOIA.TreasonLevel.Restricted"), value: 2 },
+            citizenOfInterest: { label: game.i18n.localize("PARANOIA.TreasonLevel.CitizenOfInterest"), value: 3 },
+            wanted: { label: game.i18n.localize("PARANOIA.TreasonLevel.Wanted"), value: 4 }
         };
 
         const npcs = game.actors.filter(a => !a.hasPlayerOwner);
-        const sourceSelectorHtml = this._createSourceSelectorHtml('treason', 'Source of Treason Star', 'e.g., Internal Security', npcs);
-        const levelSelectorHtml = this._createLevelSelectorHtml('treason', `Select Treason Level for ${actor.name}:`, treasonLevels);
+        const sourceSelectorHtml = this._createSourceSelectorHtml('treason', game.i18n.localize("PARANOIA.GM.CommandCenter.SourceOfTreasonStar"), game.i18n.localize("PARANOIA.GM.CommandCenter.SourceOfTreasonStarPlaceholder"), npcs);
+        const levelSelectorHtml = this._createLevelSelectorHtml('treason', game.i18n.format("PARANOIA.GM.CommandCenter.SelectTreasonLevelFor", { name: actor.name }), treasonLevels);
 
         const dialogContent = `
             <div class="paranoia-container">
@@ -387,12 +387,12 @@ export class GMCommandCenter extends Application {
         `;
 
         const d = new Dialog({
-            title: `Give Treason Star: ${actor.name}`,
+            title: game.i18n.format("PARANOIA.GM.CommandCenter.GiveTreasonStarTitle", { name: actor.name }),
             content: dialogContent,
             buttons: {
                 ok: {
                     icon: '<i class="fas fa-star"></i>',
-                    label: "Give Star",
+                    label: game.i18n.localize("PARANOIA.GM.CommandCenter.GiveStarButton"),
                     callback: async (html) => {
                         const selectedLevelKey = html.find('[name="treason-level"]').val();
                         const selectedFlagValue = treasonLevels[selectedLevelKey].value;
@@ -403,8 +403,8 @@ export class GMCommandCenter extends Application {
                         await actor.update({ 'system.flag.value': newFlagValue });
 
                         const newTreasonDescription = flagLevelToDescription(newFlagValue);
-                        const treasonMessage = `Citizen ${actor.name} has been granted a treason star. They are now <strong>${newTreasonDescription}</strong>.`;
-                        ui.notifications.info(`${actor.name} is now ${newTreasonDescription}.`);
+                        const treasonMessage = game.i18n.format("PARANOIA.GM.CommandCenter.TreasonStarGranted", { name: actor.name, description: newTreasonDescription });
+                        ui.notifications.info(game.i18n.format("PARANOIA.GM.CommandCenter.TreasonStarGrantedNotification", { name: actor.name, description: newTreasonDescription }));
 
                         const speaker = this._getSpeakerFromForm(html, 'treason');
                         this._createChatMessage(actor, { speaker, content: treasonMessage }, false);
@@ -412,7 +412,7 @@ export class GMCommandCenter extends Application {
                 },
                 cancel: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: "Cancel"
+                    label: game.i18n.localize("PARANOIA.GM.CommandCenter.CancelButton")
                 }
             },
             default: "ok",
@@ -432,16 +432,16 @@ export class GMCommandCenter extends Application {
      */
     async _onInflictHarm(actor) {
         const harmLevels = {
-            hurt: { label: "Hurt", hp: 3 },
-            injured: { label: "Injured", hp: 2 },
-            maimed: { label: "Maimed", hp: 1 }
+            hurt: { label: game.i18n.localize("PARANOIA.HarmLevel.Hurt"), hp: 3 },
+            injured: { label: game.i18n.localize("PARANOIA.HarmLevel.Injured"), hp: 2 },
+            maimed: { label: game.i18n.localize("PARANOIA.HarmLevel.Maimed"), hp: 1 }
         };
 
         const npcs = game.actors.filter(a => !a.hasPlayerOwner);
-        const sourceSelectorHtml = this._createSourceSelectorHtml('harm', 'Source of Harm', 'e.g., A Vulture squadron', npcs);
-        const optionalMessageHtml = this._createOptionalMessageHtml('harm', 'Optional Message (describes the harm):', "Flavor the harm being caused to the troubleshooter'");
-        const privateCheckboxHtml = this._createPrivateCheckboxHtml('harm', 'Private Message?');
-        const levelSelectorHtml = this._createLevelSelectorHtml('harm', `Select Harm Level for ${actor.name}:`, harmLevels);
+        const sourceSelectorHtml = this._createSourceSelectorHtml('harm', game.i18n.localize("PARANOIA.GM.CommandCenter.SourceOfHarm"), game.i18n.localize("PARANOIA.GM.CommandCenter.SourceOfHarmPlaceholder"), npcs);
+        const optionalMessageHtml = this._createOptionalMessageHtml('harm', game.i18n.localize("PARANOIA.GM.CommandCenter.OptionalMessage"), game.i18n.localize("PARANOIA.GM.CommandCenter.OptionalMessagePlaceholder"));
+        const privateCheckboxHtml = this._createPrivateCheckboxHtml('harm', game.i18n.localize("PARANOIA.GM.CommandCenter.PrivateMessage"));
+        const levelSelectorHtml = this._createLevelSelectorHtml('harm', game.i18n.format("PARANOIA.GM.CommandCenter.SelectHarmLevelFor", { name: actor.name }), harmLevels);
 
         const dialogContent = `
             <div class="paranoia-container">
@@ -453,12 +453,12 @@ export class GMCommandCenter extends Application {
         `;
 
         const d = new Dialog({
-            title: `Inflict Harm: ${actor.name}`,
+            title: game.i18n.format("PARANOIA.GM.CommandCenter.InflictHarmTitle", { name: actor.name }),
             content: dialogContent,
             buttons: {
                 ok: {
                     icon: '<i class="fas fa-check"></i>',
-                    label: "Apply Harm",
+                    label: game.i18n.localize("PARANOIA.GM.CommandCenter.ApplyHarmButton"),
                     callback: async (html) => {
                         const selectedLevelKey = html.find('[name="harm-level"]').val();
                         const currentHP = actor.system.health.value;
@@ -473,8 +473,8 @@ export class GMCommandCenter extends Application {
                         await actor.update({ 'system.health.value': newHP });
 
                         const newHealthDescription = healthLevelToDescription(newHP);
-                        const wellnessMessage = `Citizen ${actor.name} has suffered an injury. They are now <strong>${newHealthDescription}</strong>.`;
-                        ui.notifications.info(`${actor.name} is now ${newHealthDescription}.`);
+                        const wellnessMessage = game.i18n.format("PARANOIA.GM.CommandCenter.InjurySuffered", { name: actor.name, description: newHealthDescription });
+                        ui.notifications.info(game.i18n.format("PARANOIA.GM.CommandCenter.InjurySufferedNotification", { name: actor.name, description: newHealthDescription }));
 
                         const speaker = this._getSpeakerFromForm(html, 'harm');
 
@@ -493,7 +493,7 @@ export class GMCommandCenter extends Application {
                 },
                 cancel: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: "Cancel"
+                    label: game.i18n.localize("PARANOIA.GM.CommandCenter.CancelButton")
                 }
             },
             default: "ok",
@@ -513,13 +513,13 @@ export class GMCommandCenter extends Application {
      */
     async _onKillPlayer(actor) {
         const npcs = game.actors.filter(a => !a.hasPlayerOwner);
-        const sourceSelectorHtml = this._createSourceSelectorHtml('kill', 'Source of Termination', 'e.g., A faulty Vulture', npcs);
-        const optionalMessageHtml = this._createOptionalMessageHtml('kill', 'Optional Termination Report (Flavor Text):', "Describe how the troubleshooter met their untimely demise.");
-        const privateCheckboxHtml = this._createPrivateCheckboxHtml('kill', 'Private Report?');
+        const sourceSelectorHtml = this._createSourceSelectorHtml('kill', game.i18n.localize("PARANOIA.GM.CommandCenter.SourceOfTermination"), game.i18n.localize("PARANOIA.GM.CommandCenter.SourceOfTerminationPlaceholder"), npcs);
+        const optionalMessageHtml = this._createOptionalMessageHtml('kill', game.i18n.localize("PARANOIA.GM.CommandCenter.OptionalTerminationReport"), game.i18n.localize("PARANOIA.GM.CommandCenter.OptionalTerminationReportPlaceholder"));
+        const privateCheckboxHtml = this._createPrivateCheckboxHtml('kill', game.i18n.localize("PARANOIA.GM.CommandCenter.PrivateReport"));
 
         const dialogContent = `
             <div class="paranoia-container">
-                <p>You are about to terminate <strong>${actor.name}</strong>. This will advance them to their next clone, resetting their health, moxie, and treason level. Their name will be updated to reflect their new clone number.</p>
+                <p>${game.i18n.format("PARANOIA.GM.CommandCenter.TerminationConfirmation", { name: actor.name, xp: game.i18n.localize("PARANOIA.XP"), moxie: game.i18n.localize("PARANOIA.Moxie") })}</p>
                 <hr>
                 ${sourceSelectorHtml}
                 ${optionalMessageHtml}
@@ -528,12 +528,12 @@ export class GMCommandCenter extends Application {
         `;
 
         const d = new Dialog({
-            title: `Terminate Troubleshooter: ${actor.name}`,
+            title: game.i18n.format("PARANOIA.GM.CommandCenter.TerminateTroubleshooterTitle", { name: actor.name }),
             content: dialogContent,
             buttons: {
                 terminate: {
                     icon: '<i class="fas fa-skull-crossbones"></i>',
-                    label: "Terminate",
+                    label: game.i18n.localize("PARANOIA.GM.CommandCenter.TerminateButton"),
                     callback: async (html) => {
                         const currentName = actor.name;
                         const cloneRegex = /^(.*)-(\d+)$/;
@@ -558,7 +558,7 @@ export class GMCommandCenter extends Application {
 
                         const speaker = this._getSpeakerFromForm(html, 'kill');
                         const optionalMessage = html.find('[name="kill-message"]').val();
-                        const terminationMessage = `Citizen ${currentName} has been terminated. Please welcome their replacement, Citizen ${newName}.`;
+                        const terminationMessage = game.i18n.format("PARANOIA.GM.CommandCenter.TerminationMessage", { currentName, newName });
 
                         ui.notifications.info(terminationMessage);
 
@@ -574,7 +574,7 @@ export class GMCommandCenter extends Application {
                 },
                 cancel: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: "Grant Reprieve"
+                    label: game.i18n.localize("PARANOIA.GM.CommandCenter.GrantReprieveButton")
                 }
             },
             default: "terminate",
@@ -595,16 +595,16 @@ export class GMCommandCenter extends Application {
      */
     async _onModifyXP(actor, multiplier) {
         const isGiving = multiplier > 0;
-        const title = isGiving ? `Give XP: ${actor.name}` : `Deduct XP: ${actor.name}`;
-        const buttonLabel = isGiving ? "Grant XP" : "Deduct XP";
+        const title = isGiving ? game.i18n.format("PARANOIA.GM.CommandCenter.GiveXPTitle", { name: actor.name }) : game.i18n.format("PARANOIA.GM.CommandCenter.DeductXPTitle", { name: actor.name });
+        const buttonLabel = isGiving ? game.i18n.localize("PARANOIA.GM.CommandCenter.GrantXPButton") : game.i18n.localize("PARANOIA.GM.CommandCenter.DeductXPButton");
         const verb = isGiving ? "gets" : "loses";
         const prefix = 'xp';
 
         const npcs = game.actors.filter(a => !a.hasPlayerOwner);
-        const sourceSelectorHtml = this._createSourceSelectorHtml(prefix, 'Source:', 'e.g., A grateful citizen', npcs);
-        const optionalMessageHtml = this._createOptionalMessageHtml(prefix, 'Optional Message:', 'e.g., For quick thinking under pressure.');
-        const privateCheckboxHtml = this._createPrivateCheckboxHtml(prefix, 'Private Message?');
-        const amountInputHtml = this._createAmountInputHtml(prefix, 'Amount:');
+        const sourceSelectorHtml = this._createSourceSelectorHtml(prefix, game.i18n.localize("PARANOIA.GM.CommandCenter.Source"), game.i18n.localize("PARANOIA.GM.CommandCenter.SourcePlaceholder"), npcs);
+        const optionalMessageHtml = this._createOptionalMessageHtml(prefix, game.i18n.localize("PARANOIA.GM.CommandCenter.OptionalMessageLabel"), game.i18n.localize("PARANOIA.GM.CommandCenter.OptionalMessageXPPlaceholder"));
+        const privateCheckboxHtml = this._createPrivateCheckboxHtml(prefix, game.i18n.localize("PARANOIA.GM.CommandCenter.PrivateMessage"));
+        const amountInputHtml = this._createAmountInputHtml(prefix, game.i18n.localize("PARANOIA.GM.CommandCenter.Amount"));
 
         const dialogContent = `
             <div class="paranoia-container">
@@ -638,7 +638,7 @@ export class GMCommandCenter extends Application {
                         const actualChange = targetXP - currentXP;
 
                         if (actualChange === 0 && amount > 0) {
-                            ui.notifications.warn(`${actor.name}'s XP cannot be reduced further.`);
+                            ui.notifications.warn(game.i18n.format("PARANOIA.GM.CommandCenter.XPCannotBeReduced", { name: actor.name }));
                             return;
                         }
 
@@ -649,9 +649,9 @@ export class GMCommandCenter extends Application {
 
                         const changeAmountForMessage = Math.abs(actualChange);
                         const localVerb = actualChange >= 0 ? "gets" : "loses";
-                        let content = `${actor.name} ${localVerb} ${changeAmountForMessage} XP.`;
+                        let content = game.i18n.format("PARANOIA.GM.CommandCenter.XPChangeMessage", { name: actor.name, verb: localVerb, amount: changeAmountForMessage });
                         if (optionalMessage) {
-                            content = `${actor.name} ${localVerb} ${changeAmountForMessage} XP with a message: ${optionalMessage}`;
+                            content = game.i18n.format("PARANOIA.GM.CommandCenter.XPChangeMessageWithNote", { name: actor.name, verb: localVerb, amount: changeAmountForMessage, message: optionalMessage });
                         }
 
                         ui.notifications.info(content);
@@ -662,7 +662,7 @@ export class GMCommandCenter extends Application {
                 },
                 cancel: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: "Cancel"
+                    label: game.i18n.localize("PARANOIA.GM.CommandCenter.CancelButton")
                 }
             },
             default: "ok",
@@ -683,13 +683,13 @@ export class GMCommandCenter extends Application {
      */
     async _onModifyMoxie(actor, multiplier) {
         const isGiving = multiplier > 0;
-        const title = isGiving ? `Give Moxie: ${actor.name}` : `Deduct Moxie: ${actor.name}`;
-        const buttonLabel = isGiving ? "Grant Moxie" : "Deduct Moxie";
+        const title = isGiving ? game.i18n.format("PARANOIA.GM.CommandCenter.GiveMoxieTitle", { name: actor.name }) : game.i18n.format("PARANOIA.GM.CommandCenter.DeductMoxieTitle", { name: actor.name });
+        const buttonLabel = isGiving ? game.i18n.localize("PARANOIA.GM.CommandCenter.GrantMoxieButton") : game.i18n.localize("PARANOIA.GM.CommandCenter.DeductMoxieButton");
         const prefix = 'moxie';
 
-        const optionalMessageHtml = this._createOptionalMessageHtml(prefix, 'Optional Message:', 'e.g., For services to The Computer.');
-        const privateCheckboxHtml = this._createPrivateCheckboxHtml(prefix, 'Private Message?');
-        const amountInputHtml = this._createAmountInputHtml(prefix, 'Amount:');
+        const optionalMessageHtml = this._createOptionalMessageHtml(prefix, game.i18n.localize("PARANOIA.GM.CommandCenter.OptionalMessageLabel"), game.i18n.localize("PARANOIA.GM.CommandCenter.OptionalMoxieMessagePlaceholder"));
+        const privateCheckboxHtml = this._createPrivateCheckboxHtml(prefix, game.i18n.localize("PARANOIA.GM.CommandCenter.PrivateMessage"));
+        const amountInputHtml = this._createAmountInputHtml(prefix, game.i18n.localize("PARANOIA.GM.CommandCenter.Amount"));
 
         const dialogContent = `
             <div class="paranoia-container">
@@ -718,7 +718,7 @@ export class GMCommandCenter extends Application {
                         const actualChange = newMoxie - currentMoxie;
 
                         if (actualChange === 0) {
-                            ui.notifications.warn(`${actor.name}'s Moxie is already at its ${isGiving ? 'maximum' : 'minimum'} and cannot be changed.`);
+                            ui.notifications.warn(game.i18n.format("PARANOIA.GM.CommandCenter.MoxieAtMinMax", { name: actor.name, limit: (isGiving ? 'maximum' : 'minimum') }));
                             return;
                         }
 
@@ -726,19 +726,19 @@ export class GMCommandCenter extends Application {
 
                         const verb = actualChange > 0 ? "gets" : "loses";
                         const changeAmountForMessage = Math.abs(actualChange);
-                        const content = `${actor.name} ${verb} ${changeAmountForMessage} Moxie.`;
+                        const content = game.i18n.format("PARANOIA.GM.CommandCenter.MoxieChangeMessage", { name: actor.name, verb, amount: changeAmountForMessage });
                         const flavor = html.find(`[name="${prefix}-message"]`).val();
 
                         ui.notifications.info(content);
 
-                        const speaker = ChatMessage.getSpeaker({ alias: "Gamemaster" });
+                        const speaker = ChatMessage.getSpeaker({ alias: game.i18n.localize("PARANOIA.Gamemaster") });
                         const isPrivate = html.find(`[name="${prefix}-private"]`).is(':checked');
                         this._createChatMessage(actor, { speaker, content, flavor }, isPrivate);
                     }
                 },
                 cancel: {
                     icon: '<i class="fas fa-times"></i>',
-                    label: "Cancel"
+                    label: game.i18n.localize("PARANOIA.GM.CommandCenter.CancelButton")
                 }
             },
             default: "ok"
@@ -766,6 +766,11 @@ export class GMCommandCenter extends Application {
      * @param {string} mbd The raw MBD string from the actor.
      * @returns {string} The corresponding Font Awesome icon class.
      * @private
+     *
+     * Note: This is super fragile and basically only works if the user:
+     * 1) spells an mbd incorrectly
+     * 2) uses non-english terms.
+     * TODO: Make it not that?
      */
     _calculateMbdIcon(mbd) {
         if (!mbd) return 'fas fa-question-circle';

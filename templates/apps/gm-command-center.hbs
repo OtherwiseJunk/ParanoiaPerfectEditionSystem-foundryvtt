@@ -1,70 +1,117 @@
 <form class="paranoia-gm-command-center flexcol">
-    <section class="sheet-body">
-        <div class="paranoia-container">
-            <h3 class="paranoia-header">GM Tools</h3>
-            <div class="gm-tools button-group">
-                <button type="button" id="open-skill-draft"><i class="fas fa-drafting-compass"></i> Open Skill
-                    Draft</button>
-                <button type="button" id="open-treason-circle"><i class="fas fa-user-secret"></i> Open Treason
-                    Circle</button>
-            </div>
-        </div>
+  <section class="sheet-body">
+    <div class="paranoia-container">
+      <h3 class="paranoia-header">{{localize
+          "PARANOIA.GM.CommandCenter.GMTools"
+        }}</h3>
+      <div class="gm-tools button-group">
+        <button type="button" id="open-skill-draft"><i
+            class="fas fa-drafting-compass"
+          ></i>
+          {{localize "PARANOIA.GM.CommandCenter.OpenSkillDraft"}}</button>
+        <button type="button" id="open-treason-circle"><i
+            class="fas fa-user-secret"
+          ></i>
+          {{localize "PARANOIA.GM.CommandCenter.OpenTreasonCircle"}}</button>
+      </div>
+    </div>
 
-        <div class="paranoia-container">
-            <h3 class="paranoia-header">Active Player Characters</h3>
-            <div class="player-character-header">
-                <div> MBD</div>
-                <div>Character</div>
-                <div>Health</div>
-                <div>Treason Level</div>
-                <div>XP</div>
-                <div>Buttons</div>
-                <div class="actions-header">Actions</div>
+    <div class="paranoia-container">
+      <h3 class="paranoia-header">{{localize
+          "PARANOIA.GM.CommandCenter.ActivePlayerCharacters"
+        }}</h3>
+      <div class="player-character-header">
+        <div>{{localize "PARANOIA.Header.MBD"}}</div>
+        <div>{{localize "PARANOIA.Header.Character"}}</div>
+        <div>{{localize "PARANOIA.Header.Health"}}</div>
+        <div>{{localize "PARANOIA.Header.TreasonLevel"}}</div>
+        <div>{{localize "PARANOIA.Header.XP"}}</div>
+        <div>{{localize "PARANOIA.Header.Buttons"}}</div>
+        <div class="actions-header">{{localize "PARANOIA.Header.Actions"}}</div>
+      </div>
+      <div class="player-character-list">
+        {{#each playerActors as |actor|}}
+          <div class="player-character-entry" data-actor-id="{{actor.id}}">
+            <div class="character-mbd-icon" title="{{actor.mbd}}"><i
+                class="{{actor.mbdIcon}}"
+              ></i></div>
+            <div>
+              <a class="character-name rollable">{{actor.name}}</a>
+              {{#if (ne actor.secretSociety "None")}}
+                <em
+                  class="character-secret-society"
+                >{{{actor.secretSociety}}}</em>
+              {{/if}}
+              {{#if actor.mutantPower}}
+                <strong
+                  class="character-mutant-power"
+                >{{{actor.mutantPower}}}</strong>
+              {{/if}}
             </div>
-            <div class="player-character-list">
-                {{#each playerActors as |actor|}}
-                <div class="player-character-entry" data-actor-id="{{actor.id}}">
-                    <div class="character-mbd-icon" title="{{actor.mbd}}"><i class="{{actor.mbdIcon}}"></i></div>
-                    <div>
-                        <div class="character-name rollable">{{actor.name}}</div>
-                        {{#if (ne actor.secretSociety "None")}}
-                        <em class="character-secret-society">{{{actor.secretSociety}}}</em>
-                        {{/if}}
-                        {{#if actor.mutantPower}}
-                        <strong class="character-mutant-power">{{{actor.mutantPower}}}</strong>
-                        {{/if}}
-                    </div>
-                    <div class="stat-bars">
-                        {{{healthBar actor.health actor.healthDescription}}}
-                        {{{moxieBar actor.moxie actor.moxieMax}}}
-                    </div>
-                    <div>{{{treasonBar actor.treasonFlags actor.treasonDescription}}}</div>
-                    <div>{{actor.xp}}</div>
-                    <div class="button-info">
-                        <div><strong>Violence:</strong> {{{actor.violenceButton}}}</div>
-                        <div><strong>Treason:</strong> {{{actor.treasonButton}}}</div>
-                    </div>
-                    <div class="actions">
-                        <div class="action-grid">
-                            <button type="button" class="action-button" data-action="inflict-harm"
-                                title="Inflict Harm"><i class="fas fa-heart-broken"></i></button>
-                            <button type="button" class="action-button" data-action="give-treason-star"
-                                title="Give Treason Stars"><i class="fas fa-gavel"></i></button>
-                            <button type="button" class="action-button" data-action="kill-player" title="Kill Player"><i
-                                    class="fas fa-skull-crossbones"></i></button>
-                            <button type="button" class="action-button" data-action="give-xp" title="Give XP"><i
-                                    class="fas fa-plus-circle"></i></button>
-                            <button type="button" class="action-button" data-action="deduct-xp" title="Deduct XP"><i
-                                    class="fas fa-minus-circle"></i></button>
-                            <button type="button" class="action-button" data-action="give-moxie" title="Give Moxie"><i
-                                    class="fas fa-plus-square"></i></button>
-                            <button type="button" class="action-button" data-action="deduct-moxie"
-                                title="Deduct Moxie"><i class="fas fa-minus-square"></i></button>
-                        </div>
-                    </div>
-                </div>
-                {{/each}}
+            <div class="stat-bars">
+              {{{healthBar actor.health actor.healthDescription}}}
+              {{{moxieBar actor.moxie actor.moxieMax}}}
             </div>
-        </div>
-    </section>
+            <div>{{{treasonBar
+                actor.treasonFlags
+                actor.treasonDescription
+              }}}</div>
+            <div>{{actor.xp}}</div>
+            <div class="button-info">
+              <div><strong>{{localize "PARANOIA.Label.Violence"}}:</strong>
+                {{{actor.violenceButton}}}</div>
+              <div><strong>{{localize "PARANOIA.Label.Treason"}}:</strong>
+                {{{actor.treasonButton}}}</div>
+            </div>
+            <div class="actions">
+              <div class="action-grid">
+                <button
+                  type="button"
+                  class="action-button"
+                  data-action="inflict-harm"
+                  title="{{localize 'PARANOIA.Action.InflictHarm'}}"
+                ><i class="fas fa-heart-broken"></i></button>
+                <button
+                  type="button"
+                  class="action-button"
+                  data-action="give-treason-star"
+                  title="{{localize 'PARANOIA.Action.GiveTreasonStar'}}"
+                ><i class="fas fa-gavel"></i></button>
+                <button
+                  type="button"
+                  class="action-button"
+                  data-action="kill-player"
+                  title="{{localize 'PARANOIA.Action.KillPlayer'}}"
+                ><i class="fas fa-skull-crossbones"></i></button>
+                <button
+                  type="button"
+                  class="action-button"
+                  data-action="give-xp"
+                  title="{{localize 'PARANOIA.Action.GiveXP'}}"
+                ><i class="fas fa-plus-circle"></i></button>
+                <button
+                  type="button"
+                  class="action-button"
+                  data-action="deduct-xp"
+                  title="{{localize 'PARANOIA.Action.DeductXP'}}"
+                ><i class="fas fa-minus-circle"></i></button>
+                <button
+                  type="button"
+                  class="action-button"
+                  data-action="give-moxie"
+                  title="{{localize 'PARANOIA.Action.GiveMoxie'}}"
+                ><i class="fas fa-plus-square"></i></button>
+                <button
+                  type="button"
+                  class="action-button"
+                  data-action="deduct-moxie"
+                  title="{{localize 'PARANOIA.Action.DeductMoxie'}}"
+                ><i class="fas fa-minus-square"></i></button>
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </section>
 </form>
