@@ -5,7 +5,7 @@
   "version": "0.9.0",
   "compatibility": {
     "minimum": "11",
-    "verified": "12",
+    "verified": "13",
     "maximum": "13"
   },
   "authors": [
@@ -14,10 +14,7 @@
       "discord": "_dart"
     }
   ],
-  "esmodules": [
-    "module/paranoia.mjs",
-    "module/utils/compatibility.mjs"
-  ],
+  "esmodules": ["module/paranoia.mjs", "module/utils/compatibility.mjs"],
   "styles": ["css/paranoia.css"],
   "scripts": [],
   "packs": [
@@ -48,12 +45,17 @@
       "lang": "en",
       "name": "English",
       "path": "lang/en.json"
+    },
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "lang/de.json"
     }
   ],
-  "grid":{
+  "grid": {
     "distance": "10",
     "units": "ft"
-  },  
+  },
   "primaryTokenAttribute": "health",
   "secondaryTokenAttribute": "moxie",
   "background": "systems/paranoia/media/paranoia_background.webp",

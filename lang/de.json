@@ -1,0 +1,9 @@
+{
+  "TYPES.Actor.somebody": "Jemand",
+  "TYPES.Actor.nobody": "Niemand",
+  "TYPES.Actor.troubleshooter": "Troubleshooter",
+  "TYPES.Actor.accomplice": "Komplize",
+  "TYPES.Item.equipment": "Ausrüstung",
+  "PARANOIA.DeleteConfirmTitle": "{name} löschen",
+  "PARANOIA.DeleteConfirmContent": "Möchtest Du <strong>{name}</strong> wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden."
+}
