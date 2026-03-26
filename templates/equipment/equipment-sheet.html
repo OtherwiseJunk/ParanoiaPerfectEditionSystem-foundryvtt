@@ -7,32 +7,32 @@
             <img class="paranoia-item-image" src="{{item.img}}" data-edit="img" name="paranoia.item.image"
                 title="{{item.name}}" height="250" />
             <input type="checkbox" name="system.assigned" {{checked system.assigned}} />
-            <label for="system.assigned" class="resource-label">Assigned?</label>
+            <label for="system.assigned" class="resource-label">{{localize "PARANOIA.ItemAssigned"}}</label>
         </div>
         <div class="paranoia-item-info-container grid-span-4">
             <div class="paranoia-itemm-header resource flex-group-center grid grid-7col">
                 <div class="grid-span-5">
-                    <label for="name" class="resource-label">Name</label>
+                    <label for="name" class="resource-label">{{localize "PARANOIA.Name"}}</label>
                     <div class="resource-content flexrow flex-center flex-between">
                         <input class="paranoia-actor-name" type="text" name="name" value="{{item.name}}"
                             data-dtype="String" />
                     </div>
                 </div>
                 <div class="grid-span-1">
-                    <label for="system.level" class="resource-label">Level</label>
+                    <label for="system.level" class="resource-label">{{localize "PARANOIA.GearLevel"}}</label>
                     <div class="resource-content flexrow flex-center flex-between">
                         <input type="text" name="system.level" value="{{system.level}}" data-dtype="Number" />
                     </div>
                 </div>
                 <div class="grid-span-1">
-                    <label for="system.clearance" class="resource-label">Clearance</label>
+                    <label for="system.clearance" class="resource-label">{{localize "PARANOIA.GearClearance"}}</label>
                     <div class="resource-content flexrow flex-center flex-between">
                         <input type="text" name="system.clearance" value="{{system.clearance}}" data-dtype="String" />
                     </div>
                 </div>
             </div>
             <div class="resource flex-group-center">
-                <label for="system.description" class="resource-label">Description</label>
+                <label for="system.description" class="resource-label">{{localize "PARANOIA.GearDescription"}}</label>
                 <div class="resource-content flexrow flex-center flex-between">
                     <div class="paranoia-editor-container">
                         {{editor
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="resource flex-group-center">
-                <label for="system.success" class="resource-label">Success</label>
+                <label for="system.success" class="resource-label">{{localize "PARANOIA.ItemSuccess"}}</label>
                 <div class="resource-content flexrow flex-center flex-between">
                     <div class="paranoia-editor-container">
                         {{editor
@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="resource flex-group-center">
-                <label for="system.treason" class="resource-label">Treason</label>
+                <label for="system.treason" class="resource-label">{{localize "PARANOIA.ItemTreason"}}</label>
                 <div class="resource-content flexrow flex-center flex-between">
                     <div class="paranoia-editor-container">
                         {{editor

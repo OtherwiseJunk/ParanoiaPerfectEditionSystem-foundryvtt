@@ -2,7 +2,7 @@
   "id": "paranoia",
   "title": "Paranoia Perfect Edition",
   "description": "Paranoia Perfect Edition - DING! Attention citizen. Welcome to the first of your six lives here in Alpha Complex. I am your best friend, The Computer. Do not worry. I am here to protect you, educate you and help you stay loyal. This will make you happy and productive, as cases of severe anxiety and PTSD have dropped considerably. You have been decanted from your clone tank and are ready to serve. How may I help you be successful?",
-  "version": "0.9.0",
+  "version": "v0.9.2",
   "compatibility": {
     "minimum": "11",
     "verified": "13",
@@ -14,8 +14,13 @@
       "discord": "_dart"
     }
   ],
-  "esmodules": ["module/paranoia.mjs", "module/utils/compatibility.mjs"],
-  "styles": ["css/paranoia.css"],
+  "esmodules": [
+    "module/paranoia.mjs",
+    "module/utils/compatibility.mjs"
+  ],
+  "styles": [
+    "css/paranoia.css"
+  ],
   "scripts": [],
   "packs": [
     {
@@ -27,7 +32,9 @@
       "private": false,
       "flags": {
         "paranoia": {
-          "types": ["somebody"]
+          "types": [
+            "somebody"
+          ]
         }
       }
     },
@@ -50,6 +57,11 @@
       "lang": "de",
       "name": "Deutsch",
       "path": "lang/de.json"
+    },
+    {
+      "lang": "fr",
+      "name": "French",
+      "path": "lang/fr.json"
     }
   ],
   "grid": {
@@ -60,8 +72,8 @@
   "secondaryTokenAttribute": "moxie",
   "background": "systems/paranoia/media/paranoia_background.webp",
   "url": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt",
-  "manifest": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/v0.5.1/system.json",
-  "download": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/v0.5.1/ParanoiaPerfectEditionSystem-foundryvttv0.5.1.zip",
+  "manifest": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/v0.9.2/system.json",
+  "download": "https://github.com/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/releases/download/v0.9.2/ParanoiaPerfectEditionSystem-foundryvttv0.9.1.zip",
   "license": "LICENSE.txt",
   "changelog": "CHANGELOG.md",
   "socket": true

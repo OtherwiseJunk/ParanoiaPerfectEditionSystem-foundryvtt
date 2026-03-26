@@ -441,14 +441,16 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   }
 
   async sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
-    let flavor = `You manage to avoid Friend Computer\'s notice... this time.`;
+    let flavor = game.i18n.localize("PARANOIA.ChatRollNoNotice");
     if (attractedComputersAttention) {
-      flavor = `Friend Computer turns its eye on your troubleshooter... (Citizen is a ${this.flagLevelToDescription(flagLevel)} and rolled a ${computerDiceResult}).`;
+      const desc = this.flagLevelToDescription(flagLevel);
+      flavor = game.i18n.localize("PARANOIA.ChatRollAttention") + " " +
+               game.i18n.format("PARANOIA.ChatRollCitizenIs", {description: desc, result: computerDiceResult});
     }
 
     let content = this.GenerateFriendComputerMessage(flavor, attractedComputersAttention);
     ChatMessage.create({
-      speaker: { alias: 'Friend Computer' },
+      speaker: { alias: game.i18n.localize("PARANOIA.ChatComputerName") },
       content: content,
       flavor: flavor
     });
@@ -469,15 +471,17 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   flagLevelToDescription(flagLevel) {
     switch (flagLevel) {
       case 4:
-        return "Wanted Enemy of The Computer and Alpha Complex"
+        return game.i18n.localize("PARANOIA.StatusWanted");
       case 3:
-        return "Citizen-Of-Interest"
+        return game.i18n.localize("PARANOIA.StatusCOI");
       case 2:
-        return "Restricted Citizen"
+        return game.i18n.localize("PARANOIA.StatusRestricted");
       case 1:
-        return "Greylisted Citizen"
+        return game.i18n.localize("PARANOIA.StatusGreylisted");
       case 0:
-        return "Loyal Citizen of Alpha Complex"
+        return game.i18n.localize("PARANOIA.StatusLoyal");
+      default:
+        return "";
     }
   }
 
