@@ -142,6 +142,13 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   activateListeners(html) {
     super.activateListeners(html);
 
+    // Render the item sheet for viewing/editing prior to the editable check
+    html.find('.gear-edit').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.sheet.render(true);
+    });
+
     // -------------------------------------------------------------
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
@@ -330,10 +337,10 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
       case 'paranoia-character-roller':
         const flagLevel = this.actor.system.flag.value;
         let hurtLevel = (4 - this.actor.system.health.value);
-        let equipmentModifier = parseInt(this.getEquipmentModifierFromSheet(triggeringElement));
-        let initiativeModifier = parseInt(this.getInitiativeModifierFromSheet(triggeringElement));
+        let equipmentModifier = parseInt(this.getEquipmentModifierFromSheet());
+        let initiativeModifier = parseInt(this.getInitiativeModifierFromSheet());
 
-        let NODE = this.calculateNODE(triggeringElement, equipmentModifier, initiativeModifier, hurtLevel);
+        let NODE = this.calculateNODE(equipmentModifier, initiativeModifier, hurtLevel);
         let rollString = this.generateRollString(NODE);
 
         let roll = await new Roll(rollString).evaluate();
@@ -380,16 +387,15 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
       flavor += `<br>Rolled with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`
     }
 
-    const message = await roll.toMessage({ flavor, speaker: ChatMessage.getSpeaker({ actor: this.actor }) });
-    console.log(message);
+    await roll.toMessage({ flavor, speaker: ChatMessage.getSpeaker({ actor: this.actor }) });
 
     await this.sendComputerRollResults(attractedComputersAttention, roll.dice.at(-1).results[0].result, flagLevel);
   }
 
-  calculateNODE(triggeringElement, equipmentModifier, initiativeModifier, hurtLevel) {
+  calculateNODE(equipmentModifier, initiativeModifier, hurtLevel) {
     const rollData = this.actor.getRollData();
 
-    let NODE = parseInt(this.getStatisticsNODEFromSheet(triggeringElement, rollData));
+    let NODE = parseInt(this.getStatisticsNODEFromSheet(rollData));
 
     NODE += equipmentModifier;
     NODE -= initiativeModifier;
@@ -402,9 +408,9 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     return NODE + 1; // add Computer Dice
   }
 
-  getStatisticsNODEFromSheet(htmlElement, rollData) {
-    let stat = htmlElement.form[26].value.toLowerCase()
-    let skill = htmlElement.form[27].value
+  getStatisticsNODEFromSheet(rollData) {
+    let stat = document.getElementById("paranoia-roll-stat").value.toLowerCase();
+    let skill = document.getElementById("paranoia-roll-skill").value;
     let statNODE = parseInt(rollData.abilities[stat].value);
     let skillNODE;
 
@@ -418,12 +424,12 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     return statNODE + skillNODE;
   }
 
-  getEquipmentModifierFromSheet(htmlElement) {
-    return htmlElement.form[28].value;
+  getEquipmentModifierFromSheet() {
+    return document.getElementById("paranoia-roll-equipment").value;
   }
 
-  getInitiativeModifierFromSheet(htmlElement) {
-    return htmlElement.form[29].value;
+  getInitiativeModifierFromSheet() {
+    return document.getElementById("paranoia-roll-initiative").value;
   }
 
   checkAttributeValue(sender) {
