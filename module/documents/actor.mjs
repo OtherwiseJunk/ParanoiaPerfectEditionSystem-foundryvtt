@@ -38,25 +38,21 @@ export class ParanoiaActor extends Actor {
    * is queried and has a roll executed directly from it).
    */
   prepareDerivedData() {
-    const actorData = this;
-    const systemData = actorData.system;
-    const flags = actorData.flags.paranoia || {};
-
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
-    this._prepareCharacterData(actorData);
-    this._prepareNpcData(actorData);
+    this._prepareCharacterData();
+    this._prepareNpcData();
   }
 
   /**
    * Prepare Character type specific data
    */
-  _prepareCharacterData(actorData) {}
+  _prepareCharacterData() {}
 
   /**
    * Prepare NPC type specific data.
    */
-  _prepareNpcData(actorData) {}
+  _prepareNpcData() {}
 
   /**
    * Override getRollData() that's supplied to rolls.
@@ -205,7 +201,7 @@ export class ParanoiaActor extends Actor {
   /**
    * Prepare NPC roll data.
    */
-  _getNpcRollData(data) {
+  _getNpcRollData(_data) {
     if (this.type !== "npc") return;
 
     // Process additional NPC data here.

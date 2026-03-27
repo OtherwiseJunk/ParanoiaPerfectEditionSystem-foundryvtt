@@ -2,7 +2,7 @@ import { ParanoiaSomebodyData, resourceField } from "../index.mjs";
 
 export class ParanoiaAccompliceData extends ParanoiaSomebodyData {
   static defineSchema() {
-    const { SchemaField, StringField } = foundry.data.fields;
+    const { StringField } = foundry.data.fields;
 
     const parentFields = super.defineSchema();
     return {
