@@ -9,7 +9,11 @@
     "gulp": "gulp",
     "pushLDBtoJSON": "node ./tools/pushLDBtoJSON.mjs",
     "pullJSONtoLDB": "node ./tools/pullJSONtoLDB.mjs",
-    "test": "vitest"
+    "test": "vitest run",
+    "lint": "oxlint --deny-warnings ./module ./tests",
+    "lint:fix": "oxlint --fix ./module ./tests",
+    "fmt": "oxfmt ./module ./tests",
+    "fmt:check": "oxfmt --check ./module ./tests"
   },
   "browserslist": [
     "last 3 versions"
