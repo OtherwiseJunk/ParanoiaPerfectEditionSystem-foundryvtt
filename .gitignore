@@ -13,3 +13,5 @@ foundry
 .DS_Store
 *.zip
 /packs
+
+.devnotes/*

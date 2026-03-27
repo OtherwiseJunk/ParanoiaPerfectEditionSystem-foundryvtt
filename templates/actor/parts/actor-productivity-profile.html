@@ -4,7 +4,7 @@
     <div class="ability flexcol flex-group-center paranoia-container">
         <div class="paranoia-header paranoia-attribute-container">
             <label for="system.abilities.{{akey}}.value" class="resource-label flexlarge align-left paranoia-attribute-label"
-                data-label="{{ability.label}}">{{ability.label}}</label>
+                data-label="{{localize ability.label}}">{{localize ability.label}}</label>
             <input type="number" class="paranoia-rolling-atribute  paranoia-attribute-input" name="system.abilities.{{akey}}.value"
                 value="{{ability.value}}" data-dtype="Number" />
         </div>
@@ -13,7 +13,7 @@
 
         <div class="paranoia-attribute-container">
             <label for="system.abilities.skills.{{skey}}.value" class="paranoia-skill-label  paranoia-attribute-label flexlarge align-left"
-                data-label="{{skill.label}}">{{skill.label}}</label>
+                data-label="{{localize skill.label}}">{{localize skill.label}}</label>
             <input type="number" class="paranoia-rolling-atribute paranoia-skill-input paranoia-attribute-input" name="system.abilities.{{akey}}.skills.{{skey}}.value"
                 value="{{skill.value}}" data-dtype="Number" />
         </div>

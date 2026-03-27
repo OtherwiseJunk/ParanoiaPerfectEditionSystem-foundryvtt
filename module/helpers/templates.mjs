@@ -7,7 +7,8 @@ export const preloadHandlebarsTemplates = async function () {
   const templates = {
     // Actor partials.
     "actor-societal-role": "systems/paranoia/templates/actor/parts/actor-societal-role.html",
-    "actor-productivity-profile": "systems/paranoia/templates/actor/parts/actor-productivity-profile.html",
+    "actor-productivity-profile":
+      "systems/paranoia/templates/actor/parts/actor-productivity-profile.html",
     "actor-dice-roller": "systems/paranoia/templates/actor/parts/actor-dice-roller.html",
     "actor-wellness-tab": "systems/paranoia/templates/actor/parts/actor-wellness-tab.html",
     "actor-naughty-side": "systems/paranoia/templates/actor/parts/actor-naughty-side.html",
