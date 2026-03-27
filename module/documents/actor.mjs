@@ -1,13 +1,12 @@
-export const SecurityClearance = Object.freeze({
-  r: 1,
-  o: 2,
-  y: 3,
-  g: 4,
-  b: 5,
-  i: 6,
-  v: 7,
-  u: 8
-});
+import {
+  SecurityClearance,
+  extractSecurityClearance,
+  securityClearanceFromName,
+  tokenRingDataForClearance,
+} from "../utils/security-clearance.mjs";
+import { getAbilityShorthand, easeFourPeaks } from "../utils/actor-logic.mjs";
+
+export { SecurityClearance };
 
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
@@ -168,44 +167,13 @@ export class ParanoiaActor extends Actor {
   }
 
   buildDynamicTokenRingData(securityClearance) {
-    let prototype = {
+    const { color, effects } = tokenRingDataForClearance(securityClearance);
+    return {
       enabled: true,
       scale: 0.8,
-      effects: 1
-    }
-
-    switch (securityClearance) {
-      case SecurityClearance.r:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Red;
-        break;
-      case SecurityClearance.o:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Orange;
-        break;
-      case SecurityClearance.y:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Yellow;
-        break;
-      case SecurityClearance.g:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Green;
-        break;
-      case SecurityClearance.b:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Blue;
-        break;
-      case SecurityClearance.i:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Indigo;
-        break;
-      case SecurityClearance.v:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Violet;
-        break;
-      case SecurityClearance.u:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Ultraviolet;
-        prototype.effects = 2;
-        break;
-      default:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Infrared;
-        break;
-    }
-
-    return prototype;
+      effects,
+      color,
+    };
   }
 
   triggerLoseItDynamicRingEffect() {
@@ -228,22 +196,11 @@ export class ParanoiaActor extends Actor {
   }
 
   easeFourPeaks(t) {
-    return Math.sin(t * Math.PI * 3);
+    return easeFourPeaks(t);
   }
 
   getAbilityShorthand(abilityName) {
-    switch (abilityName) {
-      case 'brains':
-        return 'brn';
-      case 'chutzpah':
-        return 'chtz';
-      case 'mechanics':
-        return 'mec';
-      case 'violence':
-        return 'vio';
-      default:
-        return '';
-    }
+    return getAbilityShorthand(abilityName);
   }
 
   /**
@@ -256,19 +213,10 @@ export class ParanoiaActor extends Actor {
   }
 
   updateSecurityClearanceFromName(name, systemData) {
-    if (/.*-[R,r,O,o,Y,y,G,g,B,b,I,i,V,v,u,U]-.*/.test(name)) {
-      systemData.securityClearance = this.extractSecurityClearance(name);
-    }
-    else {
-      systemData.securityClearance = 0;
-    }
+    systemData.securityClearance = securityClearanceFromName(name);
   }
 
   extractSecurityClearance(value) {
-    const nameParts = value.split('-');
-
-    const securityCharacter = nameParts[1].toLowerCase();
-    const clearance = SecurityClearance[securityCharacter];
-    return clearance;
+    return extractSecurityClearance(value);
   }
 }
