@@ -1,4 +1,5 @@
 import { ParanoiaActor } from "./actor-sheet.mjs";
+import { getCompatibleTextEditor } from "../../utils/compatibility.mjs";
 
 export class ParanoiaNobodySheet extends ParanoiaActor {
   /** @override */
@@ -17,9 +18,10 @@ export class ParanoiaNobodySheet extends ParanoiaActor {
 
     data.system = actorData.system;
 
-    data.enrichedLooks = await TextEditor.enrichHTML(data.system.looks)
-    data.enrichedQuirks = await TextEditor.enrichHTML(data.system.quirks)
-    data.enrichedPlans = await TextEditor.enrichHTML(data.system.plans)
+    const textEditor = getCompatibleTextEditor();
+    data.enrichedLooks = await textEditor.enrichHTML(data.system.looks)
+    data.enrichedQuirks = await textEditor.enrichHTML(data.system.quirks)
+    data.enrichedPlans = await textEditor.enrichHTML(data.system.plans)
 
     return data
   }

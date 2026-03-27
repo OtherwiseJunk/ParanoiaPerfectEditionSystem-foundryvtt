@@ -1,4 +1,4 @@
-import { getCompatibleItemSheet } from "../../utils/compatibility.mjs";
+import { getCompatibleItemSheet, getCompatibleTextEditor } from "../../utils/compatibility.mjs";
 
 export class ParanoiaEquipmentSheet extends getCompatibleItemSheet() {
     /** @override */
@@ -22,9 +22,10 @@ export class ParanoiaEquipmentSheet extends getCompatibleItemSheet() {
         const itemData = this.item.toObject(false);
         data.system = itemData.system;
 
-        data.enrichedDescription = await TextEditor.enrichHTML(data.system.description);
-        data.enrichedSuccess = await TextEditor.enrichHTML(data.system.success);
-        data.enrichedTreason = await TextEditor.enrichHTML(data.system.treason);
+        const textEditor = getCompatibleTextEditor();
+        data.enrichedDescription = await textEditor.enrichHTML(data.system.description);
+        data.enrichedSuccess = await textEditor.enrichHTML(data.system.success);
+        data.enrichedTreason = await textEditor.enrichHTML(data.system.treason);
 
         return data;
     }

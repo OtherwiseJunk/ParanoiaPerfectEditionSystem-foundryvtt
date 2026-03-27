@@ -120,7 +120,8 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
       if (i.type !== 'equipment') continue;
       if (i.system.type == undefined) continue;
       i.img = i.img || DEFAULT_TOKEN;
-      i.enrichedDescription = await TextEditor.enrichHTML(i.system.description);
+      const textEditor = getCompatibleTextEditor();
+      i.enrichedDescription = await textEditor.enrichHTML(i.system.description);
       // Append to gear.
       if (i.system.type === 'publicGear') {
         publicGear.push(i);
