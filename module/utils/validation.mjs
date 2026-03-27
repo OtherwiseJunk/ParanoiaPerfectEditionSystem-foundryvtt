@@ -1,8 +1,4 @@
 /**
- * Pure validation/clamping logic — no Foundry VTT dependency.
- */
-
-/**
  * Clamp a wellness value (health, flag, moxie) within its min/max bounds.
  * @param {number} newValue - The proposed new value
  * @param {{ min: number, max: number, value: number }} bounds - The actor's current bounds

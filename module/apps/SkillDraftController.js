@@ -1,5 +1,10 @@
 import { socketEventChannel } from "../paranoia.mjs";
 import { getMergeObjectFunction } from "../utils/compatibility.mjs";
+import {
+    calculateAvailableSkills,
+    determineFirstPickForSmallGroup,
+    determineNextPlayer,
+} from "../utils/skill-draft.mjs";
 export const SkillDraftEvent = {
     START_DRAFT: 'draftStarted',
     UPDATE_DRAFT_STATE: 'draftStateUpdated',
@@ -86,17 +91,14 @@ export class SkillDraftController extends FormApplication {
      * @private
      */
     _calculateAvailableSkills() {
-        let availableSkills = [...this.state.allDraftableSkills];
         let currentPlayerId = this.state.participants[this.state.currentPlayerIndex];
         let nextPlayerId = this.state.participants[this.state.nextPlayerIndex];
-        let assignments = this.state.assignments;
-
-        // Filter out skills that have been assigned to current or next player
-        for (const actorId of [currentPlayerId, nextPlayerId]) {
-            const actorAssignments = assignments[actorId] || {};
-            availableSkills = availableSkills.filter(skill => !actorAssignments.hasOwnProperty(skill));
-        }
-        this.state.availableSkills = availableSkills;
+        this.state.availableSkills = calculateAvailableSkills(
+            this.state.allDraftableSkills,
+            this.state.assignments,
+            currentPlayerId,
+            nextPlayerId
+        );
     }
 
     /**
@@ -109,10 +111,9 @@ export class SkillDraftController extends FormApplication {
         const numParticipants = this.state.participants.length;
 
         if (numParticipants <= 5) {
-            // For 5 or fewer players, cycle through who goes first based on the initial starter.
-            // The round is 1-based, so we subtract 1 for a zero-based offset.
-            const roundOffset = this.state.round - 1;
-            this.state.currentPlayerIndex = (this.state.draftStarterIndex + roundOffset) % numParticipants;
+            this.state.currentPlayerIndex = determineFirstPickForSmallGroup(
+                this.state.draftStarterIndex, this.state.round, numParticipants
+            );
         } else {
             // For more than 5 players, randomly pick a player who hasn't gone first yet.
             let index = Math.floor(Math.random() * numParticipants);
@@ -125,12 +126,9 @@ export class SkillDraftController extends FormApplication {
     }
 
     _determineNextPlayer() {
-        if (this.state.round % 2 === 0) {
-            this.state.nextPlayerIndex = (this.state.currentPlayerIndex + 1) % this.state.participants.length;
-        }
-        else {
-            this.state.nextPlayerIndex = (this.state.currentPlayerIndex - 1 + this.state.participants.length) % this.state.participants.length;
-        }
+        this.state.nextPlayerIndex = determineNextPlayer(
+            this.state.currentPlayerIndex, this.state.round, this.state.participants.length
+        );
     }
 
     /**
