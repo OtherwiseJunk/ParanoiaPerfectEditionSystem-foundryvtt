@@ -1,6 +1,8 @@
 import { prepareActiveEffectCategories } from "../../helpers/effects.mjs";
 import { getCompatibleTextEditor } from "../../utils/compatibility.mjs";
 import { ParanoiaActor } from "./actor-sheet.mjs";
+import { calculateNODE, generateRollString, computerDiceAttractsAttention } from "../../utils/roll-logic.mjs";
+import { clampWellnessValue, clampAttributeValue } from "../../utils/validation.mjs";
 
 /**
  * Extends our base ParanoiaActor class to create a sheet for Troubleshooters.
@@ -361,15 +363,11 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
 
   computerDiceAttractsAttention(roll, flagLevel) {
     let computerDiceResult = roll.dice.at(-1).results[0].result;
-
-    return computerDiceResult >= (6 - flagLevel)
+    return computerDiceAttractsAttention(computerDiceResult, flagLevel);
   }
 
   generateRollString(NODE) {
-    if (NODE > 0) return `${Math.abs(NODE)}d6cs>=5`;
-
-    let positiveNode = Math.abs(NODE);
-    return `2 * (${positiveNode}d6cs>=5) - ${positiveNode}`;
+    return generateRollString(NODE);
   }
 
   async sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention) {
@@ -395,18 +393,8 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
 
   calculateNODE(equipmentModifier, initiativeModifier, hurtLevel) {
     const rollData = this.actor.getRollData();
-
-    let NODE = parseInt(this.getStatisticsNODEFromSheet(rollData));
-
-    NODE += equipmentModifier;
-    NODE -= initiativeModifier;
-    NODE -= hurtLevel;
-
-    if (NODE < 0) {
-      return NODE - 1; // "add" Computer Dice
-    }
-
-    return NODE + 1; // add Computer Dice
+    let statPlusSkill = parseInt(this.getStatisticsNODEFromSheet(rollData));
+    return calculateNODE(statPlusSkill, equipmentModifier, initiativeModifier, hurtLevel);
   }
 
   getStatisticsNODEFromSheet(rollData) {
@@ -434,17 +422,7 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   }
 
   checkAttributeValue(sender) {
-    const min = -5
-    const max = 5
-    let value = parseInt(sender.value);
-    if (isNaN(value)) {
-      sender.value = 0;
-    }
-    else if (value > max) {
-      sender.value = max;
-    } else if (value < min) {
-      sender.value = min;
-    }
+    sender.value = clampAttributeValue(parseInt(sender.value));
   }
 
   async sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
@@ -493,14 +471,6 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
   }
 
   validateWellnessChange(eventValue, eventTarget, actorValue) {
-    if (isNaN(eventValue)) {
-      eventTarget.value = actorValue.value;
-    }
-    if (eventValue > actorValue.max) {
-      eventTarget.value = actorValue.max;
-    }
-    if (eventValue < actorValue.min) {
-      eventTarget.value = actorValue.min;
-    }
+    eventTarget.value = clampWellnessValue(eventValue, actorValue);
   }
 }
