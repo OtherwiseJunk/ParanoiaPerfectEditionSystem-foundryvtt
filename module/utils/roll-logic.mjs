@@ -38,5 +38,5 @@ export function generateRollString(NODE) {
  * @returns {boolean}
  */
 export function computerDiceAttractsAttention(computerDiceResult, flagLevel) {
-  return computerDiceResult >= (6 - flagLevel);
+  return computerDiceResult >= 6 - flagLevel;
 }

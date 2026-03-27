@@ -8,21 +8,21 @@ export class ParanoiaNobodySheet extends ParanoiaActor {
       classes: ["paranoia", "sheet", "actor"],
       template: "systems/paranoia/templates/actor/nobody-sheet.html",
       width: 1100,
-      height: 425
+      height: 425,
     });
   }
 
-  async getData(){
+  async getData() {
     const data = super.getData();
     const actorData = this.actor.toObject(false);
 
     data.system = actorData.system;
 
     const textEditor = getCompatibleTextEditor();
-    data.enrichedLooks = await textEditor.enrichHTML(data.system.looks)
-    data.enrichedQuirks = await textEditor.enrichHTML(data.system.quirks)
-    data.enrichedPlans = await textEditor.enrichHTML(data.system.plans)
+    data.enrichedLooks = await textEditor.enrichHTML(data.system.looks);
+    data.enrichedQuirks = await textEditor.enrichHTML(data.system.quirks);
+    data.enrichedPlans = await textEditor.enrichHTML(data.system.plans);
 
-    return data
+    return data;
   }
 }

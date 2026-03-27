@@ -1,8 +1,8 @@
 const ABILITY_SHORTHANDS = Object.freeze({
-  brains: 'brn',
-  chutzpah: 'chtz',
-  mechanics: 'mec',
-  violence: 'vio',
+  brains: "brn",
+  chutzpah: "chtz",
+  mechanics: "mec",
+  violence: "vio",
 });
 
 /**
@@ -10,7 +10,7 @@ const ABILITY_SHORTHANDS = Object.freeze({
  * @returns {string} Shorthand abbreviation, or '' if unrecognized.
  */
 export function getAbilityShorthand(abilityName) {
-  return ABILITY_SHORTHANDS[abilityName] ?? '';
+  return ABILITY_SHORTHANDS[abilityName] ?? "";
 }
 
 /**

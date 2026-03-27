@@ -13,7 +13,6 @@ export { SecurityClearance };
  * @extends {Actor}
  */
 export class ParanoiaActor extends Actor {
-
   /** @override */
   prepareData() {
     // Prepare data for the actor. Calling the super version of this executes
@@ -52,12 +51,12 @@ export class ParanoiaActor extends Actor {
   /**
    * Prepare Character type specific data
    */
-  _prepareCharacterData(actorData) { }
+  _prepareCharacterData(actorData) {}
 
   /**
    * Prepare NPC type specific data.
    */
-  _prepareNpcData(actorData) { }
+  _prepareNpcData(actorData) {}
 
   /**
    * Override getRollData() that's supplied to rolls.
@@ -65,8 +64,8 @@ export class ParanoiaActor extends Actor {
   getRollData() {
     const data = super.getRollData();
 
-    data['securityClearance'] = data.securityClearance ?? 0;
-    data['sec'] = data.securityClearance ?? 0;
+    data["securityClearance"] = data.securityClearance ?? 0;
+    data["sec"] = data.securityClearance ?? 0;
 
     // Prepare character roll data.
     this._getCharacterRollData(data);
@@ -79,19 +78,18 @@ export class ParanoiaActor extends Actor {
    * Prepare character roll data.
    */
   _getCharacterRollData(data) {
-    if (this.type !== 'troubleshooter') return;
+    if (this.type !== "troubleshooter") return;
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `/roll @brainsd6`.
     if (data.abilities) {
-
       for (let [abilityName, ability] of Object.entries(data.abilities)) {
         let shorthand = this.getAbilityShorthand(abilityName);
         data[abilityName] = ability.value;
-        if (shorthand !== '') {
+        if (shorthand !== "") {
           data[shorthand] = ability.value;
         }
         for (let [skillName, skill] of Object.entries(ability.skills)) {
-          let santiziedName = skillName.replace(' ', '').toLocaleLowerCase();
+          let santiziedName = skillName.replace(" ", "").toLocaleLowerCase();
           data[santiziedName] = skill.value;
         }
       }
@@ -109,9 +107,11 @@ export class ParanoiaActor extends Actor {
     this.updateSecurityClearanceFromName(data.name, this.system);
 
     const prototypeToken = this.buildDynamicTokenRingData(this.system.securityClearance);
-    if (this.type === "troubleshooter") Object.assign(prototypeToken, {
-      sight: { enabled: true }, actorLink: true,
-    });
+    if (this.type === "troubleshooter")
+      Object.assign(prototypeToken, {
+        sight: { enabled: true },
+        actorLink: true,
+      });
 
     this.updateSource({
       "prototypeToken.ring.enabled": prototypeToken.enabled,
@@ -119,9 +119,8 @@ export class ParanoiaActor extends Actor {
       "prototypeToken.ring.colors.ring": prototypeToken.color,
       "prototypeToken.ring.effects": prototypeToken.effects,
       "prototypeToken.sight": prototypeToken.sight,
-      "prototypeToken.actorLink": prototypeToken.actorLink ?? false
+      "prototypeToken.actorLink": prototypeToken.actorLink ?? false,
     });
-
   }
 
   /**
@@ -155,14 +154,14 @@ export class ParanoiaActor extends Actor {
       "prototypeToken.ring.colors.ring": prototypeToken.color,
       "prototypeToken.ring.effects": prototypeToken.effects,
     });
-    this.getActiveTokens().forEach(token => {
+    this.getActiveTokens().forEach((token) => {
       token.document.update({
         "ring.enabled": prototypeToken.enabled,
         "ring.subject.scale": prototypeToken.scale,
         "ring.colors.ring": prototypeToken.color,
-        "ring.effects": prototypeToken.effects
+        "ring.effects": prototypeToken.effects,
       });
-      token.renderFlags.set({ redraw: true })
+      token.renderFlags.set({ redraw: true });
     });
   }
 
@@ -179,11 +178,11 @@ export class ParanoiaActor extends Actor {
   triggerLoseItDynamicRingEffect() {
     console.log(foundry.canvas.tokens.TokenRing);
     let dynamicTokenData = this.buildDynamicTokenRingData(this.system.securityClearance);
-    this.getActiveTokens().forEach(token => {
-      console.log('updating token for character losing it');
+    this.getActiveTokens().forEach((token) => {
+      console.log("updating token for character losing it");
       token.ring.flashColor(dynamicTokenData.color, {
         duration: 750,
-        easing: this.easeFourPeaks
+        easing: this.easeFourPeaks,
       });
     });
   }
@@ -207,7 +206,7 @@ export class ParanoiaActor extends Actor {
    * Prepare NPC roll data.
    */
   _getNpcRollData(data) {
-    if (this.type !== 'npc') return;
+    if (this.type !== "npc") return;
 
     // Process additional NPC data here.
   }

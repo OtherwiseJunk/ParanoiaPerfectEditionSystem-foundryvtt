@@ -9,7 +9,7 @@ export const SecurityClearance = Object.freeze({
   b: 5,
   i: 6,
   v: 7,
-  u: 8
+  u: 8,
 });
 
 /**
@@ -17,14 +17,14 @@ export const SecurityClearance = Object.freeze({
  */
 export const SecurityClearanceColors = Object.freeze({
   Infrared: 0x000000,
-  Red: 0xFF0000,
-  Orange: 0xFF7700,
-  Yellow: 0xFFFF00,
-  Green: 0x00FF00,
-  Blue: 0x0000FF,
-  Indigo: 0x4B0082,
-  Violet: 0x7F00FF,
-  Ultraviolet: 0xFFFFFF
+  Red: 0xff0000,
+  Orange: 0xff7700,
+  Yellow: 0xffff00,
+  Green: 0x00ff00,
+  Blue: 0x0000ff,
+  Indigo: 0x4b0082,
+  Violet: 0x7f00ff,
+  Ultraviolet: 0xffffff,
 });
 
 /**
@@ -38,7 +38,7 @@ const CLEARANCE_NAME_PATTERN = /.*-[RrOoYyGgBbIiVvuU]-.*/;
  * @returns {number} Numeric clearance value, or 0 for Infrared/unrecognized.
  */
 export function extractSecurityClearance(name) {
-  const nameParts = name.split('-');
+  const nameParts = name.split("-");
   const securityCharacter = nameParts[1].toLowerCase();
   return SecurityClearance[securityCharacter];
 }

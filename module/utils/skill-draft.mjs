@@ -12,7 +12,7 @@ export function calculateAvailableSkills(allSkills, assignments, currentPlayerId
 
   for (const actorId of [currentPlayerId, nextPlayerId]) {
     const actorAssignments = assignments[actorId] || {};
-    available = available.filter(skill => !actorAssignments.hasOwnProperty(skill));
+    available = available.filter((skill) => !actorAssignments.hasOwnProperty(skill));
   }
 
   return available;
