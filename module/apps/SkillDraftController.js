@@ -1,4 +1,4 @@
-import { socketEventChannel } from "../paranoia.mjs";
+import { socketEventChannel } from "../helpers/socket.mjs";
 import { getMergeObjectFunction } from "../utils/compatibility.mjs";
 export const SkillDraftEvent = {
     START_DRAFT: 'draftStarted',

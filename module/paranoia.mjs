@@ -9,6 +9,7 @@ import { ParanoiaAccompliceSheet } from "./sheets/actor/accomplice-sheet.mjs";
 import { ParanoiaEquipmentSheet } from "./sheets/equipment/equipment-sheet.mjs";
 // Import application classes.
 import { TreasonCircleApp } from "./apps/TreasonCircleApp.js";
+import { DiceRollerApp } from "./apps/DiceRollerApp.js";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { PARANOIA } from "./helpers/config.mjs";
@@ -27,8 +28,8 @@ import { SkillDraftPlayer } from "./apps/SkillDraftPlayer.js";
 /* -------------------------------------------- */
 /*  Init Hook                                   */
 /* -------------------------------------------- */
+import { socketEventChannel } from "./helpers/socket.mjs";
 let skillDraftApp = null;
-export const socketEventChannel = "system.paranoia";
 
 Hooks.once('init', async function () {
   /**
@@ -44,9 +45,10 @@ Hooks.once('init', async function () {
   });
   game.socket.on(socketEventChannel, async (data) => {
     const myActorId = game.user.character?.id;
-    if (game.user.isGM) return;
     const event = data.event;
     const state = data.state;
+
+    if (game.user.isGM) return;
 
     switch (event) {
       case SkillDraftEvent.START_DRAFT:
@@ -79,12 +81,13 @@ Hooks.once('init', async function () {
 
   globalThis.TreasonCircleApp = TreasonCircleApp;
   globalThis.SkillDraftController = SkillDraftController;
+  globalThis.DiceRollerApp = DiceRollerApp;
 
   // Add utility classes to the global game object so that they're more easily
   // accessible in global contexts.
   game.paranoia = {
     ParanoiaActor,
-    ParanoiaEquipment
+    ParanoiaEquipment,
   };
   const items = getCompatibleItemsObject();
   const actors = getCompatibleActorsObject();
