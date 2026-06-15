@@ -9,6 +9,9 @@ import { clampWellnessValue, clampAttributeValue } from "../../utils/validation.
  * @extends {ParanoiaActor}
  */
 export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
+  _selectedAttribute = null;
+  _selectedSkill = null;
+
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -386,11 +389,17 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
 
   _tryOpenDiceRoller() {
     if (this._selectedAttribute && this._selectedSkill) {
-      const app = new DiceRollerApp(this.actor, {
-        selectedStat: this._selectedAttribute,
-        selectedSkill: this._selectedSkill,
-      });
-      app.render(true);
+      const existing = Object.values(ui.windows).find(w => w.id === "paranoia-dice-roller");
+      if (existing) {
+        existing.selectedStat = this._selectedAttribute;
+        existing.selectedSkill = this._selectedSkill;
+        existing.render(true);
+      } else {
+        new DiceRollerApp(this.actor, {
+          selectedStat: this._selectedAttribute,
+          selectedSkill: this._selectedSkill,
+        }).render(true);
+      }
 
       // Reset selections and highlights
       this._selectedAttribute = null;

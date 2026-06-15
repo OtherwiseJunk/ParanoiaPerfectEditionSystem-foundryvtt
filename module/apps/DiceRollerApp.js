@@ -1,3 +1,5 @@
+import { calculateNODE, generateRollString, computerDiceAttractsAttention } from "../utils/roll-logic.mjs";
+
 /**
  * A standalone dice roller modal for Paranoia troubleshooters.
  * Extracted from the character sheet into its own FormApplication.
@@ -59,17 +61,18 @@ export class DiceRollerApp extends FormApplication {
 
     let NODE = this._calculateNODE(statKey, skillKey, equipmentModifier, initiativeModifier, hurtLevel);
 
-    let rollString = this._generateRollString(NODE);
-    let roll = await new Roll(rollString).evaluate();
+    let roll = await new Roll(generateRollString(NODE)).evaluate();
 
     // Simplified the displayed formula
     if (NODE < 0) {
       roll._formula = `${Math.abs(NODE)}d6cs>=5`;
     }
 
-    let attractedComputersAttention = this._computerDiceAttractsAttention(roll, flagLevel);
+    const allDice = roll.dice.flatMap(d => d.results);
+    const computerDiceResult = allDice.at(-1).result;
+    let attractedComputersAttention = computerDiceAttractsAttention(computerDiceResult, flagLevel);
 
-    await this._sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention);
+    await this._sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention, computerDiceResult);
 
     this.close();
   }
@@ -85,28 +88,10 @@ export class DiceRollerApp extends FormApplication {
       }
     });
 
-    let NODE = statNODE + skillNODE + equipmentModifier - initiativeModifier - hurtLevel;
-
-    if (NODE < 0) {
-      return NODE - 1; // "add" Computer Dice
-    }
-    return NODE + 1; // add Computer Dice
+    return calculateNODE(statNODE + skillNODE, equipmentModifier, initiativeModifier, hurtLevel);
   }
 
-  _generateRollString(NODE) {
-    if (NODE > 0) return `${Math.abs(NODE)}d6cs>=5`;
-    let positiveNode = Math.abs(NODE);
-    return `2 * (${positiveNode}d6cs>=5) - ${positiveNode}`;
-  }
-
-  _computerDiceAttractsAttention(roll, flagLevel) {
-    // The computer die is always the last die in the pool
-    const allDice = roll.dice.flatMap(d => d.results);
-    const computerDiceResult = allDice.at(-1).result;
-    return computerDiceResult >= 6 - flagLevel;
-  }
-
-  async _sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention) {
+  async _sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention, computerDiceResult) {
     let flavor = "";
     if (NODE === 1) {
       flavor += game.i18n.format("PARANOIA.ChatRollFateInComputer", { name: this.actor.name }) + "<br>";
@@ -123,8 +108,7 @@ export class DiceRollerApp extends FormApplication {
     }
 
     await roll.toMessage({ flavor, speaker: ChatMessage.getSpeaker({ actor: this.actor }) });
-    const allDice = roll.dice.flatMap(d => d.results);
-    await this._sendComputerRollResults(attractedComputersAttention, allDice.at(-1).result, flagLevel);
+    await this._sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel);
   }
 
   async _sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
@@ -167,8 +151,4 @@ export class DiceRollerApp extends FormApplication {
     }
   }
 
-  /** @override */
-  async _updateObject(event, formData) {
-    // No-op: form submission is handled by _onRoll
-  }
 }

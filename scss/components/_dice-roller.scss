@@ -1,8 +1,7 @@
-// Dice Roller App Styles
-.dice-roller-app {
-  .window-content {
-    padding: 0;
-  }
+// Dice Roller App Styles — @at-root escapes the .paranoia wrapper since
+// .paranoia and .dice-roller-app are on the same element, not ancestor/descendant.
+@at-root .dice-roller-app .window-content {
+  padding: 0;
 }
 
 .paranoia-dice-roller-form {
