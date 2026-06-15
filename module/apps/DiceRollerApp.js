@@ -109,17 +109,17 @@ export class DiceRollerApp extends FormApplication {
   async _sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention) {
     let flavor = "";
     if (NODE === 1) {
-      flavor += `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`;
+      flavor += game.i18n.format("PARANOIA.ChatRollFateInComputer", { name: this.actor.name }) + "<br>";
     }
     if (NODE < 0) {
-      flavor += "Rolled with negative node. Non-Successes subtract from your success count! Good luck, citizen.<br>";
+      flavor += game.i18n.localize("PARANOIA.ChatRollNegativeNode") + "<br>";
     }
-    flavor += `Rolled with a level ${equipmentModifier} equipment.`;
+    flavor += game.i18n.format("PARANOIA.ChatRollEquipment", { level: equipmentModifier });
     if (hurtLevel !== 0) {
-      flavor += `<br>Rolled with ${hurtLevel} less NODE due to current wounds`;
+      flavor += "<br>" + game.i18n.format("PARANOIA.ChatRollWounds", { hurt: hurtLevel });
     }
     if (initiativeModifier !== 0) {
-      flavor += `<br>Rolled with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiative!`;
+      flavor += "<br>" + game.i18n.format("PARANOIA.ChatRollInitiative", { modifier: initiativeModifier });
     }
 
     await roll.toMessage({ flavor, speaker: ChatMessage.getSpeaker({ actor: this.actor }) });
@@ -128,14 +128,18 @@ export class DiceRollerApp extends FormApplication {
   }
 
   async _sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
-    let flavor = `You manage to avoid Friend Computer's notice... this time.`;
+    let flavor = game.i18n.localize("PARANOIA.ChatRollNoNotice");
     if (attractedComputersAttention) {
-      flavor = `Friend Computer turns its eye on your troubleshooter... (Citizen is a ${this._flagLevelToDescription(flagLevel)} and rolled a ${computerDiceResult}).`;
+      flavor = game.i18n.localize("PARANOIA.ChatRollAttention") + " " +
+        game.i18n.format("PARANOIA.ChatRollCitizenIs", {
+          description: this._flagLevelToDescription(flagLevel),
+          result: computerDiceResult,
+        });
     }
 
     let content = this._generateFriendComputerMessage(flavor, attractedComputersAttention);
     ChatMessage.create({
-      speaker: { alias: "Friend Computer" },
+      speaker: { alias: game.i18n.localize("PARANOIA.ChatComputerName") },
       content: content,
       flavor: flavor,
     });
@@ -154,11 +158,12 @@ export class DiceRollerApp extends FormApplication {
 
   _flagLevelToDescription(flagLevel) {
     switch (flagLevel) {
-      case 4: return "Wanted Enemy of The Computer and Alpha Complex";
-      case 3: return "Citizen-Of-Interest";
-      case 2: return "Restricted Citizen";
-      case 1: return "Greylisted Citizen";
-      case 0: return "Loyal Citizen of Alpha Complex";
+      case 4: return game.i18n.localize("PARANOIA.StatusWanted");
+      case 3: return game.i18n.localize("PARANOIA.StatusCOI");
+      case 2: return game.i18n.localize("PARANOIA.StatusRestricted");
+      case 1: return game.i18n.localize("PARANOIA.StatusGreylisted");
+      case 0: return game.i18n.localize("PARANOIA.StatusLoyal");
+      default: return "";
     }
   }
 

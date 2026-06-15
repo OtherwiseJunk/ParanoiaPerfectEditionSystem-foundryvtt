@@ -85,5 +85,13 @@
   "PARANOIA.StatusCOI": "a Citizen of Interest",
   "PARANOIA.StatusRestricted": "a Restricted Citizen",
   "PARANOIA.StatusGreylisted": "a Greylisted Citizen",
-  "PARANOIA.StatusLoyal": "a Loyal Citizen of Alpha Complex"
+  "PARANOIA.StatusLoyal": "a Loyal Citizen of Alpha Complex",
+  "PARANOIA.RollerRollingFor": "Rolling for {name}",
+  "PARANOIA.RollerAttribute": "Attribute",
+  "PARANOIA.RollerSkill": "Skill",
+  "PARANOIA.ChatRollFateInComputer": "{name} puts their fate in Friend Computer's capable lack-of-hands.",
+  "PARANOIA.ChatRollNegativeNode": "Rolled with negative node. Non-Successes subtract from your success count! Good luck, citizen.",
+  "PARANOIA.ChatRollEquipment": "Rolled with a level {level} equipment.",
+  "PARANOIA.ChatRollWounds": "Rolled with {hurt} less NODE due to current wounds",
+  "PARANOIA.ChatRollInitiative": "Rolled with {modifier} less NODE to jump up {modifier} places in the initiative!"
 }
