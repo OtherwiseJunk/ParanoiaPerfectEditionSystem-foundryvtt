@@ -1,20 +1,18 @@
-export const SecurityClearance = Object.freeze({
-  r: 1,
-  o: 2,
-  y: 3,
-  g: 4,
-  b: 5,
-  i: 6,
-  v: 7,
-  u: 8
-});
+import {
+  SecurityClearance,
+  extractSecurityClearance,
+  securityClearanceFromName,
+  tokenRingDataForClearance,
+} from "../utils/security-clearance.mjs";
+import { getAbilityShorthand, easeFourPeaks } from "../utils/actor-logic.mjs";
+
+export { SecurityClearance };
 
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
  */
 export class ParanoiaActor extends Actor {
-
   /** @override */
   prepareData() {
     // Prepare data for the actor. Calling the super version of this executes
@@ -40,25 +38,21 @@ export class ParanoiaActor extends Actor {
    * is queried and has a roll executed directly from it).
    */
   prepareDerivedData() {
-    const actorData = this;
-    const systemData = actorData.system;
-    const flags = actorData.flags.paranoia || {};
-
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
-    this._prepareCharacterData(actorData);
-    this._prepareNpcData(actorData);
+    this._prepareCharacterData();
+    this._prepareNpcData();
   }
 
   /**
    * Prepare Character type specific data
    */
-  _prepareCharacterData(actorData) { }
+  _prepareCharacterData() {}
 
   /**
    * Prepare NPC type specific data.
    */
-  _prepareNpcData(actorData) { }
+  _prepareNpcData() {}
 
   /**
    * Override getRollData() that's supplied to rolls.
@@ -66,8 +60,8 @@ export class ParanoiaActor extends Actor {
   getRollData() {
     const data = super.getRollData();
 
-    data['securityClearance'] = data.securityClearance ?? 0;
-    data['sec'] = data.securityClearance ?? 0;
+    data["securityClearance"] = data.securityClearance ?? 0;
+    data["sec"] = data.securityClearance ?? 0;
 
     // Prepare character roll data.
     this._getCharacterRollData(data);
@@ -80,19 +74,18 @@ export class ParanoiaActor extends Actor {
    * Prepare character roll data.
    */
   _getCharacterRollData(data) {
-    if (this.type !== 'troubleshooter') return;
+    if (this.type !== "troubleshooter") return;
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `/roll @brainsd6`.
     if (data.abilities) {
-
       for (let [abilityName, ability] of Object.entries(data.abilities)) {
         let shorthand = this.getAbilityShorthand(abilityName);
         data[abilityName] = ability.value;
-        if (shorthand !== '') {
+        if (shorthand !== "") {
           data[shorthand] = ability.value;
         }
         for (let [skillName, skill] of Object.entries(ability.skills)) {
-          let santiziedName = skillName.replace(' ', '').toLocaleLowerCase();
+          let santiziedName = skillName.replace(" ", "").toLocaleLowerCase();
           data[santiziedName] = skill.value;
         }
       }
@@ -110,9 +103,11 @@ export class ParanoiaActor extends Actor {
     this.updateSecurityClearanceFromName(data.name, this.system);
 
     const prototypeToken = this.buildDynamicTokenRingData(this.system.securityClearance);
-    if (this.type === "troubleshooter") Object.assign(prototypeToken, {
-      sight: { enabled: true }, actorLink: true,
-    });
+    if (this.type === "troubleshooter")
+      Object.assign(prototypeToken, {
+        sight: { enabled: true },
+        actorLink: true,
+      });
 
     this.updateSource({
       "prototypeToken.ring.enabled": prototypeToken.enabled,
@@ -120,9 +115,8 @@ export class ParanoiaActor extends Actor {
       "prototypeToken.ring.colors.ring": prototypeToken.color,
       "prototypeToken.ring.effects": prototypeToken.effects,
       "prototypeToken.sight": prototypeToken.sight,
-      "prototypeToken.actorLink": prototypeToken.actorLink ?? false
+      "prototypeToken.actorLink": prototypeToken.actorLink ?? false,
     });
-
   }
 
   /**
@@ -156,66 +150,35 @@ export class ParanoiaActor extends Actor {
       "prototypeToken.ring.colors.ring": prototypeToken.color,
       "prototypeToken.ring.effects": prototypeToken.effects,
     });
-    this.getActiveTokens().forEach(token => {
+    this.getActiveTokens().forEach((token) => {
       token.document.update({
         "ring.enabled": prototypeToken.enabled,
         "ring.subject.scale": prototypeToken.scale,
         "ring.colors.ring": prototypeToken.color,
-        "ring.effects": prototypeToken.effects
+        "ring.effects": prototypeToken.effects,
       });
-      token.renderFlags.set({ redraw: true })
+      token.renderFlags.set({ redraw: true });
     });
   }
 
   buildDynamicTokenRingData(securityClearance) {
-    let prototype = {
+    const { color, effects } = tokenRingDataForClearance(securityClearance);
+    return {
       enabled: true,
       scale: 0.8,
-      effects: 1
-    }
-
-    switch (securityClearance) {
-      case SecurityClearance.r:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Red;
-        break;
-      case SecurityClearance.o:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Orange;
-        break;
-      case SecurityClearance.y:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Yellow;
-        break;
-      case SecurityClearance.g:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Green;
-        break;
-      case SecurityClearance.b:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Blue;
-        break;
-      case SecurityClearance.i:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Indigo;
-        break;
-      case SecurityClearance.v:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Violet;
-        break;
-      case SecurityClearance.u:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Ultraviolet;
-        prototype.effects = 2;
-        break;
-      default:
-        prototype.color = CONFIG.PARANOIA.SecurityClearanceColors.Infrared;
-        break;
-    }
-
-    return prototype;
+      effects,
+      color,
+    };
   }
 
   triggerLoseItDynamicRingEffect() {
     console.log(foundry.canvas.tokens.TokenRing);
     let dynamicTokenData = this.buildDynamicTokenRingData(this.system.securityClearance);
-    this.getActiveTokens().forEach(token => {
-      console.log('updating token for character losing it');
+    this.getActiveTokens().forEach((token) => {
+      console.log("updating token for character losing it");
       token.ring.flashColor(dynamicTokenData.color, {
         duration: 750,
-        easing: this.easeFourPeaks
+        easing: this.easeFourPeaks,
       });
     });
   }
@@ -228,47 +191,27 @@ export class ParanoiaActor extends Actor {
   }
 
   easeFourPeaks(t) {
-    return Math.sin(t * Math.PI * 3);
+    return easeFourPeaks(t);
   }
 
   getAbilityShorthand(abilityName) {
-    switch (abilityName) {
-      case 'brains':
-        return 'brn';
-      case 'chutzpah':
-        return 'chtz';
-      case 'mechanics':
-        return 'mec';
-      case 'violence':
-        return 'vio';
-      default:
-        return '';
-    }
+    return getAbilityShorthand(abilityName);
   }
 
   /**
    * Prepare NPC roll data.
    */
-  _getNpcRollData(data) {
-    if (this.type !== 'npc') return;
+  _getNpcRollData(_data) {
+    if (this.type !== "npc") return;
 
     // Process additional NPC data here.
   }
 
   updateSecurityClearanceFromName(name, systemData) {
-    if (/.*-[R,r,O,o,Y,y,G,g,B,b,I,i,V,v,u,U]-.*/.test(name)) {
-      systemData.securityClearance = this.extractSecurityClearance(name);
-    }
-    else {
-      systemData.securityClearance = 0;
-    }
+    systemData.securityClearance = securityClearanceFromName(name);
   }
 
   extractSecurityClearance(value) {
-    const nameParts = value.split('-');
-
-    const securityCharacter = nameParts[1].toLowerCase();
-    const clearance = SecurityClearance[securityCharacter];
-    return clearance;
+    return extractSecurityClearance(value);
   }
 }

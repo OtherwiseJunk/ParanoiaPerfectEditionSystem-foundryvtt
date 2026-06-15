@@ -3,7 +3,7 @@
         <div>
             <div>
                 <div class="paranoia-header">
-                    <label>Aliases</label>
+                    <label>{{localize "PARANOIA.Aliases"}}</label>
                 </div>
                 <div class="paranoia-editor-container">
                     {{editor
@@ -17,7 +17,7 @@
             </div>
             <div>
                 <div class="paranoia-header">
-                    <label>Secret Society</label>
+                    <label>{{localize "PARANOIA.SecretSociety"}}</label>
                 </div>
                 <div class="paranoia-editor-container">
                     {{editor
@@ -31,7 +31,7 @@
             </div>
             <div>
                 <div class="paranoia-header">
-                    <label>Secret Society Favours</label>
+                    <label>{{localize "PARANOIA.SecretSocietyFavours"}}</label>
                 </div>
                 <div class="paranoia-editor-container">
                     {{editor
@@ -61,7 +61,7 @@
             </div>
             <div>
                 <div class="paranoia-header">
-                    <label>Mutant Power</label>
+                    <label>{{localize "PARANOIA.MutantPower"}}</label>
                 </div>
                 <div class="paranoia-editor-container">
                     {{editor
@@ -75,7 +75,7 @@
             </div>
             <div>
                 <div class="paranoia-header">
-                    <label>Service Group Favours</label>
+                    <label>{{localize "PARANOIA.ServiceGroupFavours"}}</label>
                 </div>
                 <div class="paranoia-editor-container">
                     {{editor
@@ -91,7 +91,7 @@
     </div>
     <div>
         <div class="paranoia-header">
-            <label>Evidence (For blackmail and accusations)</label>
+            <label>{{localize "PARANOIA.Evidence"}}</label>
         </div>
         <div class="paranoia-editor-container">
             {{editor enrichedEvidence target="system.secrets.evidence" button=true engine="prosemirror"
@@ -101,7 +101,7 @@
     </div>
     <div>
         <div class="paranoia-header">
-            <label>DO NOT FORGET THESE NOTES</label>
+            <label>{{localize "PARANOIA.SecretNotes"}}</label>
         </div>
         <div class="paranoia-editor-container">
             {{editor enrichedSecretNotes target="system.secrets.notes" button=true engine="prosemirror"
@@ -111,11 +111,11 @@
     </div>
     <div>
         <div class="paranoia-header">
-            <label>Treasonous Gear (DO NOT USE OPENLY!)</label>
+            <label>{{localize "PARANOIA.TreasonousGear"}}</label>
         </div>
         <div class="gear-list-container" data-drop-type="treasonousGear">
             {{> "actor-gear-list" gearList=treasonousGear gearType="treasonousGear"
-            createTitle="Create Treasonous Gear"}}
+            createTitle=(localize "PARANOIA.CreateTreasonousGear")}}
         </div>
     </div>
 </section>

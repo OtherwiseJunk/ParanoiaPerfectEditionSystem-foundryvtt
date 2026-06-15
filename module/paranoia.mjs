@@ -17,10 +17,15 @@ import {
   ParanoiaNobodyData,
   ParanoiaSomebodyData,
   ParanoiaAccompliceData,
-  ParanoiaEquipmentData
+  ParanoiaEquipmentData,
 } from "./data/index.mjs";
 import { registerGameSettings } from "./settings/settings.mjs";
-import { getCompatibleActorsObject, getCompatibleItemsObject, getCompatibleActorSheet, getCompatibleItemSheet } from "./utils/compatibility.mjs";
+import {
+  getCompatibleActorsObject,
+  getCompatibleItemsObject,
+  getCompatibleActorSheet,
+  getCompatibleItemSheet,
+} from "./utils/compatibility.mjs";
 import { SkillDraftController, SkillDraftEvent } from "./apps/SkillDraftController.js";
 import { SkillDraftPlayer } from "./apps/SkillDraftPlayer.js";
 
@@ -30,16 +35,16 @@ import { SkillDraftPlayer } from "./apps/SkillDraftPlayer.js";
 let skillDraftApp = null;
 export const socketEventChannel = "system.paranoia";
 
-Hooks.once('init', async function () {
+Hooks.once("init", async function () {
   /**
-  * Formats a skill name for display.
-  * Capitalizes the first letter and handles special cases like "alphaComplex".
-  * @param {string} skillName - The machine-readable skill name.
-  * @returns {string} The formatted, human-readable skill name.
-  */
-  Handlebars.registerHelper('formatSkillName', function (skillName) {
-    if (skillName === 'alphaComplex') return 'Alpha Complex';
-    if (typeof skillName !== 'string' || skillName.length === 0) return '';
+   * Formats a skill name for display.
+   * Capitalizes the first letter and handles special cases like "alphaComplex".
+   * @param {string} skillName - The machine-readable skill name.
+   * @returns {string} The formatted, human-readable skill name.
+   */
+  Handlebars.registerHelper("formatSkillName", function (skillName) {
+    if (skillName === "alphaComplex") return "Alpha Complex";
+    if (typeof skillName !== "string" || skillName.length === 0) return "";
     return skillName.charAt(0).toUpperCase() + skillName.slice(1);
   });
   game.socket.on(socketEventChannel, async (data) => {
@@ -84,12 +89,12 @@ Hooks.once('init', async function () {
   // accessible in global contexts.
   game.paranoia = {
     ParanoiaActor,
-    ParanoiaEquipment
+    ParanoiaEquipment,
   };
   const items = getCompatibleItemsObject();
   const actors = getCompatibleActorsObject();
 
-  registerGameSettings()
+  registerGameSettings();
 
   // Add custom constants for configuration.
   CONFIG.PARANOIA = PARANOIA;
@@ -99,8 +104,8 @@ Hooks.once('init', async function () {
   CONFIG.Item.documentClass = ParanoiaEquipment;
 
   CONFIG.Combat.initiative = {
-    formula: "@sec"
-  }
+    formula: "@sec",
+  };
 
   Object.assign(CONFIG.Actor.dataModels, {
     troubleshooter: ParanoiaTroubleshooterData,
@@ -110,17 +115,29 @@ Hooks.once('init', async function () {
   });
 
   Object.assign(CONFIG.Item.dataModels, {
-    equipment: ParanoiaEquipmentData
-  })
+    equipment: ParanoiaEquipmentData,
+  });
 
   // Register sheet application classes
   actors.unregisterSheet("core", getCompatibleActorSheet());
   items.unregisterSheet("core", getCompatibleItemSheet());
-  actors.registerSheet("paranoia", ParanoiaTroubleshooterSheet, { types: ["troubleshooter"], makeDefault: true });
+  actors.registerSheet("paranoia", ParanoiaTroubleshooterSheet, {
+    types: ["troubleshooter"],
+    makeDefault: true,
+  });
   actors.registerSheet("paranoia", ParanoiaNobodySheet, { types: ["nobody"], makeDefault: false });
-  actors.registerSheet("paranoia", ParanoiaSomebodySheet, { types: ["somebody"], makeDefault: false });
-  actors.registerSheet("paranoia", ParanoiaAccompliceSheet, { types: ["accomplice"], makeDefault: false });
-  items.registerSheet("paranoia", ParanoiaEquipmentSheet, { types: ["equipment"], makeDefault: true });
+  actors.registerSheet("paranoia", ParanoiaSomebodySheet, {
+    types: ["somebody"],
+    makeDefault: false,
+  });
+  actors.registerSheet("paranoia", ParanoiaAccompliceSheet, {
+    types: ["accomplice"],
+    makeDefault: false,
+  });
+  items.registerSheet("paranoia", ParanoiaEquipmentSheet, {
+    types: ["equipment"],
+    makeDefault: true,
+  });
 
   // Preload Handlebars templates.
   console.log("Paranoia | Paranoia system initialized");
@@ -132,21 +149,21 @@ Hooks.once('init', async function () {
 /* -------------------------------------------- */
 
 // If you need to add Handlebars helpers, here are a few useful examples:
-Handlebars.registerHelper('concat', function () {
-  var outStr = '';
+Handlebars.registerHelper("concat", function () {
+  var outStr = "";
   for (var arg in arguments) {
-    if (typeof arguments[arg] != 'object') {
+    if (typeof arguments[arg] != "object") {
       outStr += arguments[arg];
     }
   }
   return outStr;
 });
 
-Handlebars.registerHelper('add', function (a, b) {
+Handlebars.registerHelper("add", function (a, b) {
   return a + b;
 });
 
-Handlebars.registerHelper('toLowerCase', function (str) {
+Handlebars.registerHelper("toLowerCase", function (str) {
   return str.toLowerCase();
 });
 
@@ -158,12 +175,12 @@ Hooks.once("ready", async function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
 
   // Friend Computer Eye Tracking
-  document.addEventListener('mousemove', (event) => {
-    const eyes = document.querySelectorAll('.paranoia-eye');
+  document.addEventListener("mousemove", (event) => {
+    const eyes = document.querySelectorAll(".paranoia-eye");
     // If there are no eyes on the page at all, do nothing. This is a very fast check.
     if (eyes.length === 0) return;
 
-    const screens = document.querySelectorAll('.paranoia-screen');
+    const screens = document.querySelectorAll(".paranoia-screen");
     eyes.forEach((eye, index) => {
       const screen = screens[index];
       if (!screen) return;
@@ -171,7 +188,12 @@ Hooks.once("ready", async function () {
       const rect = screen.getBoundingClientRect();
 
       // Optimization: If the screen is not in the viewport, do not perform calculations.
-      if (rect.bottom < 0 || rect.top > window.innerHeight || rect.right < 0 || rect.left > window.innerWidth) {
+      if (
+        rect.bottom < 0 ||
+        rect.top > window.innerHeight ||
+        rect.right < 0 ||
+        rect.left > window.innerWidth
+      ) {
         return;
       }
 
@@ -192,14 +214,14 @@ Hooks.once("ready", async function () {
   let draggedElement = null;
   let clickTimeout = null;
 
-  document.body.addEventListener('mousedown', (event) => {
-    if (draggedElement) draggedElement.classList.remove('paranoia-dragging-item');
+  document.body.addEventListener("mousedown", (event) => {
+    if (draggedElement) draggedElement.classList.remove("paranoia-dragging-item");
     clearTimeout(clickTimeout);
 
-    const itemElement = event.target.closest('li.directory-item.item');
+    const itemElement = event.target.closest("li.directory-item.item");
     if (itemElement) {
       draggedElement = itemElement;
-      draggedElement.classList.add('paranoia-dragging-item');
+      draggedElement.classList.add("paranoia-dragging-item");
 
       // Set a timeout. If mouseup happens before this, it's a click.
       clickTimeout = setTimeout(() => {
@@ -208,17 +230,17 @@ Hooks.once("ready", async function () {
     }
   });
 
-  document.body.addEventListener('mouseup', () => {
+  document.body.addEventListener("mouseup", () => {
     if (clickTimeout) {
       clearTimeout(clickTimeout);
-      if (draggedElement) draggedElement.classList.remove('paranoia-dragging-item');
+      if (draggedElement) draggedElement.classList.remove("paranoia-dragging-item");
       draggedElement = null;
     }
   });
 
-  document.body.addEventListener('dragend', () => {
+  document.body.addEventListener("dragend", () => {
     if (draggedElement) {
-      draggedElement.classList.remove('paranoia-dragging-item');
+      draggedElement.classList.remove("paranoia-dragging-item");
       draggedElement = null;
     }
   });

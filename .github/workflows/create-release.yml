@@ -17,10 +17,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18 # Use your project's Node.js version
+          node-version: 22
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run fmt:check
+
+      - name: Run tests
+        run: npm test
 
       - name: Extract version tag
         id: get_version

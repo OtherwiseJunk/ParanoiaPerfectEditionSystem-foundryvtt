@@ -6,9 +6,9 @@
   <div class="grid grid-3col">
     <div class="paranoia-npc-info">
       <img class="paranoia-somebody-image" ; src="{{actor.img}}" data-edit="img" name="paranoia.actor.image"
-        title="{{actor.name}}'s ugly mug" height="200" />
+        title="{{localize 'PARANOIA.UglyMug' name=actor.name}}" height="200" />
       <div class="resource flex-group-center">
-        <label for="system.plans" class="resource-label">Quote</label>
+        <label for="system.plans" class="resource-label">{{localize "PARANOIA.Quote"}}</label>
         <div class="resource-content flexrow flex-center flex-between" style="width: 100%">
           <div class="paranoia-editor-container">
             {{editor
@@ -24,7 +24,7 @@
     </div>
     <div class="paranoia-npc-info grid-span-2">
       <div class="resource flex-group-center" style="width: 100%">
-        <label for="name" class="resource-label">Name</label>
+        <label for="name" class="resource-label">{{localize "PARANOIA.Name"}}</label>
         <div class="resource-content flexrow flex-center flex-between">
           <input class="paranoia-actor-name" type="text" name="name" value="{{actor.name}}" data-dtype="String" />
         </div>
@@ -32,7 +32,7 @@
       <div class="grid grid-2col">
         <div>
           <div class="resource flex-group-center" style="width: 100%">
-            <label for="system.looks" class="resource-label">Looks</label>
+            <label for="system.looks" class="resource-label">{{localize "PARANOIA.Looks"}}</label>
             <div class="resource-content flexrow flex-center flex-between">
               <div class="paranoia-editor-container">
                 {{editor
@@ -46,7 +46,7 @@
             </div>
           </div>
           <div class="resource flex-group-center" style="width: 100%">
-            <label for="system.quirks" class="resource-label">Quirks</label>
+            <label for="system.quirks" class="resource-label">{{localize "PARANOIA.Quirks"}}</label>
             <div class="resource-content flexrow flex-center flex-between">
               <div class="paranoia-editor-container">
                 {{editor
@@ -60,7 +60,7 @@
             </div>
           </div>
           <div class="resource flex-group-center" style="width: 100%">
-            <label for="system.plans" class="resource-label">Plans</label>
+            <label for="system.plans" class="resource-label">{{localize "PARANOIA.Plans"}}</label>
             <div class="resource-content flexrow flex-center flex-between">
               <div class="paranoia-editor-container">
                 {{editor
@@ -76,7 +76,7 @@
         </div>
         <div>
           <div class="resource flex-group-center" style="width: 100%">
-            <label for="system.basics" class="resource-label">Basics</label>
+            <label for="system.basics" class="resource-label">{{localize "PARANOIA.Basics"}}</label>
             <div class="resource-content flexrow flex-center flex-between">
               <div class="paranoia-editor-container">
                 {{editor
@@ -90,7 +90,7 @@
             </div>
           </div>
           <div class="resource flex-group-center" style="width: 100%">
-            <label for="system.gear" class="resource-label">Gear</label>
+            <label for="system.gear" class="resource-label">{{localize "PARANOIA.Gear"}}</label>
             <div class="resource-content flexrow flex-center flex-between">
               <div class="paranoia-editor-container">
                 {{editor
@@ -104,7 +104,7 @@
             </div>
           </div>
           <div class="resource flex-group-center" style="width: 100%">
-            <label for="system.mutantPowers" class="resource-label">Mutant Powers</label>
+            <label for="system.mutantPowers" class="resource-label">{{localize "PARANOIA.MutantPower"}}</label>
             <div class="resource-content flexrow flex-center flex-between">
               <div class="paranoia-editor-container">
                 {{editor
@@ -122,11 +122,11 @@
       <div>
         <div class="grid grid-2col">
           <div class="resource flex-group-center">
-            <label class="resource-label center-align" for="system.moxie">Moxie</label>
+            <label class="resource-label center-align" for="system.moxie">{{localize "PARANOIA.Moxie"}}</label>
             <input type="text" name="system.moxie.value" value="{{system.moxie.value}}" data-dtype="Number" />
           </div>
           <div class="resource flex-group-center">
-            <label class="resource-label center-align" for="system.health">Health</label>
+            <label class="resource-label center-align" for="system.health">{{localize "PARANOIA.Wounds"}}</label>
             <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number" />
           </div>
         </div>
