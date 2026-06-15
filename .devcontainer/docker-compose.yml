@@ -11,9 +11,9 @@ services:
       - foundryvtt
   foundryvtt:
     # Other Versions:
-    # image: felddy/foundryvtt:13.344.0
+    # image: felddy/foundryvtt:13.351.0
     # image: felddy/foundryvtt:12.331.0
-    image: felddy/foundryvtt:13.344.0
+    image: felddy/foundryvtt:13.351.0
     container_name: foundryvtt
     environment:
       - FOUNDRY_RELEASE_URL=<Get a timed URL from foundryvtt>

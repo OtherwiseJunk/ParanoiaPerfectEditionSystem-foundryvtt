@@ -1,7 +1,7 @@
 <section>
     <div>
         <div class="paranoia-header">
-            <label for="paranoia-mission-objectives">Mission Objectives</label>
+            <label for="paranoia-mission-objectives">{{localize "PARANOIA.MissionObjectives"}}</label>
         </div>
         <div class="paranoia-editor-container paranoia-societal">
             {{editor
@@ -14,10 +14,10 @@
         </div>
     </div>
     <div class="paranoia-header">
-        <label for="paranoia-gear">Assigned Gear</label>
+        <label for="paranoia-gear">{{localize "PARANOIA.AssignedGear"}}</label>
     </div>
     <div class="gear-list-container" data-drop-type="publicGear">
         {{> "actor-gear-list" gearList=publicGear gearType="publicGear"
-        createTitle="Create Gear"}}
+        createTitle=(localize "PARANOIA.CreateGear")}}
     </div>
 </section>
