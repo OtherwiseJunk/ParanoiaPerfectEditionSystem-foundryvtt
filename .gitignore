@@ -13,3 +13,6 @@ foundry
 .DS_Store
 *.zip
 /packs
+
+#local notes
+.devnotes/*
