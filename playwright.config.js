@@ -1,0 +1,35 @@
+import { defineConfig, devices } from "@playwright/test";
+
+const FOUNDRY_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
+
+export default defineConfig({
+  testDir: "./tests/e2e/specs",
+  fullyParallel: false,
+  timeout: 30_000,
+  use: {
+    baseURL: FOUNDRY_URL,
+    actionTimeout: 60_000,
+    storageState: "tests/e2e/.auth/state.json",
+  },
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 }, // Foundry requires ≥ 1366×768
+        launchOptions: {
+          args: [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-webgl",
+            "--disable-webgl2",
+          ],
+        },
+      },
+    },
+  ],
+  globalSetup: "./tests/e2e/global-setup.js",
+  outputDir: "test-results/e2e",
+  reporter: [["list"], ["html", { outputFolder: "test-results/html" }]],
+});
