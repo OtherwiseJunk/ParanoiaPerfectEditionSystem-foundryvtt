@@ -48,6 +48,15 @@ jobs:
           key: foundryvtt-${{ matrix.foundry.image }}
 
       - name: Start FoundryVTT
+        # Pass secrets via env, not string interpolation into the script — a
+        # value containing shell metacharacters (quotes, $, backticks) would
+        # otherwise break parsing or allow script injection. `docker run -e VAR`
+        # (no value) inherits the variable by name from this env block.
+        env:
+          FOUNDRY_USERNAME: ${{ secrets.FOUNDRY_USERNAME }}
+          FOUNDRY_PASSWORD: ${{ secrets.FOUNDRY_PASSWORD }}
+          FOUNDRY_LICENSE_KEY: ${{ secrets.FOUNDRY_LICENSE_KEY }}
+          FOUNDRY_IMAGE: ${{ matrix.foundry.image }}
         run: |
           mkdir -p /tmp/foundryvtt-cache
           chmod 777 /tmp/foundryvtt-cache
@@ -56,16 +65,16 @@ jobs:
             --user root \
             -p 30000:30000 \
             -v /tmp/foundryvtt-cache:/data/container_cache \
-            -e FOUNDRY_USERNAME="${{ secrets.FOUNDRY_USERNAME }}" \
-            -e FOUNDRY_PASSWORD="${{ secrets.FOUNDRY_PASSWORD }}" \
-            -e FOUNDRY_LICENSE_KEY="${{ secrets.FOUNDRY_LICENSE_KEY }}" \
+            -e FOUNDRY_USERNAME \
+            -e FOUNDRY_PASSWORD \
+            -e FOUNDRY_LICENSE_KEY \
             -e FOUNDRY_ADMIN_KEY=admin \
             --health-cmd "curl -sf http://localhost:30000/ || exit 1" \
             --health-interval 15s \
             --health-timeout 10s \
             --health-retries 12 \
             --health-start-period 60s \
-            ${{ matrix.foundry.image }}
+            "$FOUNDRY_IMAGE"
 
       - name: Wait for FoundryVTT to be ready
         run: |
