@@ -8,23 +8,13 @@ on:
 
 env:
   FOUNDRY_URL: http://localhost:30000
+  FOUNDRY_IMAGE: felddy/foundryvtt:13.351.0
 
 jobs:
   e2e:
-    name: Playwright E2E (Foundry v${{ matrix.foundry.version }})
+    name: Playwright E2E (Foundry v13)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
-    strategy:
-      fail-fast: false
-      matrix:
-        foundry:
-          - version: "12"
-            image: felddy/foundryvtt:12.343.0
-          - version: "13"
-            image: felddy/foundryvtt:13.351.0
-          - version: "14"
-            image: felddy/foundryvtt:14.363.0
 
     steps:
       - name: Checkout code
@@ -39,7 +29,7 @@ jobs:
         uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
         with:
           path: /tmp/foundryvtt-cache
-          key: foundryvtt-${{ matrix.foundry.image }}
+          key: foundryvtt-${{ env.FOUNDRY_IMAGE }}
 
       - name: Start FoundryVTT
         run: |
@@ -57,11 +47,11 @@ jobs:
             --health-timeout 10s \
             --health-retries 12 \
             --health-start-period 60s \
-            ${{ matrix.foundry.image }}
+            ${{ env.FOUNDRY_IMAGE }}
 
       - name: Wait for FoundryVTT to be ready
         run: |
-          echo "Waiting for FoundryVTT ${{ matrix.foundry.image }}..."
+          echo "Waiting for FoundryVTT ${{ env.FOUNDRY_IMAGE }}..."
           counter=0
           until curl -sf http://localhost:30000/ > /dev/null 2>&1; do
             if [ "$counter" -ge 180 ]; then
@@ -87,6 +77,6 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report-v${{ matrix.foundry.version }}
+          name: playwright-report-v13
           path: test-results/html/
           retention-days: 30
