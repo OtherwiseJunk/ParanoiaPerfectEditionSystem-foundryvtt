@@ -41,6 +41,15 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install dependencies
+        run: npm ci
+
+      # The compendium packs (LevelDB) are gitignored and built from the
+      # tracked unpacked_packs/ JSON sources. They must exist before Foundry
+      # loads the system, so build them before mounting the system.
+      - name: Build compendium packs
+        run: npm run pullJSONtoLDB
+
       - name: Restore Foundry binary cache
         uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
         with:
@@ -52,6 +61,9 @@ jobs:
         # value containing shell metacharacters (quotes, $, backticks) would
         # otherwise break parsing or allow script injection. `docker run -e VAR`
         # (no value) inherits the variable by name from this env block.
+        # Mount the checked-out repo as the paranoia system, mirroring the
+        # devcontainer (..:/data/Data/systems/paranoia), so createWorld can
+        # find the system.
         env:
           FOUNDRY_USERNAME: ${{ secrets.FOUNDRY_USERNAME }}
           FOUNDRY_PASSWORD: ${{ secrets.FOUNDRY_PASSWORD }}
@@ -65,6 +77,7 @@ jobs:
             --user root \
             -p 30000:30000 \
             -v /tmp/foundryvtt-cache:/data/container_cache \
+            -v "$GITHUB_WORKSPACE":/data/Data/systems/paranoia \
             -e FOUNDRY_USERNAME \
             -e FOUNDRY_PASSWORD \
             -e FOUNDRY_LICENSE_KEY \
@@ -90,9 +103,6 @@ jobs:
             counter=$((counter + 5))
           done
           echo "FoundryVTT ready after ${counter}s"
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
