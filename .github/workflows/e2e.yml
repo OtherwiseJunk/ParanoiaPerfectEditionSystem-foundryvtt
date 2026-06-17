@@ -34,8 +34,10 @@ jobs:
       - name: Start FoundryVTT
         run: |
           mkdir -p /tmp/foundryvtt-cache
+          chmod 777 /tmp/foundryvtt-cache
           docker run -d \
             --name foundry \
+            --user root \
             -p 30000:30000 \
             -v /tmp/foundryvtt-cache:/data/container_cache \
             -e FOUNDRY_USERNAME="${{ secrets.FOUNDRY_USERNAME }}" \
