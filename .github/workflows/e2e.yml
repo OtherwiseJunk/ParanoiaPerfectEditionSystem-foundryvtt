@@ -14,6 +14,12 @@ jobs:
     name: Playwright E2E (Foundry v${{ matrix.foundry.version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Foundry secrets are not exposed to fork PRs, so e2e can only run on
+    # pushes (post-merge) or same-repo PRs. Fork PRs skip this job cleanly
+    # rather than failing; lint/unit tests still gate them.
+    if: >-
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name == github.repository
 
     strategy:
       fail-fast: false
