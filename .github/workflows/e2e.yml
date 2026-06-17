@@ -1,0 +1,92 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  FOUNDRY_URL: http://localhost:30000
+
+jobs:
+  e2e:
+    name: Playwright E2E (Foundry v${{ matrix.foundry.version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        foundry:
+          - version: "12"
+            image: felddy/foundryvtt:12.343.0
+          - version: "13"
+            image: felddy/foundryvtt:13.351.0
+          - version: "14"
+            image: felddy/foundryvtt:14.363.0
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      - name: Restore Foundry binary cache
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+        with:
+          path: /tmp/foundryvtt-cache
+          key: foundryvtt-${{ matrix.foundry.image }}
+
+      - name: Start FoundryVTT
+        run: |
+          mkdir -p /tmp/foundryvtt-cache
+          docker run -d \
+            --name foundry \
+            -p 30000:30000 \
+            -v /tmp/foundryvtt-cache:/data/container_cache \
+            -e FOUNDRY_USERNAME="${{ secrets.FOUNDRY_USERNAME }}" \
+            -e FOUNDRY_PASSWORD="${{ secrets.FOUNDRY_PASSWORD }}" \
+            -e FOUNDRY_LICENSE_KEY="${{ secrets.FOUNDRY_LICENSE_KEY }}" \
+            -e FOUNDRY_ADMIN_KEY=admin \
+            --health-cmd "curl -sf http://localhost:30000/ || exit 1" \
+            --health-interval 15s \
+            --health-timeout 10s \
+            --health-retries 12 \
+            --health-start-period 60s \
+            ${{ matrix.foundry.image }}
+
+      - name: Wait for FoundryVTT to be ready
+        run: |
+          echo "Waiting for FoundryVTT ${{ matrix.foundry.image }}..."
+          counter=0
+          until curl -sf http://localhost:30000/ > /dev/null 2>&1; do
+            if [ "$counter" -ge 180 ]; then
+              echo "FoundryVTT did not start within 180s"
+              docker logs foundry 2>&1 | tail -60
+              exit 1
+            fi
+            sleep 5
+            counter=$((counter + 5))
+          done
+          echo "FoundryVTT ready after ${counter}s"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-v${{ matrix.foundry.version }}
+          path: test-results/html/
+          retention-days: 30
