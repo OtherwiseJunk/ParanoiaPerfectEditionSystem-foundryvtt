@@ -4,18 +4,12 @@ import { test, expect } from "@playwright/test";
 import { selectors } from "../helpers/selectors.js";
 import { ACTOR_NAMES, PLAYER_NAMES } from "../setup/bootstrap.js";
 import { login } from "../helpers/auth.js";
+import { openGamePage, waitForGameReady, installWebGLStub } from "../helpers/game-page.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 const PLAYER_STATE_PATH = path.resolve(__dirname, "../.auth/player-state.json");
 const SOCKET_CHANNEL = "system.paranoia";
-
-async function waitForGameReady(page) {
-  await page.waitForFunction(
-    () => typeof game !== "undefined" && game.ready === true && typeof game.actors !== "undefined",
-    { timeout: 60_000 },
-  );
-}
 
 async function closeAllWindows(page) {
   await page
@@ -48,14 +42,15 @@ test.describe("Skill Draft", () => {
 
   test.beforeAll(async ({ browser }) => {
     // GM context — reuse existing auth state.
-    const gmContext = await browser.newContext({ storageState: "tests/e2e/.auth/state.json" });
-    gmPage = await gmContext.newPage();
-    await gmPage.goto(BASE_URL, { waitUntil: "domcontentloaded" });
-    await waitForGameReady(gmPage);
+    gmPage = await openGamePage(browser, { baseURL: BASE_URL });
 
     // Player context — log in as E2E-Player-1, save to separate state file so the
-    // GM's state.json is not overwritten.
-    const playerContext = await browser.newContext();
+    // GM's state.json is not overwritten. The WebGL stub must be installed before
+    // login navigates to /game, or PIXI crashes and game.ready never fires.
+    const playerContext = await browser.newContext({
+      viewport: { width: 1920, height: 1080 },
+    });
+    await installWebGLStub(playerContext);
     playerPage = await playerContext.newPage();
     await login(playerPage, {
       baseURL: BASE_URL,

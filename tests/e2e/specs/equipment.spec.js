@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { selectors } from "../helpers/selectors.js";
 import { ACTOR_NAMES } from "../setup/bootstrap.js";
+import { openGamePage } from "../helpers/game-page.js";
 
 const BASE_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 const ACTOR_NAME = ACTOR_NAMES.troubleshooter;
@@ -12,12 +13,7 @@ test.describe("Equipment", () => {
   let page;
 
   test.beforeAll(async ({ browser }) => {
-    const context = await browser.newContext({ storageState: "tests/e2e/.auth/state.json" });
-    page = await context.newPage();
-    await page.goto(BASE_URL, { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => typeof game !== "undefined" && game.ready === true, {
-      timeout: 60_000,
-    });
+    page = await openGamePage(browser, { baseURL: BASE_URL });
   });
 
   test.afterAll(async () => {

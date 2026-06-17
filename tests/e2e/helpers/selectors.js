@@ -8,12 +8,16 @@
  */
 
 export const selectors = {
+  // The "sheet" and "actor" classes from defaultOptions.classes land on the
+  // window container, not the <form>. The form is rendered with
+  // `{{cssClass}} {{actor.type}} flexcol paranoia`, so it carries `paranoia`
+  // plus the actor type. Item sheets additionally carry `paranoia-item`.
   actorSheet: {
-    root: "form.paranoia.sheet.actor",
-    troubleshooter: "form.paranoia.sheet.actor.troubleshooter",
-    nobody: "form.paranoia.sheet.actor.nobody",
-    somebody: "form.paranoia.sheet.actor.somebody",
-    accomplice: "form.paranoia.sheet.actor.accomplice",
+    root: "form.paranoia:not(.paranoia-item)",
+    troubleshooter: "form.paranoia.troubleshooter",
+    nobody: "form.paranoia.nobody",
+    somebody: "form.paranoia.somebody",
+    accomplice: "form.paranoia.accomplice",
     nameInput: "input.paranoia-actor-name",
     header: ".window-header",
     content: ".window-content",
@@ -43,7 +47,7 @@ export const selectors = {
     deleteBtn: ".gear-delete",
   },
 
-  equipmentSheet: "form.paranoia.sheet.item",
+  equipmentSheet: "form.paranoia.paranoia-item",
 
   diceRoller: {
     root: "#paranoia-dice-roller",

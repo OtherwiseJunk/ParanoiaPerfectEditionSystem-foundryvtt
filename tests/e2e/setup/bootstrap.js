@@ -3,6 +3,7 @@ import { fileURLToPath } from "url";
 import fs from "fs/promises";
 import { chromium } from "@playwright/test";
 import { login } from "../helpers/auth.js";
+import { installWebGLStub } from "../helpers/game-page.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BOOTSTRAP_STATE_PATH = path.resolve(__dirname, "../.bootstrap-state.json");
@@ -331,101 +332,9 @@ export default async function bootstrap({
   });
   const page = await context.newPage();
 
-  // PIXI.js crashes in _detectFormats when canvas.getContext('webgl') returns null
-  // (no GPU in the Docker devcontainer). The crash prevents the entire Foundry
-  // initialization chain from running, so the join form never renders.
-  // Inject a minimal WebGL stub BEFORE any scripts run so PIXI gets a non-null
-  // context, calls getExtension() → null, falls back to Canvas 2D, and continues.
-  await page.addInitScript(() => {
-    const _getCtx = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function (type, opts) {
-      const ctx = _getCtx.call(this, type, opts);
-      if (ctx) return ctx;
-      if (type === "webgl" || type === "webgl2" || type === "experimental-webgl") {
-        /* eslint-disable */
-        return {
-          canvas: this,
-          drawingBufferWidth: 1,
-          drawingBufferHeight: 1,
-          getExtension: () => null,
-          getParameter: () => null,
-          getSupportedExtensions: () => [],
-          isContextLost: () => true,
-          enable: () => {},
-          disable: () => {},
-          hint: () => {},
-          clearColor: () => {},
-          clear: () => {},
-          viewport: () => {},
-          pixelStorei: () => {},
-          texParameteri: () => {},
-          blendFunc: () => {},
-          blendFuncSeparate: () => {},
-          blendEquation: () => {},
-          blendEquationSeparate: () => {},
-          activeTexture: () => {},
-          bindTexture: () => {},
-          bindBuffer: () => {},
-          bindFramebuffer: () => {},
-          bindRenderbuffer: () => {},
-          createTexture: () => ({}),
-          createBuffer: () => ({}),
-          createFramebuffer: () => ({}),
-          createRenderbuffer: () => ({}),
-          createProgram: () => ({}),
-          createShader: () => ({}),
-          deleteTexture: () => {},
-          deleteBuffer: () => {},
-          deleteFramebuffer: () => {},
-          deleteRenderbuffer: () => {},
-          deleteProgram: () => {},
-          deleteShader: () => {},
-          flush: () => {},
-          finish: () => {},
-          drawArrays: () => {},
-          drawElements: () => {},
-          getError: () => 0,
-          scissor: () => {},
-          colorMask: () => {},
-          depthMask: () => {},
-          stencilMask: () => {},
-          lineWidth: () => {},
-          generateMipmap: () => {},
-          texImage2D: () => {},
-          texSubImage2D: () => {},
-          compressedTexImage2D: () => {},
-          renderbufferStorage: () => {},
-          framebufferTexture2D: () => {},
-          framebufferRenderbuffer: () => {},
-          checkFramebufferStatus: () => 36053,
-          shaderSource: () => {},
-          compileShader: () => {},
-          linkProgram: () => {},
-          useProgram: () => {},
-          getAttribLocation: () => -1,
-          getUniformLocation: () => null,
-          uniform1i: () => {},
-          uniform1f: () => {},
-          uniform2f: () => {},
-          uniform3f: () => {},
-          uniform4f: () => {},
-          uniformMatrix3fv: () => {},
-          uniformMatrix4fv: () => {},
-          enableVertexAttribArray: () => {},
-          disableVertexAttribArray: () => {},
-          vertexAttribPointer: () => {},
-          bufferData: () => {},
-          bufferSubData: () => {},
-          getProgramParameter: () => true,
-          getShaderParameter: () => true,
-          getProgramInfoLog: () => "",
-          getShaderInfoLog: () => "",
-        };
-        /* eslint-enable */
-      }
-      return null;
-    };
-  });
+  // PIXI.js crashes in _detectFormats when canvas.getContext('webgl') returns
+  // null (no GPU in the CI/devcontainer); the stub lets it fall back to Canvas 2D.
+  await installWebGLStub(page);
 
   page.on("pageerror", (err) =>
     console.log("[bootstrap:browser-error]", err.message, "\n", err.stack?.slice(0, 600)),

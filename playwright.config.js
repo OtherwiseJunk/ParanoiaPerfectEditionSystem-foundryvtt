@@ -5,7 +5,10 @@ const FOUNDRY_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 export default defineConfig({
   testDir: "./tests/e2e/specs",
   fullyParallel: false,
-  timeout: 30_000,
+  // Generous global ceiling: booting Foundry to game.ready can take up to ~60s
+  // in CI, and this timeout also governs beforeAll/afterAll hooks. Tests return
+  // well before this in the common case.
+  timeout: 120_000,
   use: {
     baseURL: FOUNDRY_URL,
     actionTimeout: 60_000,

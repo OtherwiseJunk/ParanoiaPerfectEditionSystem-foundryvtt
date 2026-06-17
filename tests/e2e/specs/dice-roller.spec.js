@@ -1,16 +1,10 @@
 import { test, expect } from "@playwright/test";
 import bootstrap from "../setup/bootstrap.js";
 import { selectors } from "../helpers/selectors.js";
+import { openGamePage, waitForGameReady } from "../helpers/game-page.js";
 
 const BASE_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 const ACTOR_NAME = "E2E-Troubleshooter";
-
-async function waitForGameReady(page) {
-  await page.waitForFunction(
-    () => typeof game !== "undefined" && game.ready === true && typeof game.actors !== "undefined",
-    { timeout: 60_000 },
-  );
-}
 
 async function openActorSheet(page) {
   await waitForGameReady(page);
@@ -65,12 +59,7 @@ test.describe("Dice Roller", () => {
 
   test.beforeAll(async ({ browser }) => {
     // Single persistent page so Foundry doesn't re-initialise between every test.
-    const context = await browser.newContext({
-      storageState: "tests/e2e/.auth/state.json",
-    });
-    page = await context.newPage();
-    await page.goto(BASE_URL, { waitUntil: "domcontentloaded" });
-    await waitForGameReady(page);
+    page = await openGamePage(browser, { baseURL: BASE_URL });
   });
 
   test.afterAll(async () => {
