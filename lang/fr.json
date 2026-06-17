@@ -68,6 +68,8 @@
   "PARANOIA.EquipModifier": "Modificateur d'Équipement",
   "PARANOIA.InitiativeModifier": "Modificateur de Saut d'Initiative",
   "PARANOIA.RollDice": "Lancer les dés !",
+  "PARANOIA.LaunchDiceRoller": "Ouvrir le Lanceur de Dés",
+  "PARANOIA.DiceRollerHint": "Cliquez sur un attribut, puis sur une compétence pour ouvrir le lanceur avec les sélections préremplies.",
   "PARANOIA.Looks": "Apparence",
   "PARANOIA.Quirks": "Manies et Particularités",
   "PARANOIA.Plans": "Intentions / Plans",

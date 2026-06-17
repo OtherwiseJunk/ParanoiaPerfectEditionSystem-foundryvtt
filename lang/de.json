@@ -69,6 +69,8 @@
   "PARANOIA.EquipModifier": "Equipment Modifier",
   "PARANOIA.InitiativeModifier": "Initiative Jumping Modifier",
   "PARANOIA.RollDice": "Roll some dice!",
+  "PARANOIA.LaunchDiceRoller": "Open Dice Roller",
+  "PARANOIA.DiceRollerHint": "Click an attribute, then a skill to open the roller with them pre-selected.",
   "PARANOIA.Looks": "Looks",
   "PARANOIA.Quirks": "Quirks",
   "PARANOIA.Plans": "Plans",

@@ -183,6 +183,7 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     // Click-to-select attributes and skills for dice rolling
     html.find(".paranoia-selectable-attribute").click(this._onSelectAttribute.bind(this));
     html.find(".paranoia-selectable-skill").click(this._onSelectSkill.bind(this));
+    html.find(".paranoia-open-dice-roller").click(this._onOpenDiceRoller.bind(this));
 
     //Paranoia-Specific Listeners
     html.find(".paranoia-rolling-atribute").change((event) => {
@@ -389,6 +390,16 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     }
 
     this._tryOpenDiceRoller();
+  }
+
+  _onOpenDiceRoller(event) {
+    event.preventDefault();
+    const existing = Object.values(ui.windows).find((w) => w.id === "paranoia-dice-roller");
+    if (existing) {
+      existing.render(true);
+    } else {
+      new DiceRollerApp(this.actor).render(true);
+    }
   }
 
   _tryOpenDiceRoller() {

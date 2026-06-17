@@ -82,3 +82,25 @@
     background: #218838;
   }
 }
+
+.paranoia-dice-roller-launcher {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 4px;
+  margin-top: 6px;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+
+  .paranoia-dice-roller-hint {
+    flex: 1;
+    margin: 0;
+    font-size: 0.8rem;
+    font-style: italic;
+    opacity: 0.75;
+  }
+
+  .paranoia-open-dice-roller {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
