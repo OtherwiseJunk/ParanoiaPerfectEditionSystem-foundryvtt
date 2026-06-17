@@ -5,6 +5,10 @@ const FOUNDRY_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 export default defineConfig({
   testDir: "./tests/e2e/specs",
   fullyParallel: false,
+  // All specs share a single Foundry world, actor set, and GM user. Running
+  // spec files in parallel (the default across workers) causes them to fight
+  // over that shared state, so force a single worker for true serial execution.
+  workers: 1,
   // Generous global ceiling: booting Foundry to game.ready can take up to ~60s
   // in CI, and this timeout also governs beforeAll/afterAll hooks. Tests return
   // well before this in the common case.

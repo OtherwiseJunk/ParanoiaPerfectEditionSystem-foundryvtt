@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { selectors } from "../helpers/selectors.js";
 import { ACTOR_NAMES } from "../setup/bootstrap.js";
-import { openGamePage } from "../helpers/game-page.js";
+import { openGamePage, renderActorSheet, resetActorGear } from "../helpers/game-page.js";
 
 const BASE_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 const ACTOR_NAME = ACTOR_NAMES.troubleshooter;
@@ -11,36 +11,21 @@ test.describe("Troubleshooter Sheet", () => {
 
   let page;
 
-  test.beforeAll(async ({ browser }) => {
+  // A fresh joined page per test. Foundry re-renders sheets asynchronously on
+  // every document change, and a single shared page accumulates instability
+  // across many mutations; isolating each test keeps them deterministic.
+  test.beforeEach(async ({ browser }) => {
     page = await openGamePage(browser, { baseURL: BASE_URL });
-  });
-
-  test.afterAll(async () => {
-    await page?.close();
-  });
-
-  test.beforeEach(async () => {
-    await page
-      .evaluate(() => {
-        Object.values(ui.windows).forEach((w) => {
-          try {
-            w.close();
-          } catch {
-            /**/
-          }
-        });
-      })
-      .catch(() => {});
-
-    await page.evaluate(async (name) => {
-      const actor = game.actors.find((a) => a.name === name);
-      if (!actor) throw new Error(`Actor "${name}" not found.`);
-      actor.sheet.render(true);
-    }, ACTOR_NAME);
+    await resetActorGear(page, ACTOR_NAME);
+    await renderActorSheet(page, ACTOR_NAME);
 
     await expect(page.locator(selectors.actorSheet.troubleshooter).first()).toBeVisible({
       timeout: 15_000,
     });
+  });
+
+  test.afterEach(async () => {
+    await page?.context().close();
   });
 
   // -------------------------------------------------------------------------

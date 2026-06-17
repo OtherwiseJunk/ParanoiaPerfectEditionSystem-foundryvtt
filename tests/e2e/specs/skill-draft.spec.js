@@ -11,20 +11,6 @@ const BASE_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 const PLAYER_STATE_PATH = path.resolve(__dirname, "../.auth/player-state.json");
 const SOCKET_CHANNEL = "system.paranoia";
 
-async function closeAllWindows(page) {
-  await page
-    .evaluate(() => {
-      Object.values(ui.windows).forEach((w) => {
-        try {
-          w.close();
-        } catch {
-          /**/
-        }
-      });
-    })
-    .catch(() => {});
-}
-
 async function clearChat(page) {
   await page
     .evaluate(async () => {
@@ -40,13 +26,15 @@ test.describe("Skill Draft", () => {
   /** @type {import('@playwright/test').Page} */
   let playerPage;
 
-  test.beforeAll(async ({ browser }) => {
-    // GM context — reuse existing auth state.
+  // Fresh GM + player pages per test. Foundry re-renders asynchronously and a
+  // shared page accumulates instability across the multi-step draft flow.
+  test.beforeEach(async ({ browser }) => {
+    // GM context.
     gmPage = await openGamePage(browser, { baseURL: BASE_URL });
 
-    // Player context — log in as E2E-Player-1, save to separate state file so the
-    // GM's state.json is not overwritten. The WebGL stub must be installed before
-    // login navigates to /game, or PIXI crashes and game.ready never fires.
+    // Player context — log in as E2E-Player-1, saved to a separate state file so
+    // the GM's state.json is not overwritten. The WebGL stub must be installed
+    // before login navigates to /game, or PIXI crashes and game.ready never fires.
     const playerContext = await browser.newContext({
       viewport: { width: 1920, height: 1080 },
     });
@@ -59,17 +47,13 @@ test.describe("Skill Draft", () => {
       statePath: PLAYER_STATE_PATH,
     });
     await waitForGameReady(playerPage);
-  });
 
-  test.afterAll(async () => {
-    await gmPage?.close();
-    await playerPage?.close();
-  });
-
-  test.beforeEach(async () => {
-    await closeAllWindows(gmPage);
-    await closeAllWindows(playerPage);
     await clearChat(gmPage);
+  });
+
+  test.afterEach(async () => {
+    await gmPage?.context().close();
+    await playerPage?.context().close();
   });
 
   // -------------------------------------------------------------------------

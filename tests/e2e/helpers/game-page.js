@@ -151,3 +151,64 @@ export async function openGamePage(
   await waitForGameReady(page);
   return page;
 }
+
+/**
+ * Close every open Foundry Application window. Used between tests that share a
+ * single page so leftover sheets/dialogs don't leak into the next test.
+ */
+export async function closeAllWindows(page) {
+  await page
+    .evaluate(() => {
+      for (const w of Object.values(ui.windows)) {
+        try {
+          w.close();
+        } catch {
+          /* ignore */
+        }
+      }
+    })
+    .catch(() => {});
+}
+
+/**
+ * Render an actor's sheet and wait for the render to complete. Returns nothing;
+ * callers assert on the resulting DOM. Awaiting render() avoids racing the
+ * asynchronous re-render that Foundry performs after document updates.
+ */
+export async function renderActorSheet(page, actorName) {
+  await page.evaluate(async (name) => {
+    const actor = game.actors.find((a) => a.name === name);
+    if (!actor) throw new Error(`Actor "${name}" not found.`);
+    await actor.sheet.render(true);
+  }, actorName);
+  // Foundry fires additional asynchronous re-renders after document updates
+  // (and resets the active tab). Let them flush before the test interacts, so
+  // clicks don't land on elements that are about to detach.
+  await page.waitForTimeout(400);
+}
+
+/**
+ * Reset an actor's embedded items to a known set, awaiting completion. Tests
+ * that create/delete gear mutate shared actor state, so each test resets to a
+ * predictable baseline (one public + one treasonous gear item).
+ */
+export async function resetActorGear(page, actorName) {
+  await page.evaluate(async (name) => {
+    const actor = game.actors.find((a) => a.name === name);
+    if (!actor) throw new Error(`Actor "${name}" not found.`);
+    const ids = actor.items.map((i) => i.id);
+    if (ids.length) await actor.deleteEmbeddedDocuments("Item", ids);
+    await actor.createEmbeddedDocuments("Item", [
+      {
+        name: "E2E-Laser-Pistol",
+        type: "equipment",
+        system: { type: "publicGear", level: 1, clearance: "Red", description: "" },
+      },
+      {
+        name: "E2E-Treason-Device",
+        type: "equipment",
+        system: { type: "treasonousGear", level: 2, clearance: "Infrared", description: "" },
+      },
+    ]);
+  }, actorName);
+}

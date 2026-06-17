@@ -1,43 +1,24 @@
 import { test, expect } from "@playwright/test";
 import { selectors } from "../helpers/selectors.js";
 import { ACTOR_NAMES } from "../setup/bootstrap.js";
-import { openGamePage } from "../helpers/game-page.js";
+import { openGamePage, renderActorSheet } from "../helpers/game-page.js";
 
 const BASE_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 
 test.describe("NPC Sheets", () => {
-  test.use({ storageState: "tests/e2e/.auth/state.json" });
-
   let page;
 
-  test.beforeAll(async ({ browser }) => {
+  // A fresh joined page per test keeps the shared-page re-render races out.
+  test.beforeEach(async ({ browser }) => {
     page = await openGamePage(browser, { baseURL: BASE_URL });
   });
 
-  test.afterAll(async () => {
-    await page?.close();
-  });
-
   test.afterEach(async () => {
-    await page
-      .evaluate(() => {
-        Object.values(ui.windows).forEach((w) => {
-          try {
-            w.close();
-          } catch {
-            /**/
-          }
-        });
-      })
-      .catch(() => {});
+    await page?.context().close();
   });
 
   async function openActorSheet(actorName) {
-    await page.evaluate(async (name) => {
-      const actor = game.actors.find((a) => a.name === name);
-      if (!actor) throw new Error(`Actor "${name}" not found.`);
-      actor.sheet.render(true);
-    }, actorName);
+    await renderActorSheet(page, actorName);
   }
 
   // -------------------------------------------------------------------------

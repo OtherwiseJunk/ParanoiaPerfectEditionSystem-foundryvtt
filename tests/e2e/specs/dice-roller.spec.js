@@ -1,35 +1,16 @@
 import { test, expect } from "@playwright/test";
 import bootstrap from "../setup/bootstrap.js";
 import { selectors } from "../helpers/selectors.js";
-import { openGamePage, waitForGameReady } from "../helpers/game-page.js";
+import { openGamePage, renderActorSheet } from "../helpers/game-page.js";
 
 const BASE_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 const ACTOR_NAME = "E2E-Troubleshooter";
 
 async function openActorSheet(page) {
-  await waitForGameReady(page);
-  await page.evaluate(async (actorName) => {
-    const actor = game.actors.find((a) => a.name === actorName);
-    if (!actor) throw new Error(`Actor "${actorName}" not found. Run bootstrap first.`);
-    actor.sheet.render(true);
-  }, ACTOR_NAME);
+  await renderActorSheet(page, ACTOR_NAME);
   const sheet = page.locator(selectors.actorSheet.root).first();
   await expect(sheet).toBeVisible({ timeout: 15_000 });
   return sheet;
-}
-
-async function closeAllWindows(page) {
-  await page
-    .evaluate(() => {
-      Object.values(ui.windows).forEach((w) => {
-        try {
-          w.close();
-        } catch {
-          // ignore
-        }
-      });
-    })
-    .catch(() => {});
 }
 
 async function clearChat(page) {
@@ -50,27 +31,15 @@ test.describe("@setup", () => {
 });
 
 test.describe("Dice Roller", () => {
-  test.use({
-    storageState: "tests/e2e/.auth/state.json",
-  });
-
   /** @type {import('@playwright/test').Page} */
   let page;
 
-  test.beforeAll(async ({ browser }) => {
-    // Single persistent page so Foundry doesn't re-initialise between every test.
+  // A fresh joined page per test keeps the shared-page re-render races out.
+  test.beforeEach(async ({ browser }) => {
     page = await openGamePage(browser, { baseURL: BASE_URL });
-  });
-
-  test.afterAll(async () => {
-    await page?.close();
-  });
-
-  test.beforeEach(async () => {
-    await closeAllWindows(page);
     await openActorSheet(page);
 
-    // Navigate explicitly in case a prior test changed tabs.
+    // Navigate explicitly to the productivity tab where attributes/skills live.
     const productivityTab = page.locator('.sheet-tabs a[data-tab="productivityProfile"]');
     if (await productivityTab.isVisible()) {
       await productivityTab.click();
@@ -78,8 +47,8 @@ test.describe("Dice Roller", () => {
   });
 
   test.afterEach(async () => {
-    await closeAllWindows(page);
     await clearChat(page);
+    await page?.context().close();
   });
 
   test("clicking an attribute label highlights it", async () => {

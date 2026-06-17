@@ -6,37 +6,22 @@ import { openGamePage } from "../helpers/game-page.js";
 const BASE_URL = process.env.FOUNDRY_URL ?? "http://foundryvtt:30000";
 
 test.describe("Treason Circle", () => {
-  test.use({ storageState: "tests/e2e/.auth/state.json" });
-
   let page;
 
-  test.beforeAll(async ({ browser }) => {
+  // A fresh joined page per test. Chat is world state (not page state), so it is
+  // still cleared each test to keep whisper assertions independent.
+  test.beforeEach(async ({ browser }) => {
     page = await openGamePage(browser, { baseURL: BASE_URL });
-  });
-
-  test.afterAll(async () => {
-    await page?.close();
-  });
-
-  test.beforeEach(async () => {
-    await page
-      .evaluate(() => {
-        Object.values(ui.windows).forEach((w) => {
-          try {
-            w.close();
-          } catch {
-            /**/
-          }
-        });
-      })
-      .catch(() => {});
-
     await page
       .evaluate(async () => {
         const ids = game.messages.map((m) => m.id);
         if (ids.length) await ChatMessage.deleteDocuments(ids);
       })
       .catch(() => {});
+  });
+
+  test.afterEach(async () => {
+    await page?.context().close();
   });
 
   async function openTreasonCircle() {
