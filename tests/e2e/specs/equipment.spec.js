@@ -15,10 +15,9 @@ test.describe("Equipment", () => {
     const context = await browser.newContext({ storageState: "tests/e2e/.auth/state.json" });
     page = await context.newPage();
     await page.goto(BASE_URL, { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(
-      () => typeof game !== "undefined" && game.ready === true,
-      { timeout: 60_000 },
-    );
+    await page.waitForFunction(() => typeof game !== "undefined" && game.ready === true, {
+      timeout: 60_000,
+    });
   });
 
   test.afterAll(async () => {
@@ -26,9 +25,17 @@ test.describe("Equipment", () => {
   });
 
   test.beforeEach(async () => {
-    await page.evaluate(() => {
-      Object.values(ui.windows).forEach((w) => { try { w.close(); } catch { /**/ } });
-    }).catch(() => {});
+    await page
+      .evaluate(() => {
+        Object.values(ui.windows).forEach((w) => {
+          try {
+            w.close();
+          } catch {
+            /**/
+          }
+        });
+      })
+      .catch(() => {});
 
     await page.evaluate(async (name) => {
       const actor = game.actors.find((a) => a.name === name);
@@ -56,8 +63,9 @@ test.describe("Equipment", () => {
         const item = game.items.find((i) => i.name === itemName);
         if (!actor || !item) throw new Error("Actor or item not found");
 
-        const dropZoneEl = actor.sheet.element
-          .find('.gear-list-container[data-drop-type="publicGear"]')[0];
+        const dropZoneEl = actor.sheet.element.find(
+          '.gear-list-container[data-drop-type="publicGear"]',
+        )[0];
 
         const dragData = JSON.stringify({ type: "Item", uuid: item.uuid });
         const dt = new DataTransfer();
@@ -89,8 +97,9 @@ test.describe("Equipment", () => {
         const item = game.items.find((i) => i.name === itemName);
         if (!actor || !item) throw new Error("Actor or item not found");
 
-        const dropZoneEl = actor.sheet.element
-          .find('.gear-list-container[data-drop-type="treasonousGear"]')[0];
+        const dropZoneEl = actor.sheet.element.find(
+          '.gear-list-container[data-drop-type="treasonousGear"]',
+        )[0];
 
         const dragData = JSON.stringify({ type: "Item", uuid: item.uuid });
         const dt = new DataTransfer();

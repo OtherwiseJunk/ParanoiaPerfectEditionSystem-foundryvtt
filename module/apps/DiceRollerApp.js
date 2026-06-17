@@ -1,4 +1,8 @@
-import { calculateNODE, generateRollString, computerDiceAttractsAttention } from "../utils/roll-logic.mjs";
+import {
+  calculateNODE,
+  generateRollString,
+  computerDiceAttractsAttention,
+} from "../utils/roll-logic.mjs";
 
 /**
  * A standalone dice roller modal for Paranoia troubleshooters.
@@ -6,7 +10,7 @@ import { calculateNODE, generateRollString, computerDiceAttractsAttention } from
  * @extends {FormApplication}
  */
 export class DiceRollerApp extends FormApplication {
-  constructor(actor, {selectedStat = null, selectedSkill = null, ...options} = {}) {
+  constructor(actor, { selectedStat = null, selectedSkill = null, ...options } = {}) {
     super(options);
     this.actor = actor;
     this.selectedStat = selectedStat;
@@ -59,7 +63,13 @@ export class DiceRollerApp extends FormApplication {
     const flagLevel = this.actor.system.flag.value;
     const hurtLevel = 4 - this.actor.system.health.value;
 
-    let NODE = this._calculateNODE(statKey, skillKey, equipmentModifier, initiativeModifier, hurtLevel);
+    let NODE = this._calculateNODE(
+      statKey,
+      skillKey,
+      equipmentModifier,
+      initiativeModifier,
+      hurtLevel,
+    );
 
     let roll = await new Roll(generateRollString(NODE)).evaluate();
 
@@ -68,11 +78,20 @@ export class DiceRollerApp extends FormApplication {
       roll._formula = `${Math.abs(NODE)}d6cs>=5`;
     }
 
-    const allDice = roll.dice.flatMap(d => d.results);
+    const allDice = roll.dice.flatMap((d) => d.results);
     const computerDiceResult = allDice.at(-1).result;
     let attractedComputersAttention = computerDiceAttractsAttention(computerDiceResult, flagLevel);
 
-    await this._sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention, computerDiceResult);
+    await this._sendRollResults(
+      roll,
+      NODE,
+      equipmentModifier,
+      hurtLevel,
+      initiativeModifier,
+      flagLevel,
+      attractedComputersAttention,
+      computerDiceResult,
+    );
 
     this.close();
   }
@@ -91,10 +110,20 @@ export class DiceRollerApp extends FormApplication {
     return calculateNODE(statNODE + skillNODE, equipmentModifier, initiativeModifier, hurtLevel);
   }
 
-  async _sendRollResults(roll, NODE, equipmentModifier, hurtLevel, initiativeModifier, flagLevel, attractedComputersAttention, computerDiceResult) {
+  async _sendRollResults(
+    roll,
+    NODE,
+    equipmentModifier,
+    hurtLevel,
+    initiativeModifier,
+    flagLevel,
+    attractedComputersAttention,
+    computerDiceResult,
+  ) {
     let flavor = "";
     if (NODE === 1) {
-      flavor += game.i18n.format("PARANOIA.ChatRollFateInComputer", { name: this.actor.name }) + "<br>";
+      flavor +=
+        game.i18n.format("PARANOIA.ChatRollFateInComputer", { name: this.actor.name }) + "<br>";
     }
     if (NODE < 0) {
       flavor += game.i18n.localize("PARANOIA.ChatRollNegativeNode") + "<br>";
@@ -104,7 +133,8 @@ export class DiceRollerApp extends FormApplication {
       flavor += "<br>" + game.i18n.format("PARANOIA.ChatRollWounds", { hurt: hurtLevel });
     }
     if (initiativeModifier !== 0) {
-      flavor += "<br>" + game.i18n.format("PARANOIA.ChatRollInitiative", { modifier: initiativeModifier });
+      flavor +=
+        "<br>" + game.i18n.format("PARANOIA.ChatRollInitiative", { modifier: initiativeModifier });
     }
 
     await roll.toMessage({ flavor, speaker: ChatMessage.getSpeaker({ actor: this.actor }) });
@@ -114,7 +144,9 @@ export class DiceRollerApp extends FormApplication {
   async _sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
     let flavor = game.i18n.localize("PARANOIA.ChatRollNoNotice");
     if (attractedComputersAttention) {
-      flavor = game.i18n.localize("PARANOIA.ChatRollAttention") + " " +
+      flavor =
+        game.i18n.localize("PARANOIA.ChatRollAttention") +
+        " " +
         game.i18n.format("PARANOIA.ChatRollCitizenIs", {
           description: this._flagLevelToDescription(flagLevel),
           result: computerDiceResult,
@@ -142,13 +174,18 @@ export class DiceRollerApp extends FormApplication {
 
   _flagLevelToDescription(flagLevel) {
     switch (flagLevel) {
-      case 4: return game.i18n.localize("PARANOIA.StatusWanted");
-      case 3: return game.i18n.localize("PARANOIA.StatusCOI");
-      case 2: return game.i18n.localize("PARANOIA.StatusRestricted");
-      case 1: return game.i18n.localize("PARANOIA.StatusGreylisted");
-      case 0: return game.i18n.localize("PARANOIA.StatusLoyal");
-      default: return "";
+      case 4:
+        return game.i18n.localize("PARANOIA.StatusWanted");
+      case 3:
+        return game.i18n.localize("PARANOIA.StatusCOI");
+      case 2:
+        return game.i18n.localize("PARANOIA.StatusRestricted");
+      case 1:
+        return game.i18n.localize("PARANOIA.StatusGreylisted");
+      case 0:
+        return game.i18n.localize("PARANOIA.StatusLoyal");
+      default:
+        return "";
     }
   }
-
 }

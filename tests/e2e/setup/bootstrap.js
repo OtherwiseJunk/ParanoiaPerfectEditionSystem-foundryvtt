@@ -68,10 +68,7 @@ async function writeBootstrapState(state) {
 
 async function waitForGameReady(page, timeoutMs = 60_000) {
   await page.waitForFunction(
-    () =>
-      typeof game !== "undefined" &&
-      game.ready === true &&
-      typeof game.actors !== "undefined",
+    () => typeof game !== "undefined" && game.ready === true && typeof game.actors !== "undefined",
     undefined,
     { timeout: timeoutMs },
   );
@@ -110,9 +107,7 @@ async function ensureSetupAccess(page, baseURL) {
   }
 
   if (!page.url().includes("/setup")) {
-    throw new Error(
-      `[bootstrap] Could not reach setup page. Current URL: ${page.url()}`,
-    );
+    throw new Error(`[bootstrap] Could not reach setup page. Current URL: ${page.url()}`);
   }
 }
 
@@ -123,23 +118,26 @@ async function ensureSetupAccess(page, baseURL) {
 async function ensureWorld(page, baseURL) {
   await ensureSetupAccess(page, baseURL);
 
-  const result = await page.evaluate(async (data) => {
-    const resp = await fetch("/setup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "createWorld", ...data }),
-    });
-    if (!resp.ok) throw new Error(`createWorld HTTP ${resp.status}`);
-    return resp.json();
-  }, {
-    id: WORLD_NAME,
-    title: WORLD_NAME,
-    system: "paranoia",
-    background: "",
-    description: "Automated e2e test world — do not modify manually.",
-    resetKeys: false,
-    safeMode: false,
-  });
+  const result = await page.evaluate(
+    async (data) => {
+      const resp = await fetch("/setup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "createWorld", ...data }),
+      });
+      if (!resp.ok) throw new Error(`createWorld HTTP ${resp.status}`);
+      return resp.json();
+    },
+    {
+      id: WORLD_NAME,
+      title: WORLD_NAME,
+      system: "paranoia",
+      background: "",
+      description: "Automated e2e test world — do not modify manually.",
+      resetKeys: false,
+      safeMode: false,
+    },
+  );
 
   if (result.error) {
     if (result.error.includes("already exists")) {
@@ -185,17 +183,14 @@ async function joinWorld(page, baseURL) {
 }
 
 async function ensureActor(page, name, type, updates = null) {
-  let exists = await page.evaluate(
-    (n) => !!game.actors?.find((a) => a.name === n),
-    name,
-  );
+  let exists = await page.evaluate((n) => !!game.actors?.find((a) => a.name === n), name);
 
   if (!exists) {
     console.log(`[bootstrap] Creating actor "${name}" (${type})…`);
-    await page.evaluate(
-      async ({ n, t }) => Actor.implementation.create({ name: n, type: t }),
-      { n: name, t: type },
-    );
+    await page.evaluate(async ({ n, t }) => Actor.implementation.create({ name: n, type: t }), {
+      n: name,
+      t: type,
+    });
 
     exists = await page.evaluate((n) => !!game.actors?.find((a) => a.name === n), name);
     if (!exists) throw new Error(`Failed to create actor "${name}".`);
@@ -277,10 +272,7 @@ async function ensureEmbeddedEquipment(page, actorName) {
 }
 
 async function ensureWorldItem(page, itemName) {
-  const exists = await page.evaluate(
-    (n) => !!game.items?.find((i) => i.name === n),
-    itemName,
-  );
+  const exists = await page.evaluate((n) => !!game.items?.find((i) => i.name === n), itemName);
 
   if (!exists) {
     console.log(`[bootstrap] Creating world item "${itemName}"…`);
@@ -352,39 +344,82 @@ export default async function bootstrap({
       if (type === "webgl" || type === "webgl2" || type === "experimental-webgl") {
         /* eslint-disable */
         return {
-          canvas: this, drawingBufferWidth: 1, drawingBufferHeight: 1,
-          getExtension: () => null, getParameter: () => null,
-          getSupportedExtensions: () => [], isContextLost: () => true,
-          enable: () => {}, disable: () => {}, hint: () => {},
-          clearColor: () => {}, clear: () => {}, viewport: () => {},
-          pixelStorei: () => {}, texParameteri: () => {},
-          blendFunc: () => {}, blendFuncSeparate: () => {},
-          blendEquation: () => {}, blendEquationSeparate: () => {},
-          activeTexture: () => {}, bindTexture: () => {},
-          bindBuffer: () => {}, bindFramebuffer: () => {}, bindRenderbuffer: () => {},
-          createTexture: () => ({}), createBuffer: () => ({}),
-          createFramebuffer: () => ({}), createRenderbuffer: () => ({}),
-          createProgram: () => ({}), createShader: () => ({}),
-          deleteTexture: () => {}, deleteBuffer: () => {},
-          deleteFramebuffer: () => {}, deleteRenderbuffer: () => {},
-          deleteProgram: () => {}, deleteShader: () => {},
-          flush: () => {}, finish: () => {},
-          drawArrays: () => {}, drawElements: () => {},
-          getError: () => 0, scissor: () => {}, colorMask: () => {},
-          depthMask: () => {}, stencilMask: () => {}, lineWidth: () => {},
-          generateMipmap: () => {}, texImage2D: () => {}, texSubImage2D: () => {},
-          compressedTexImage2D: () => {}, renderbufferStorage: () => {},
-          framebufferTexture2D: () => {}, framebufferRenderbuffer: () => {},
+          canvas: this,
+          drawingBufferWidth: 1,
+          drawingBufferHeight: 1,
+          getExtension: () => null,
+          getParameter: () => null,
+          getSupportedExtensions: () => [],
+          isContextLost: () => true,
+          enable: () => {},
+          disable: () => {},
+          hint: () => {},
+          clearColor: () => {},
+          clear: () => {},
+          viewport: () => {},
+          pixelStorei: () => {},
+          texParameteri: () => {},
+          blendFunc: () => {},
+          blendFuncSeparate: () => {},
+          blendEquation: () => {},
+          blendEquationSeparate: () => {},
+          activeTexture: () => {},
+          bindTexture: () => {},
+          bindBuffer: () => {},
+          bindFramebuffer: () => {},
+          bindRenderbuffer: () => {},
+          createTexture: () => ({}),
+          createBuffer: () => ({}),
+          createFramebuffer: () => ({}),
+          createRenderbuffer: () => ({}),
+          createProgram: () => ({}),
+          createShader: () => ({}),
+          deleteTexture: () => {},
+          deleteBuffer: () => {},
+          deleteFramebuffer: () => {},
+          deleteRenderbuffer: () => {},
+          deleteProgram: () => {},
+          deleteShader: () => {},
+          flush: () => {},
+          finish: () => {},
+          drawArrays: () => {},
+          drawElements: () => {},
+          getError: () => 0,
+          scissor: () => {},
+          colorMask: () => {},
+          depthMask: () => {},
+          stencilMask: () => {},
+          lineWidth: () => {},
+          generateMipmap: () => {},
+          texImage2D: () => {},
+          texSubImage2D: () => {},
+          compressedTexImage2D: () => {},
+          renderbufferStorage: () => {},
+          framebufferTexture2D: () => {},
+          framebufferRenderbuffer: () => {},
           checkFramebufferStatus: () => 36053,
-          shaderSource: () => {}, compileShader: () => {}, linkProgram: () => {},
-          useProgram: () => {}, getAttribLocation: () => -1,
-          getUniformLocation: () => null, uniform1i: () => {}, uniform1f: () => {},
-          uniform2f: () => {}, uniform3f: () => {}, uniform4f: () => {},
-          uniformMatrix3fv: () => {}, uniformMatrix4fv: () => {},
-          enableVertexAttribArray: () => {}, disableVertexAttribArray: () => {},
-          vertexAttribPointer: () => {}, bufferData: () => {}, bufferSubData: () => {},
-          getProgramParameter: () => true, getShaderParameter: () => true,
-          getProgramInfoLog: () => "", getShaderInfoLog: () => "",
+          shaderSource: () => {},
+          compileShader: () => {},
+          linkProgram: () => {},
+          useProgram: () => {},
+          getAttribLocation: () => -1,
+          getUniformLocation: () => null,
+          uniform1i: () => {},
+          uniform1f: () => {},
+          uniform2f: () => {},
+          uniform3f: () => {},
+          uniform4f: () => {},
+          uniformMatrix3fv: () => {},
+          uniformMatrix4fv: () => {},
+          enableVertexAttribArray: () => {},
+          disableVertexAttribArray: () => {},
+          vertexAttribPointer: () => {},
+          bufferData: () => {},
+          bufferSubData: () => {},
+          getProgramParameter: () => true,
+          getShaderParameter: () => true,
+          getProgramInfoLog: () => "",
+          getShaderInfoLog: () => "",
         };
         /* eslint-enable */
       }
@@ -392,17 +427,19 @@ export default async function bootstrap({
     };
   });
 
-  page.on("pageerror", (err) => console.log("[bootstrap:browser-error]", err.message, "\n", err.stack?.slice(0, 600)));
+  page.on("pageerror", (err) =>
+    console.log("[bootstrap:browser-error]", err.message, "\n", err.stack?.slice(0, 600)),
+  );
   page.on("console", (msg) => {
-    if (msg.type() === "error") console.log("[bootstrap:browser-console-error]", msg.text().slice(0, 400));
+    if (msg.type() === "error")
+      console.log("[bootstrap:browser-console-error]", msg.text().slice(0, 400));
   });
 
   try {
     // Check if a world is already active (e.g. previous test run left it running).
     const statusResp = await fetch(`${baseURL}/api/status`);
     const statusData = await statusResp.json();
-    const worldAlreadyActive =
-      statusData.active === true && statusData.world === WORLD_NAME;
+    const worldAlreadyActive = statusData.active === true && statusData.world === WORLD_NAME;
 
     let worldExists;
     if (worldAlreadyActive) {

@@ -127,9 +127,7 @@ test.describe("Dice Roller", () => {
     const attributeLabel = page
       .locator(".paranoia-selectable-attribute[data-attribute-key='violence']")
       .first();
-    const skillLabel = page
-      .locator(".paranoia-selectable-skill[data-skill-key='guns']")
-      .first();
+    const skillLabel = page.locator(".paranoia-selectable-skill[data-skill-key='guns']").first();
 
     await expect(attributeLabel).toBeVisible();
     await expect(skillLabel).toBeVisible();
@@ -150,9 +148,7 @@ test.describe("Dice Roller", () => {
     const attributeLabel = page
       .locator(".paranoia-selectable-attribute[data-attribute-key='brains']")
       .first();
-    const skillLabel = page
-      .locator(".paranoia-selectable-skill[data-skill-key='science']")
-      .first();
+    const skillLabel = page.locator(".paranoia-selectable-skill[data-skill-key='science']").first();
 
     await attributeLabel.click();
     await skillLabel.click();
@@ -173,9 +169,7 @@ test.describe("Dice Roller", () => {
     const attributeLabel = page
       .locator(".paranoia-selectable-attribute[data-attribute-key='violence']")
       .first();
-    const skillLabel = page
-      .locator(".paranoia-selectable-skill[data-skill-key='guns']")
-      .first();
+    const skillLabel = page.locator(".paranoia-selectable-skill[data-skill-key='guns']").first();
 
     await attributeLabel.click();
     await skillLabel.click();
@@ -200,9 +194,7 @@ test.describe("Dice Roller", () => {
     const violenceLabel = page
       .locator(".paranoia-selectable-attribute[data-attribute-key='violence']")
       .first();
-    const gunsLabel = page
-      .locator(".paranoia-selectable-skill[data-skill-key='guns']")
-      .first();
+    const gunsLabel = page.locator(".paranoia-selectable-skill[data-skill-key='guns']").first();
 
     await violenceLabel.click();
     await gunsLabel.click();

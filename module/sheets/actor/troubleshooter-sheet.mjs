@@ -181,8 +181,8 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     this._setSheetHeight(tabs.filter(".active").data("tab"));
 
     // Click-to-select attributes and skills for dice rolling
-    html.find('.paranoia-selectable-attribute').click(this._onSelectAttribute.bind(this));
-    html.find('.paranoia-selectable-skill').click(this._onSelectSkill.bind(this));
+    html.find(".paranoia-selectable-attribute").click(this._onSelectAttribute.bind(this));
+    html.find(".paranoia-selectable-skill").click(this._onSelectSkill.bind(this));
 
     //Paranoia-Specific Listeners
     html.find(".paranoia-rolling-atribute").change((event) => {
@@ -360,7 +360,9 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
       label.classList.remove("paranoia-selected");
     } else {
       // Remove highlight from previously selected attribute
-      this.element.find(".paranoia-selectable-attribute.paranoia-selected").removeClass("paranoia-selected");
+      this.element
+        .find(".paranoia-selectable-attribute.paranoia-selected")
+        .removeClass("paranoia-selected");
       this._selectedAttribute = key;
       label.classList.add("paranoia-selected");
     }
@@ -379,7 +381,9 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
       label.classList.remove("paranoia-selected");
     } else {
       // Remove highlight from previously selected skill
-      this.element.find(".paranoia-selectable-skill.paranoia-selected").removeClass("paranoia-selected");
+      this.element
+        .find(".paranoia-selectable-skill.paranoia-selected")
+        .removeClass("paranoia-selected");
       this._selectedSkill = key;
       label.classList.add("paranoia-selected");
     }
@@ -389,7 +393,7 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
 
   _tryOpenDiceRoller() {
     if (this._selectedAttribute && this._selectedSkill) {
-      const existing = Object.values(ui.windows).find(w => w.id === "paranoia-dice-roller");
+      const existing = Object.values(ui.windows).find((w) => w.id === "paranoia-dice-roller");
       if (existing) {
         existing.selectedStat = this._selectedAttribute;
         existing.selectedSkill = this._selectedSkill;
@@ -404,8 +408,12 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
       // Reset selections and highlights
       this._selectedAttribute = null;
       this._selectedSkill = null;
-      this.element.find(".paranoia-selectable-attribute.paranoia-selected").removeClass("paranoia-selected");
-      this.element.find(".paranoia-selectable-skill.paranoia-selected").removeClass("paranoia-selected");
+      this.element
+        .find(".paranoia-selectable-attribute.paranoia-selected")
+        .removeClass("paranoia-selected");
+      this.element
+        .find(".paranoia-selectable-skill.paranoia-selected")
+        .removeClass("paranoia-selected");
     }
   }
 

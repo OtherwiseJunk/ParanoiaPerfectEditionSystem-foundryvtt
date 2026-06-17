@@ -14,10 +14,9 @@ test.describe("Troubleshooter Sheet", () => {
     const context = await browser.newContext({ storageState: "tests/e2e/.auth/state.json" });
     page = await context.newPage();
     await page.goto(BASE_URL, { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(
-      () => typeof game !== "undefined" && game.ready === true,
-      { timeout: 60_000 },
-    );
+    await page.waitForFunction(() => typeof game !== "undefined" && game.ready === true, {
+      timeout: 60_000,
+    });
   });
 
   test.afterAll(async () => {
@@ -25,9 +24,17 @@ test.describe("Troubleshooter Sheet", () => {
   });
 
   test.beforeEach(async () => {
-    await page.evaluate(() => {
-      Object.values(ui.windows).forEach((w) => { try { w.close(); } catch { /**/ } });
-    }).catch(() => {});
+    await page
+      .evaluate(() => {
+        Object.values(ui.windows).forEach((w) => {
+          try {
+            w.close();
+          } catch {
+            /**/
+          }
+        });
+      })
+      .catch(() => {});
 
     await page.evaluate(async (name) => {
       const actor = game.actors.find((a) => a.name === name);

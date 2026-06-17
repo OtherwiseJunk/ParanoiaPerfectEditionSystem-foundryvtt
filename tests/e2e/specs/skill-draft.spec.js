@@ -18,16 +18,26 @@ async function waitForGameReady(page) {
 }
 
 async function closeAllWindows(page) {
-  await page.evaluate(() => {
-    Object.values(ui.windows).forEach((w) => { try { w.close(); } catch { /**/ } });
-  }).catch(() => {});
+  await page
+    .evaluate(() => {
+      Object.values(ui.windows).forEach((w) => {
+        try {
+          w.close();
+        } catch {
+          /**/
+        }
+      });
+    })
+    .catch(() => {});
 }
 
 async function clearChat(page) {
-  await page.evaluate(async () => {
-    const ids = game.messages.map((m) => m.id);
-    if (ids.length) await ChatMessage.deleteDocuments(ids);
-  }).catch(() => {});
+  await page
+    .evaluate(async () => {
+      const ids = game.messages.map((m) => m.id);
+      if (ids.length) await ChatMessage.deleteDocuments(ids);
+    })
+    .catch(() => {});
 }
 
 test.describe("Skill Draft", () => {
@@ -73,7 +83,9 @@ test.describe("Skill Draft", () => {
 
   test("GM can open the Skill Draft Controller", async () => {
     await gmPage.evaluate(() => new SkillDraftController().render(true));
-    await expect(gmPage.locator("#paranoia-skill-draft-controller")).toBeVisible({ timeout: 10_000 });
+    await expect(gmPage.locator("#paranoia-skill-draft-controller")).toBeVisible({
+      timeout: 10_000,
+    });
   });
 
   test("controller shows player-owned actors in the participant list", async () => {
@@ -104,17 +116,24 @@ test.describe("Skill Draft", () => {
     const controller = gmPage.locator("#paranoia-skill-draft-controller");
     await expect(controller).toBeVisible({ timeout: 10_000 });
 
-    await gmPage.evaluate(([name2, name3]) => {
-      const select = document.querySelector("#paranoia-skill-draft-controller select[name='participants']");
-      const ids = game.actors
-        .filter((a) => [name2, name3].includes(a.name))
-        .map((a) => a.id);
-      Array.from(select.options).forEach((opt) => { opt.selected = ids.includes(opt.value); });
-    }, [ACTOR_NAMES.troubleshooter2, ACTOR_NAMES.troubleshooter3]);
+    await gmPage.evaluate(
+      ([name2, name3]) => {
+        const select = document.querySelector(
+          "#paranoia-skill-draft-controller select[name='participants']",
+        );
+        const ids = game.actors.filter((a) => [name2, name3].includes(a.name)).map((a) => a.id);
+        Array.from(select.options).forEach((opt) => {
+          opt.selected = ids.includes(opt.value);
+        });
+      },
+      [ACTOR_NAMES.troubleshooter2, ACTOR_NAMES.troubleshooter3],
+    );
 
     await controller.locator(".start-draft").click();
 
-    await expect(playerPage.locator("#paranoia-skill-draft-player")).toBeVisible({ timeout: 15_000 });
+    await expect(playerPage.locator("#paranoia-skill-draft-player")).toBeVisible({
+      timeout: 15_000,
+    });
   });
 
   test("completing all draft rounds applies skill assignments to both actors", async () => {
@@ -123,10 +142,13 @@ test.describe("Skill Draft", () => {
     await expect(controller).toBeVisible({ timeout: 10_000 });
 
     // Get actor IDs upfront.
-    const { actor2Id, actor3Id } = await gmPage.evaluate(([n2, n3]) => ({
-      actor2Id: game.actors.find((a) => a.name === n2)?.id,
-      actor3Id: game.actors.find((a) => a.name === n3)?.id,
-    }), [ACTOR_NAMES.troubleshooter2, ACTOR_NAMES.troubleshooter3]);
+    const { actor2Id, actor3Id } = await gmPage.evaluate(
+      ([n2, n3]) => ({
+        actor2Id: game.actors.find((a) => a.name === n2)?.id,
+        actor3Id: game.actors.find((a) => a.name === n3)?.id,
+      }),
+      [ACTOR_NAMES.troubleshooter2, ACTOR_NAMES.troubleshooter3],
+    );
 
     if (!actor2Id || !actor3Id) throw new Error("Test actors not found — run bootstrap first.");
 
@@ -144,7 +166,9 @@ test.describe("Skill Draft", () => {
     );
 
     await controller.locator(".start-draft").click();
-    await expect(playerPage.locator("#paranoia-skill-draft-player")).toBeVisible({ timeout: 15_000 });
+    await expect(playerPage.locator("#paranoia-skill-draft-player")).toBeVisible({
+      timeout: 15_000,
+    });
 
     // Drive all 10 picks (5 rounds × 2 players).
     // After each pick the controller emits a chat message — we use that as the
@@ -207,16 +231,16 @@ test.describe("Skill Draft", () => {
     // Verify at least one positive skill was applied to each actor.
     const actor2PositiveSkills = await gmPage.evaluate((id) => {
       const actor = game.actors.get(id);
-      return Object.values(actor.system.abilities).flatMap((ab) =>
-        Object.values(ab.skills).map((s) => s.value),
-      ).filter((v) => v > 0).length;
+      return Object.values(actor.system.abilities)
+        .flatMap((ab) => Object.values(ab.skills).map((s) => s.value))
+        .filter((v) => v > 0).length;
     }, actor2Id);
 
     const actor3PositiveSkills = await gmPage.evaluate((id) => {
       const actor = game.actors.get(id);
-      return Object.values(actor.system.abilities).flatMap((ab) =>
-        Object.values(ab.skills).map((s) => s.value),
-      ).filter((v) => v > 0).length;
+      return Object.values(actor.system.abilities)
+        .flatMap((ab) => Object.values(ab.skills).map((s) => s.value))
+        .filter((v) => v > 0).length;
     }, actor3Id);
 
     expect(actor2PositiveSkills).toBeGreaterThan(0);

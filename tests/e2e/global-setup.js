@@ -8,14 +8,14 @@ export default async function globalSetup() {
     statusData = await res.json();
   } catch (err) {
     throw new Error(
-      `Foundry not reachable at ${BASE_URL} — is the devcontainer running? (${err.message})`
+      `Foundry not reachable at ${BASE_URL} — is the devcontainer running? (${err.message})`,
     );
   }
 
   const versionString = statusData.version;
   if (!versionString) {
     throw new Error(
-      `Could not read version from /api/status response: ${JSON.stringify(statusData)}`
+      `Could not read version from /api/status response: ${JSON.stringify(statusData)}`,
     );
   }
 
