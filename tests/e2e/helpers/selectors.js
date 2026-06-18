@@ -64,7 +64,8 @@ export const selectors = {
     primaryTreasonInput: "textarea[name='big_treason']",
     addRowBtn: ".add-row-button",
     entriesContainer: ".treason-entries-container",
-    entryRow: ".treason-entry",
+    // The column header also has `.treason-entry`; scope to rows in the container.
+    entryRow: ".treason-entries-container .treason-entry",
     submitBtn: 'button[type="submit"]',
   },
 

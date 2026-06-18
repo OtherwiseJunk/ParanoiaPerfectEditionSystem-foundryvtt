@@ -122,7 +122,10 @@ export class TreasonCircleApp extends FormApplication {
 
     this._updateColumnWidths();
 
-    if (this.element.find(".treason-entry").length === 0) {
+    // Count only rows inside the entries container — the column header also
+    // carries the `treason-entry` class, so a bare `.treason-entry` lookup is
+    // never zero and the initial row would never be added.
+    if (this.element.find(".treason-entries-container .treason-entry").length === 0) {
       this._onAddRow();
     }
   }

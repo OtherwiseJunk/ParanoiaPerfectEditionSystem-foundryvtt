@@ -1,7 +1,6 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { test, expect } from "@playwright/test";
-import { selectors } from "../helpers/selectors.js";
 import { ACTOR_NAMES, PLAYER_NAMES } from "../setup/bootstrap.js";
 import { login } from "../helpers/auth.js";
 import { openGamePage, waitForGameReady, installWebGLStub } from "../helpers/game-page.js";
@@ -149,19 +148,23 @@ test.describe("Skill Draft", () => {
       timeout: 15_000,
     });
 
-    // Drive all 10 picks (5 rounds × 2 players).
-    // After each pick the controller emits a chat message — we use that as the
-    // signal that the GM has processed the selection before we read next state.
+    // Drive all 10 picks (5 rounds × 2 players). The number of chat messages a
+    // pick produces varies, so synchronise on the controller's own state: the
+    // total count of assigned-skill keys is strictly monotonic (keys are only
+    // ever added), so we wait for it to grow after each pick.
     for (let pick = 0; pick < 10; pick++) {
-      const chatCountBefore = await gmPage.locator(selectors.chat.message).count();
-
-      const { currentActorId, availableSkills } = await gmPage.evaluate(() => {
+      const { currentActorId, availableSkills, assignedBefore } = await gmPage.evaluate(() => {
         const ctrl = Object.values(ui.windows).find(
           (w) => w.id === "paranoia-skill-draft-controller",
+        );
+        const assigned = Object.values(ctrl.state.assignments).reduce(
+          (n, o) => n + Object.keys(o).length,
+          0,
         );
         return {
           currentActorId: ctrl.state.participants[ctrl.state.currentPlayerIndex],
           availableSkills: [...ctrl.state.availableSkills],
+          assignedBefore: assigned,
         };
       });
 
@@ -185,21 +188,31 @@ test.describe("Skill Draft", () => {
         );
       }
 
-      // Wait for the chat message confirming the pick was processed.
-      await expect(gmPage.locator(selectors.chat.message)).toHaveCount(chatCountBefore + 1, {
-        timeout: 15_000,
-      });
+      // Wait for the controller to record the pick (assignment key count grows).
+      await gmPage.waitForFunction(
+        (before) => {
+          const ctrl = Object.values(ui.windows).find(
+            (w) => w.id === "paranoia-skill-draft-controller",
+          );
+          if (!ctrl) return false;
+          const assigned = Object.values(ctrl.state.assignments).reduce(
+            (n, o) => n + Object.keys(o).length,
+            0,
+          );
+          return assigned > before;
+        },
+        assignedBefore,
+        { timeout: 15_000 },
+      );
     }
-
-    // The completion message is the 11th chat entry.
-    await expect(gmPage.locator(selectors.chat.message)).toHaveCount(11, { timeout: 15_000 });
 
     // Controller should now show the completed state.
     await gmPage.waitForFunction(
       () =>
         Object.values(ui.windows).find((w) => w.id === "paranoia-skill-draft-controller")?.state
           .status === "complete",
-      { timeout: 10_000 },
+      undefined,
+      { timeout: 15_000 },
     );
 
     // Player app should have closed automatically.
