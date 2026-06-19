@@ -206,6 +206,22 @@ button {
   font-size: medium;
 }
 
+.paranoia-selectable-attribute,
+.paranoia-selectable-skill {
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 0, 0.2);
+  }
+
+  &.paranoia-selected {
+    background-color: rgba(255, 255, 0, 0.5);
+    outline: 2px solid #cc0;
+  }
+}
+
 .paranoia-attribute-input {
   margin-left: auto;
   background-color: white;

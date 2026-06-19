@@ -1,0 +1,106 @@
+// Dice Roller App Styles — @at-root escapes the .paranoia wrapper since
+// .paranoia and .dice-roller-app are on the same element, not ancestor/descendant.
+@at-root .dice-roller-app .window-content {
+  padding: 0;
+}
+
+.paranoia-dice-roller-form {
+  padding: 12px;
+  font-family: "Roboto", sans-serif;
+
+  h3 {
+    margin: 0 0 12px;
+    text-align: center;
+    font-size: 1.1rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 8px;
+  }
+}
+
+// Dice Roller
+.paranoia-dice-roller-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.paranoia-roller-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    flex: 0 0 180px;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  select {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    background: #fff;
+  }
+}
+
+.paranoia-roller-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.paranoia-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+
+  i {
+    margin-right: 4px;
+  }
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.paranoia-btn-roll {
+  background: #28a745;
+  color: white;
+
+  &:hover {
+    background: #218838;
+  }
+}
+
+.paranoia-dice-roller-launcher {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 4px;
+  margin-top: 6px;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+
+  .paranoia-dice-roller-hint {
+    flex: 1;
+    margin: 0;
+    font-size: 0.8rem;
+    font-style: italic;
+    opacity: 0.75;
+  }
+
+  .paranoia-open-dice-roller {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}

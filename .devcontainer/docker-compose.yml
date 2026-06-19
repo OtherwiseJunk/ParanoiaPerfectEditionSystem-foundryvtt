@@ -12,11 +12,11 @@ services:
   foundryvtt:
     # Other Versions:
     # image: felddy/foundryvtt:13.351.0
-    # image: felddy/foundryvtt:12.331.0
-    image: felddy/foundryvtt:13.351.0
+    # image: felddy/foundryvtt:12.343.0
+    image: felddy/foundryvtt:14.364.0
     container_name: foundryvtt
     environment:
-      - FOUNDRY_RELEASE_URL=<Get a timed URL from foundryvtt>
+      - FOUNDRY_RELEASE_URL=<FOUNDRY_TIMED_URL>
       - FOUNDRY_ADMIN_KEY=admin
     ports:
       - "30000:30000"

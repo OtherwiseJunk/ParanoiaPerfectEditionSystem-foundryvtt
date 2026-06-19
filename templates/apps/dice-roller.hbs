@@ -1,0 +1,59 @@
+<form class="paranoia-dice-roller-form" autocomplete="off">
+  <div class="paranoia-dice-roller-content">
+
+    <h3>{{localize "PARANOIA.RollerRollingFor" name=actor.name}}</h3>
+
+    <div class="paranoia-roller-field">
+      <label for="paranoia-roller-stat">{{localize "PARANOIA.RollerAttribute"}}:</label>
+      <select id="paranoia-roller-stat" data-dtype="String">
+        {{#each abilities as |ability akey|}}
+        {{#if ability.label}}
+        <option value="{{akey}}" {{#if (eq akey ../selectedStat)}}selected{{/if}}>{{localize ability.label}}</option>
+        {{/if}}
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="paranoia-roller-field">
+      <label for="paranoia-roller-skill">{{localize "PARANOIA.RollerSkill"}}:</label>
+      <select id="paranoia-roller-skill" data-dtype="String">
+        {{#each abilities as |ability|}}
+        {{#each ability.skills as |skill skey|}}
+        <option value="{{skey}}" {{#if (eq skey ../../selectedSkill)}}selected{{/if}}>{{localize skill.label}}</option>
+        {{/each}}
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="paranoia-roller-field">
+      <label for="paranoia-roller-equipment">{{localize "PARANOIA.EquipModifier"}}:</label>
+      <select id="paranoia-roller-equipment" data-dtype="Number">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+
+    <div class="paranoia-roller-field">
+      <label for="paranoia-roller-initiative">{{localize "PARANOIA.InitiativeModifier"}}:</label>
+      <select id="paranoia-roller-initiative" data-dtype="Number">
+        <option value="0">0</option>
+        <option value="1">-1</option>
+        <option value="2">-2</option>
+        <option value="3">-3</option>
+        <option value="4">-4</option>
+        <option value="5">-5</option>
+      </select>
+    </div>
+
+    <div class="paranoia-roller-actions">
+      <button id="paranoia-roller-roll-btn" type="button" class="paranoia-btn paranoia-btn-roll">
+        <i class="fas fa-dice-d6"></i> {{localize "PARANOIA.RollDice"}}
+      </button>
+    </div>
+
+  </div>
+</form>

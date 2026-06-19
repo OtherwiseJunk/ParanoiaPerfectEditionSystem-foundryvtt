@@ -1,3 +1,5 @@
+import { getMergeObjectFunction } from "../utils/compatibility.mjs";
+
 /**
  * A GM-only application for creating and distributing a Paranoia Treason Circle.
  * @extends {FormApplication}
@@ -18,6 +20,7 @@ export class TreasonCircleApp extends FormApplication {
 
   /** @override */
   static get defaultOptions() {
+    const mergeObject = getMergeObjectFunction();
     return mergeObject(super.defaultOptions, {
       id: "paranoia-treason-circle-architect",
       title: "Treason Circle Architect",
@@ -122,7 +125,10 @@ export class TreasonCircleApp extends FormApplication {
 
     this._updateColumnWidths();
 
-    if (this.element.find(".treason-entry").length === 0) {
+    // Count only rows inside the entries container — the column header also
+    // carries the `treason-entry` class, so a bare `.treason-entry` lookup is
+    // never zero and the initial row would never be added.
+    if (this.element.find(".treason-entries-container .treason-entry").length === 0) {
       this._onAddRow();
     }
   }

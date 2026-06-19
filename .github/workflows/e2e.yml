@@ -1,0 +1,135 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  FOUNDRY_URL: http://localhost:30000
+
+jobs:
+  e2e:
+    name: Playwright E2E (Foundry v${{ matrix.foundry.version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Foundry secrets are not exposed to fork PRs, so e2e can only run on
+    # pushes (post-merge) or same-repo PRs. Fork PRs skip this job cleanly
+    # rather than failing; lint/unit tests still gate them.
+    if: >-
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+
+    strategy:
+      fail-fast: false
+      matrix:
+        foundry:
+          - version: "12"
+            image: felddy/foundryvtt:12.343.0
+          - version: "13"
+            image: felddy/foundryvtt:13.351.0
+          - version: "14"
+            image: felddy/foundryvtt:14.363.0
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The compendium packs (LevelDB) are gitignored and built from the
+      # tracked unpacked_packs/ JSON sources. They must exist before Foundry
+      # loads the system, so build them before staging the system.
+      - name: Build compendium packs
+        run: npm run pullJSONtoLDB
+
+      # Copy the system into an isolated dir rather than bind-mounting the live
+      # workspace. The felddy entrypoint chowns /data recursively on some Foundry
+      # versions (v12), which would change ownership of the mounted repo and make
+      # tests/e2e/.auth and test-results unwritable by the runner. Copying keeps
+      # the runner's workspace untouched.
+      - name: Stage system for Foundry
+        run: |
+          mkdir -p /tmp/paranoia-system
+          rsync -a --delete \
+            --exclude node_modules \
+            --exclude .git \
+            --exclude test-results \
+            --exclude tests \
+            "$GITHUB_WORKSPACE"/ /tmp/paranoia-system/
+          chmod -R 777 /tmp/paranoia-system
+
+      - name: Restore Foundry binary cache
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+        with:
+          path: /tmp/foundryvtt-cache
+          key: foundryvtt-${{ matrix.foundry.image }}
+
+      - name: Start FoundryVTT
+        # Pass secrets via env, not string interpolation into the script — a
+        # value containing shell metacharacters (quotes, $, backticks) would
+        # otherwise break parsing or allow script injection. `docker run -e VAR`
+        # (no value) inherits the variable by name from this env block.
+        # Mount the staged system copy as the paranoia system, mirroring the
+        # devcontainer (..:/data/Data/systems/paranoia), so createWorld can
+        # find the system.
+        env:
+          FOUNDRY_USERNAME: ${{ secrets.FOUNDRY_USERNAME }}
+          FOUNDRY_PASSWORD: ${{ secrets.FOUNDRY_PASSWORD }}
+          FOUNDRY_LICENSE_KEY: ${{ secrets.FOUNDRY_LICENSE_KEY }}
+          FOUNDRY_IMAGE: ${{ matrix.foundry.image }}
+        run: |
+          mkdir -p /tmp/foundryvtt-cache
+          chmod 777 /tmp/foundryvtt-cache
+          docker run -d \
+            --name foundry \
+            --user root \
+            -p 30000:30000 \
+            -v /tmp/foundryvtt-cache:/data/container_cache \
+            -v /tmp/paranoia-system:/data/Data/systems/paranoia \
+            -e FOUNDRY_USERNAME \
+            -e FOUNDRY_PASSWORD \
+            -e FOUNDRY_LICENSE_KEY \
+            -e FOUNDRY_ADMIN_KEY=admin \
+            --health-cmd "curl -sf http://localhost:30000/ || exit 1" \
+            --health-interval 15s \
+            --health-timeout 10s \
+            --health-retries 12 \
+            --health-start-period 60s \
+            "$FOUNDRY_IMAGE"
+
+      - name: Wait for FoundryVTT to be ready
+        run: |
+          echo "Waiting for FoundryVTT ${{ matrix.foundry.image }}..."
+          counter=0
+          until curl -sf http://localhost:30000/ > /dev/null 2>&1; do
+            if [ "$counter" -ge 300 ]; then
+              echo "FoundryVTT ${{ matrix.foundry.image }} did not start within 300s"
+              docker logs foundry 2>&1 | tail -60
+              exit 1
+            fi
+            sleep 5
+            counter=$((counter + 5))
+          done
+          echo "FoundryVTT ready after ${counter}s"
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-v${{ matrix.foundry.version }}
+          path: test-results/html/
+          retention-days: 30
