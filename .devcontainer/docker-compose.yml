@@ -12,11 +12,11 @@ services:
   foundryvtt:
     # Other Versions:
     # image: felddy/foundryvtt:13.351.0
-    # image: felddy/foundryvtt:12.331.0
+    # image: felddy/foundryvtt:12.343.0
     image: felddy/foundryvtt:13.351.0
     container_name: foundryvtt
     environment:
-      - FOUNDRY_RELEASE_URL=<Get a timed URL from foundryvtt>
+      - FOUNDRY_RELEASE_URL=https://r2.foundryvtt.com/releases/13.351/FoundryVTT-Linux-13.351.zip?verify=1781556841-mLgG7IAAltY4ajtzoIIALuJ58hUQhBe4btm6X4Zjzgg%3D
       - FOUNDRY_ADMIN_KEY=admin
     ports:
       - "30000:30000"

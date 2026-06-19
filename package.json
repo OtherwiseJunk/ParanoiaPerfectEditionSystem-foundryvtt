@@ -10,6 +10,8 @@
     "pushLDBtoJSON": "node ./tools/pushLDBtoJSON.mjs",
     "pullJSONtoLDB": "node ./tools/pullJSONtoLDB.mjs",
     "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:setup": "playwright test --grep @setup",
     "lint": "oxlint --deny-warnings ./module ./tests",
     "lint:fix": "oxlint --fix ./module ./tests",
     "fmt": "oxfmt ./module ./tests",
@@ -30,6 +32,7 @@
     "oxfmt": "^0.42.0",
     "oxlint": "^1.57.0",
     "sass": "^1.53.0",
+    "@playwright/test": "^1.44.0",
     "vitest": "^4.1.2"
   }
 }

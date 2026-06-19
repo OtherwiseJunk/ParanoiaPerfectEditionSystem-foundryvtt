@@ -9,7 +9,6 @@ export const preloadHandlebarsTemplates = async function () {
     "actor-societal-role": "systems/paranoia/templates/actor/parts/actor-societal-role.html",
     "actor-productivity-profile":
       "systems/paranoia/templates/actor/parts/actor-productivity-profile.html",
-    "actor-dice-roller": "systems/paranoia/templates/actor/parts/actor-dice-roller.html",
     "actor-wellness-tab": "systems/paranoia/templates/actor/parts/actor-wellness-tab.html",
     "actor-naughty-side": "systems/paranoia/templates/actor/parts/actor-naughty-side.html",
     "actor-foundry-data": "systems/paranoia/templates/actor/parts/actor-foundry-data.html",
@@ -19,6 +18,7 @@ export const preloadHandlebarsTemplates = async function () {
     "skill-draft-assignments": "systems/paranoia/templates/partials/skill-draft-assignments.hbs",
     "skill-draft-turn-info": "systems/paranoia/templates/partials/skill-draft-turn-info.hbs",
     "skill-draft-complete": "systems/paranoia/templates/partials/skill-draft-complete.hbs",
+    "dice-roller": "systems/paranoia/templates/apps/dice-roller.hbs",
   };
 
   if (foundry.utils.isNewerVersion(game.version, "13")) {
