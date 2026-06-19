@@ -116,12 +116,16 @@ async function ensureSetupAccess(page, baseURL) {
 // Entity helpers — each is idempotent (checks before creating)
 // ---------------------------------------------------------------------------
 
-async function ensureWorld(page, baseURL) {
+async function ensureWorld(page, baseURL, majorVersion) {
   await ensureSetupAccess(page, baseURL);
 
+  // Foundry v14 moved world creation off the /setup action dispatcher onto a
+  // dedicated /create route (v13 and earlier handle createWorld at /setup).
+  const createEndpoint = majorVersion >= 14 ? "/create" : "/setup";
+
   const result = await page.evaluate(
-    async (data) => {
-      const resp = await fetch("/setup", {
+    async ({ endpoint, data }) => {
+      const resp = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "createWorld", ...data }),
@@ -130,13 +134,16 @@ async function ensureWorld(page, baseURL) {
       return resp.json();
     },
     {
-      id: WORLD_NAME,
-      title: WORLD_NAME,
-      system: "paranoia",
-      background: "",
-      description: "Automated e2e test world — do not modify manually.",
-      resetKeys: false,
-      safeMode: false,
+      endpoint: createEndpoint,
+      data: {
+        id: WORLD_NAME,
+        title: WORLD_NAME,
+        system: "paranoia",
+        background: "",
+        description: "Automated e2e test world — do not modify manually.",
+        resetKeys: false,
+        safeMode: false,
+      },
     },
   );
 
@@ -357,7 +364,7 @@ export default async function bootstrap({
       await login(page, { baseURL, username: "Gamemaster", password: "" });
       await waitForGameReady(page);
     } else {
-      worldExists = await ensureWorld(page, baseURL);
+      worldExists = await ensureWorld(page, baseURL, majorVersion);
       await joinWorld(page, baseURL);
     }
 

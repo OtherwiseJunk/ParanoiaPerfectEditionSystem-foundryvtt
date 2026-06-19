@@ -1,3 +1,5 @@
+import { getMergeObjectFunction } from "../utils/compatibility.mjs";
+
 /**
  * A GM-only application for creating and distributing a Paranoia Treason Circle.
  * @extends {FormApplication}
@@ -18,6 +20,7 @@ export class TreasonCircleApp extends FormApplication {
 
   /** @override */
   static get defaultOptions() {
+    const mergeObject = getMergeObjectFunction();
     return mergeObject(super.defaultOptions, {
       id: "paranoia-treason-circle-architect",
       title: "Treason Circle Architect",
