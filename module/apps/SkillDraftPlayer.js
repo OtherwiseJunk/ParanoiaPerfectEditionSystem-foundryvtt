@@ -1,5 +1,5 @@
 import { getMergeObjectFunction } from "../utils/compatibility.mjs";
-import { socketEventChannel } from "../paranoia.mjs";
+import { socketEventChannel } from "../helpers/socket.mjs";
 import { SkillDraftEvent } from "./SkillDraftController.js";
 
 /**

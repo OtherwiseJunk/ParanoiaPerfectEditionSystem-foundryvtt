@@ -3,8 +3,8 @@
     {{#if ability.label}}
     <div class="ability flexcol flex-group-center paranoia-container">
         <div class="paranoia-header paranoia-attribute-container">
-            <label for="system.abilities.{{akey}}.value" class="resource-label flexlarge align-left paranoia-attribute-label"
-                data-label="{{localize ability.label}}">{{localize ability.label}}</label>
+            <label for="system.abilities.{{akey}}.value" class="resource-label flexlarge align-left paranoia-attribute-label paranoia-selectable-attribute"
+                data-label="{{localize ability.label}}" data-attribute-key="{{akey}}">{{localize ability.label}}</label>
             <input type="number" class="paranoia-rolling-atribute  paranoia-attribute-input" name="system.abilities.{{akey}}.value"
                 value="{{ability.value}}" data-dtype="Number" />
         </div>
@@ -12,8 +12,8 @@
         {{#each ability.skills as |skill skey|}}
 
         <div class="paranoia-attribute-container">
-            <label for="system.abilities.skills.{{skey}}.value" class="paranoia-skill-label  paranoia-attribute-label flexlarge align-left"
-                data-label="{{localize skill.label}}">{{localize skill.label}}</label>
+            <label for="system.abilities.skills.{{skey}}.value" class="paranoia-skill-label  paranoia-attribute-label flexlarge align-left paranoia-selectable-skill"
+                data-label="{{localize skill.label}}" data-skill-key="{{skey}}">{{localize skill.label}}</label>
             <input type="number" class="paranoia-rolling-atribute paranoia-skill-input paranoia-attribute-input" name="system.abilities.{{akey}}.skills.{{skey}}.value"
                 value="{{skill.value}}" data-dtype="Number" />
         </div>
@@ -23,4 +23,9 @@
     {{/each}}
 </section>
 
-{{> "actor-dice-roller"}}
+<div class="paranoia-dice-roller-launcher">
+  <p class="paranoia-dice-roller-hint">{{localize "PARANOIA.DiceRollerHint"}}</p>
+  <button type="button" class="paranoia-btn paranoia-btn-roll paranoia-open-dice-roller">
+    <i class="fas fa-dice-d6"></i> {{localize "PARANOIA.LaunchDiceRoller"}}
+  </button>
+</div>

@@ -1,11 +1,7 @@
 import { prepareActiveEffectCategories } from "../../helpers/effects.mjs";
 import { getCompatibleTextEditor } from "../../utils/compatibility.mjs";
 import { ParanoiaActor } from "./actor-sheet.mjs";
-import {
-  calculateNODE,
-  generateRollString,
-  computerDiceAttractsAttention,
-} from "../../utils/roll-logic.mjs";
+import { DiceRollerApp } from "../../apps/DiceRollerApp.js";
 import { clampWellnessValue, clampAttributeValue } from "../../utils/validation.mjs";
 
 /**
@@ -13,6 +9,9 @@ import { clampWellnessValue, clampAttributeValue } from "../../utils/validation.
  * @extends {ParanoiaActor}
  */
 export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
+  _selectedAttribute = null;
+  _selectedSkill = null;
+
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -181,8 +180,10 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
     // Set initial height based on the active tab.
     this._setSheetHeight(tabs.filter(".active").data("tab"));
 
-    // Rollable abilities.
-    html.find(".rollable").click(this._onRoll.bind(this));
+    // Click-to-select attributes and skills for dice rolling
+    html.find(".paranoia-selectable-attribute").click(this._onSelectAttribute.bind(this));
+    html.find(".paranoia-selectable-skill").click(this._onSelectSkill.bind(this));
+    html.find(".paranoia-open-dice-roller").click(this._onOpenDiceRoller.bind(this));
 
     //Paranoia-Specific Listeners
     html.find(".paranoia-rolling-atribute").change((event) => {
@@ -349,165 +350,86 @@ export class ParanoiaTroubleshooterSheet extends ParanoiaActor {
    * @param {Event} event   The originating click event
    * @private
    */
-  async _onRoll(event) {
+  _onSelectAttribute(event) {
     event.preventDefault();
-    const triggeringElement = event.currentTarget;
+    const label = event.currentTarget;
+    const key = label.dataset.attributeKey;
 
-    switch (triggeringElement.id) {
-      case "paranoia-character-roller":
-        const flagLevel = this.actor.system.flag.value;
-        let hurtLevel = 4 - this.actor.system.health.value;
-        let equipmentModifier = parseInt(this.getEquipmentModifierFromSheet());
-        let initiativeModifier = parseInt(this.getInitiativeModifierFromSheet());
+    // Toggle selection
+    if (this._selectedAttribute === key) {
+      this._selectedAttribute = null;
+      label.classList.remove("paranoia-selected");
+    } else {
+      // Remove highlight from previously selected attribute
+      this.element
+        .find(".paranoia-selectable-attribute.paranoia-selected")
+        .removeClass("paranoia-selected");
+      this._selectedAttribute = key;
+      label.classList.add("paranoia-selected");
+    }
 
-        let NODE = this.calculateNODE(equipmentModifier, initiativeModifier, hurtLevel);
-        let rollString = this.generateRollString(NODE);
+    this._tryOpenDiceRoller();
+  }
 
-        let roll = await new Roll(rollString).evaluate();
-        // Simplified the displayed formula to reduce confusion. 2 * (Xd6cs>=5) - X is weird.
-        if (NODE < 0) {
-          roll._formula = `${Math.abs(NODE)}d6cs>=5`;
-        }
+  _onSelectSkill(event) {
+    event.preventDefault();
+    const label = event.currentTarget;
+    const key = label.dataset.skillKey;
 
-        let attractedComputersAttention = this.computerDiceAttractsAttention(roll, flagLevel);
+    // Toggle selection
+    if (this._selectedSkill === key) {
+      this._selectedSkill = null;
+      label.classList.remove("paranoia-selected");
+    } else {
+      // Remove highlight from previously selected skill
+      this.element
+        .find(".paranoia-selectable-skill.paranoia-selected")
+        .removeClass("paranoia-selected");
+      this._selectedSkill = key;
+      label.classList.add("paranoia-selected");
+    }
 
-        await this.sendRollResults(
-          roll,
-          NODE,
-          equipmentModifier,
-          hurtLevel,
-          initiativeModifier,
-          flagLevel,
-          attractedComputersAttention,
-        );
-        break;
+    this._tryOpenDiceRoller();
+  }
+
+  _onOpenDiceRoller(event) {
+    event.preventDefault();
+    const existing = Object.values(ui.windows).find((w) => w.id === "paranoia-dice-roller");
+    if (existing) {
+      existing.render(true);
+    } else {
+      new DiceRollerApp(this.actor).render(true);
     }
   }
 
-  computerDiceAttractsAttention(roll, flagLevel) {
-    let computerDiceResult = roll.dice.at(-1).results[0].result;
-    return computerDiceAttractsAttention(computerDiceResult, flagLevel);
-  }
-
-  generateRollString(NODE) {
-    return generateRollString(NODE);
-  }
-
-  async sendRollResults(
-    roll,
-    NODE,
-    equipmentModifier,
-    hurtLevel,
-    initiativeModifier,
-    flagLevel,
-    attractedComputersAttention,
-  ) {
-    let flavor = "";
-    if (NODE === 1) {
-      flavor += `${this.actor.name} puts their fate in Friend Computer's capable lack-of-hands.<br>`;
-    }
-    if (NODE < 0) {
-      flavor +=
-        "Rolled with negative node. Non-Successes subtract from your success count! Good luck, citizen.<br>";
-    }
-    flavor += `Rolled with a level ${equipmentModifier} equipment.`;
-    if (hurtLevel != 0) {
-      flavor += `<br>Rolled with ${hurtLevel} less NODE due to current wounds`;
-    }
-    if (initiativeModifier != 0) {
-      flavor += `<br>Rolled with ${initiativeModifier} less NODE to jump up ${initiativeModifier} places in the initiaive!`;
-    }
-
-    await roll.toMessage({ flavor, speaker: ChatMessage.getSpeaker({ actor: this.actor }) });
-
-    await this.sendComputerRollResults(
-      attractedComputersAttention,
-      roll.dice.at(-1).results[0].result,
-      flagLevel,
-    );
-  }
-
-  calculateNODE(equipmentModifier, initiativeModifier, hurtLevel) {
-    const rollData = this.actor.getRollData();
-    let statPlusSkill = parseInt(this.getStatisticsNODEFromSheet(rollData));
-    return calculateNODE(statPlusSkill, equipmentModifier, initiativeModifier, hurtLevel);
-  }
-
-  getStatisticsNODEFromSheet(rollData) {
-    let stat = document.getElementById("paranoia-roll-stat").value.toLowerCase();
-    let skill = document.getElementById("paranoia-roll-skill").value;
-    let statNODE = parseInt(rollData.abilities[stat].value);
-    let skillNODE;
-
-    Object.values(rollData.abilities).forEach((ability) => {
-      if (ability.hasOwnProperty("skills") && ability.skills.hasOwnProperty(skill)) {
-        skillNODE = parseInt(ability.skills[skill].value);
+  _tryOpenDiceRoller() {
+    if (this._selectedAttribute && this._selectedSkill) {
+      const existing = Object.values(ui.windows).find((w) => w.id === "paranoia-dice-roller");
+      if (existing) {
+        existing.selectedStat = this._selectedAttribute;
+        existing.selectedSkill = this._selectedSkill;
+        existing.render(true);
+      } else {
+        new DiceRollerApp(this.actor, {
+          selectedStat: this._selectedAttribute,
+          selectedSkill: this._selectedSkill,
+        }).render(true);
       }
-    });
 
-    return statNODE + skillNODE;
-  }
-
-  getEquipmentModifierFromSheet() {
-    return document.getElementById("paranoia-roll-equipment").value;
-  }
-
-  getInitiativeModifierFromSheet() {
-    return document.getElementById("paranoia-roll-initiative").value;
+      // Reset selections and highlights
+      this._selectedAttribute = null;
+      this._selectedSkill = null;
+      this.element
+        .find(".paranoia-selectable-attribute.paranoia-selected")
+        .removeClass("paranoia-selected");
+      this.element
+        .find(".paranoia-selectable-skill.paranoia-selected")
+        .removeClass("paranoia-selected");
+    }
   }
 
   checkAttributeValue(sender) {
     sender.value = clampAttributeValue(parseInt(sender.value));
-  }
-
-  async sendComputerRollResults(attractedComputersAttention, computerDiceResult, flagLevel) {
-    let flavor = game.i18n.localize("PARANOIA.ChatRollNoNotice");
-    if (attractedComputersAttention) {
-      const desc = this.flagLevelToDescription(flagLevel);
-      flavor =
-        game.i18n.localize("PARANOIA.ChatRollAttention") +
-        " " +
-        game.i18n.format("PARANOIA.ChatRollCitizenIs", {
-          description: desc,
-          result: computerDiceResult,
-        });
-    }
-
-    let content = this.GenerateFriendComputerMessage(flavor, attractedComputersAttention);
-    ChatMessage.create({
-      speaker: { alias: game.i18n.localize("PARANOIA.ChatComputerName") },
-      content: content,
-      flavor: flavor,
-    });
-  }
-
-  GenerateFriendComputerMessage(message, isAngry) {
-    let theme = isAngry ? "paranoia-red-theme" : "paranoia-blue-theme";
-
-    return `<div class="paranoia-friend-computer-container ${theme}">
-    <div class="paranoia-screen">
-      <div class="paranoia-eye">
-        <div class="paranoia-pupil"></div>
-      </div>
-    </div>
-  </div>`;
-  }
-
-  flagLevelToDescription(flagLevel) {
-    switch (flagLevel) {
-      case 4:
-        return game.i18n.localize("PARANOIA.StatusWanted");
-      case 3:
-        return game.i18n.localize("PARANOIA.StatusCOI");
-      case 2:
-        return game.i18n.localize("PARANOIA.StatusRestricted");
-      case 1:
-        return game.i18n.localize("PARANOIA.StatusGreylisted");
-      case 0:
-        return game.i18n.localize("PARANOIA.StatusLoyal");
-      default:
-        return "";
-    }
   }
 
   validateWellnessChange(eventValue, eventTarget, actorValue) {
