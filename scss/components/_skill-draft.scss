@@ -34,7 +34,7 @@
 
   h4 {
     // Mimic .paranoia-header
-    background-color: darkred;
+    background-color: $c-paranoia-accent;
     color: white;
     text-align: center;
     padding: 5px;
@@ -168,7 +168,7 @@
   font-weight: bold;
 
   &:hover {
-    border-color: darkred;
+    border-color: $c-paranoia-accent;
     box-shadow: 0 0 5px red;
   }
 }

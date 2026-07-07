@@ -6,7 +6,6 @@
 
 .paranoia-dice-roller-form {
   padding: 12px;
-  font-family: "Roboto", sans-serif;
 
   h3 {
     margin: 0 0 12px;
@@ -75,32 +74,32 @@
 }
 
 .paranoia-btn-roll {
-  background: #28a745;
+  background: $c-paranoia-accent;
   color: white;
 
   &:hover {
-    background: #218838;
+    background: #a00000;
   }
 }
 
 .paranoia-dice-roller-launcher {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   padding: 8px 4px;
   margin-top: 6px;
   border-top: 1px solid rgba(0, 0, 0, 0.15);
 
   .paranoia-dice-roller-hint {
-    flex: 1;
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     font-style: italic;
     opacity: 0.75;
+    text-align: center;
   }
 
   .paranoia-open-dice-roller {
     flex: 0 0 auto;
-    white-space: nowrap;
   }
 }

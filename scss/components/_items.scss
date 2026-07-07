@@ -115,7 +115,7 @@
 
   // Provide visual feedback when dragging over. This class is added via JS.
   &.paranoia-drop-hover {
-    border-color: var(--main-color, darkred);
+    border-color: var(--main-color, $c-paranoia-accent);
     box-shadow: 0 0 10px var(--glow-color, rgba(255, 0, 0, 0.5));
   }
 }

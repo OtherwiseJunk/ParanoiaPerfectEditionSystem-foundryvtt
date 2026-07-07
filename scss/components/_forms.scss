@@ -71,7 +71,7 @@
 }
 
 .paranoia-header {
-  background-color: darkred;
+  background-color: $c-paranoia-accent;
   width: 100%;
   color: white;
   text-align: center;
@@ -255,19 +255,19 @@ button {
 .paranoia-somebody-image {
   width: 100%;
   height: 67%;
-  background-color: darkred;
+  background-color: $c-paranoia-accent;
 }
 
 .paranoia-nobody-image {
   width: 100%;
   height: 100%;
-  background-color: darkred;
+  background-color: $c-paranoia-accent;
 }
 
 .paranoia-item-image {
   width: 100%;
   height: 95%;
-  background-color: darkred;
+  background-color: $c-paranoia-accent;
 }
 
 .paranoia-select {
