@@ -33,6 +33,6 @@
     "oxlint": "^1.57.0",
     "sass": "^1.53.0",
     "@playwright/test": "^1.44.0",
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.11"
   }
 }
