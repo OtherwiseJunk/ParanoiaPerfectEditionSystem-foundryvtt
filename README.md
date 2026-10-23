@@ -3,7 +3,7 @@
 ![Foundry v11](https://img.shields.io/badge/foundry-v11-green)
 ![Foundry v12](https://img.shields.io/badge/foundry-v12-green)
 ![Foundry v13](https://img.shields.io/badge/foundry-v13-green)
-![Installs of v0.10.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/latest/ParanoiaPerfectEditionSystem-foundryvttv0.10.0.zip?label="Zip downloads for the latest release")
+![Installs of v0.10.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/latest/ParanoiaPerfectEditionSystem-foundryvttv0.10.0.zip?label=v0.10.0)
 
 An attempt at adopting the upcoming [Paranoia: Perfect Edition](https://www.kickstarter.com/projects/1990654819/paranoia-rpg-the-perfect-edition) into FoundryVTT as a system.
 
