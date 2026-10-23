@@ -5,6 +5,25 @@
 ![Foundry v13](https://img.shields.io/badge/foundry-v13-green)
 ![Installs of v0.10.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/latest/ParanoiaPerfectEditionSystem-foundryvttv0.10.0.zip "Zip downloads for the latest release")
 
+![v0.10.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.10.0/ParanoiaPerfectEditionSystem-foundryvttv0.10.0.zip?label=v0.10.0)
+![v0.9.1](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.9.1/ParanoiaPerfectEditionSystem-foundryvttv0.9.1.zip?label=v0.9.1)
+![v0.9.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.9.0/ParanoiaPerfectEditionSystem-foundryvttv0.9.0.zip?label=v0.9.0)
+![v0.8.5](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.8.5/ParanoiaPerfectEditionSystem-foundryvttv0.8.5.zip?label=v0.8.5)
+![v0.8.3](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.8.3/ParanoiaPerfectEditionSystem-foundryvttv0.8.3.zip?label=v0.8.3)
+![v0.8.2](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.8.2/ParanoiaPerfectEditionSystem-foundryvttv0.8.2.zip?label=v0.8.2)
+![v0.8.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.8.0/ParanoiaPerfectEditionSystem-foundryvttv0.8.0.zip?label=v0.8.0)
+![v0.7.1](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.7.1/ParanoiaPerfectEditionSystem-foundryvttv0.7.1.zip?label=v0.7.1)
+![v0.7.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.7.0/ParanoiaPerfectEditionSystem-foundryvttv0.7.0.zip?label=v0.7.0)
+![v0.6.1](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.6.1/ParanoiaPerfectEditionSystem-foundryvttv0.6.1.zip?label=v0.6.1)
+![v0.6.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.6.0/ParanoiaPerfectEditionSystem-foundryvttv0.6.0.zip?label=v0.6.0)
+![v0.5.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/v0.5.0/ParanoiaPerfectEditionSystem-foundryvttv0.5.0.zip?label=v0.5.0)
+![0.5.1](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/0.5.1/ParanoiaPerfectEditionSystem-foundryvtt0.5.1.zip?label=0.5.1)
+![0.4.2](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/0.4.2/ParanoiaPerfectEditionSystem-foundryvtt0.4.2.zip?label=0.4.2)
+![0.4.1](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/0.4.1/ParanoiaPerfectEditionSystem-foundryvtt0.4.1.zip?label=0.4.1)
+![0.4.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/0.4.0/ParanoiaPerfectEditionSystem-foundryvtt0.4.0.zip?label=0.4.0)
+![0.3.0](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/0.3.0/ParanoiaPerfectEditionSystem-foundryvtt0.3.0.zip?label=0.3.0)
+![0.2.1](https://img.shields.io/github/downloads/OtherwiseJunk/ParanoiaPerfectEditionSystem-foundryvtt/0.2.1/ParanoiaPerfectEditionSystem-foundryvtt0.2.1.zip?label=0.2.1)
+
 An attempt at adopting the upcoming [Paranoia: Perfect Edition](https://www.kickstarter.com/projects/1990654819/paranoia-rpg-the-perfect-edition) into FoundryVTT as a system.
 
 Current version tested against v11, v12, and v13 of FoundryVTT.
